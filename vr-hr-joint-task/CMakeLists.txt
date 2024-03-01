@@ -52,10 +52,12 @@ add_compile_definitions(OUTPUT_DIRECTORY="${OUTPUT_DIRECTORY}")
 
 # Set header files
 set(header
+    "include/coppeliasim_handler.h"
 )
 
 # Set source files
 set(src 
+    "src/coppeliasim_handler.cpp"
 )
 
 configure_file(./resources/resources.rc.in ./resources/resources.rc)
@@ -84,6 +86,10 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json
 # Setup dynamic-neural-field-composer
 find_package(dynamic-neural-field-composer REQUIRED)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE dynamic-neural-field-composer)
+
+# Setup coppeliasim-cpp-client
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/coppeliasim-cpp-client/include)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/coppeliasim-cpp-client)
 
 target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC
                             HR_VR_PROJ=1
@@ -122,6 +128,7 @@ add_executable(${EXE_PROJECT} "src/main.cpp" ./resources/resources.rc)
 target_include_directories(${EXE_PROJECT} PRIVATE include)
 target_link_libraries(${EXE_PROJECT} PRIVATE imgui::imgui ${CMAKE_PROJECT_NAME})
 target_link_libraries(${EXE_PROJECT} PRIVATE dynamic-neural-field-composer)
+target_link_libraries(${EXE_PROJECT} PRIVATE coppeliasim-cpp-client)
 
 
 # Setup Catch2
