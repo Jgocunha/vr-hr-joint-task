@@ -6,6 +6,12 @@ namespace coppeliasim
 {
 	CoppeliasimHandler::CoppeliasimHandler()
 	{
+		client.setLogMode(coppeliasim_cpp::LogMode::NO_LOGS);
+	}
+
+	CoppeliasimHandler::~CoppeliasimHandler()
+	{
+		close();
 	}
 
 	void CoppeliasimHandler::init()
@@ -18,6 +24,7 @@ namespace coppeliasim
 	{
 		// keep trying to initialize the connection
 		while (!client.initialize());
+		connected = true;
 
 		resetSignals();
 		client.startSimulation();
@@ -40,58 +47,58 @@ namespace coppeliasim
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Coppeliasim Handler: Thread has finished its execution.\n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
 	}
 
-	void CoppeliasimHandler::setSignals(Signals signals)
+	void CoppeliasimHandler::setSignal(const std::string& signalName, const int signalValue)
 	{
+		client.setIntegerSignal(signalName, signalValue);
+		log(dnf_composer::tools::logger::LogLevel::INFO, "Signal " + signalName + " was written as " + std::to_string(signalValue) + '\n');
 		wereSignalsChanged = true;
-		this->signals = signals;
 	}
 
-	Signals CoppeliasimHandler::getSignals()
+	void CoppeliasimHandler::setSignals(const Signals& sign)
+	{
+		wereSignalsChanged = true;
+		signals = sign;
+	}
+
+	Signals CoppeliasimHandler::getSignals() const
 	{
 		return signals;
 	}
 
+	bool CoppeliasimHandler::isConnected() const
+	{
+		return connected;
+	}
+
 	void CoppeliasimHandler::writeSignals()
 	{
-		//client.setIntegerSignal(CREATE_SHAPE_SIGNAL, signals.createShape);
-		//client.setIntegerSignal(GRASP_SHAPE_SIGNAL, signals.graspShape);
-		//client.setIntegerSignal(PLACE_SHAPE_SIGNAL, signals.placeShape);
-		//client.setFloatSignal(SHAPE_ANGLE_SIGNAL, signals.targetAngle);
+		client.setIntegerSignal(SignalSignatures::START_SIM, signals.startSim);
+		client.setIntegerSignal(SignalSignatures::TARGET_OBJECT, signals.targetObject);
 
-		//wereSignalsChanged = false;
-
-		//if (DEBUG)
-			//client.log("Coppeliasim Handler: New signals written.\n");
-		//log(dnf_composer::tools::logger::LogLevel::INFO, "Coppeliasim Handler: New signals written.\n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
+		wereSignalsChanged = false;
 	}
 
 	void CoppeliasimHandler::readSignals()
 	{
-		//signals.isShapeCreated = client.getIntegerSignal(SHAPE_CREATED_SIGNAL);
-		//signals.isShapeGrasped = client.getIntegerSignal(SHAPE_GRASPED_SIGNAL);
-		//signals.isShapePlaced = client.getIntegerSignal(SHAPE_PLACED_SIGNAL);
-
-		//signals.shapeHue = client.getFloatSignal(SHAPE_HUE_SIGNAL);
-
-		//if (DEBUG)
-			//client.log("Coppeliasim Handler: Signals retrieved.\n");
-		//log(dnf_composer::tools::logger::LogLevel::INFO, "Coppeliasim Handler: Signals retrieved.\n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
+		signals.simStarted = client.getIntegerSignal(SignalSignatures::SIM_STARTED);
+		signals.objectsCreated = client.getIntegerSignal(SignalSignatures::OBJECTS_CREATED);
+		signals.object1 = client.getIntegerSignal(SignalSignatures::OBJECT1_EXISTS);
+		signals.object2 = client.getIntegerSignal(SignalSignatures::OBJECT2_EXISTS);
+		signals.object3 = client.getIntegerSignal(SignalSignatures::OBJECT3_EXISTS);
+		signals.objectGrasped = client.getIntegerSignal(SignalSignatures::OBJECT_GRASPED);
+		signals.objectPlaced = client.getIntegerSignal(SignalSignatures::OBJECT_PLACED);
 	}
 
-	void CoppeliasimHandler::resetSignals()
+	void CoppeliasimHandler::resetSignals() const
 	{
-		//client.setIntegerSignal(CREATE_SHAPE_SIGNAL, 0);
-		//client.setIntegerSignal(SHAPE_CREATED_SIGNAL, 0);
-		//client.setIntegerSignal(GRASP_SHAPE_SIGNAL, 0);
-		//client.setIntegerSignal(SHAPE_GRASPED_SIGNAL, 0);
-		//client.setIntegerSignal(PLACE_SHAPE_SIGNAL, 0);
-		//client.setIntegerSignal(SHAPE_PLACED_SIGNAL, 0);
-
-		//client.setFloatSignal(SHAPE_HUE_SIGNAL, UNDEFINED);
-		//client.setFloatSignal(SHAPE_ANGLE_SIGNAL, UNDEFINED);
-
-		//if (DEBUG)
-			//client.log("Coppeliasim Handler: All signals were reset.\n");
-		//log(dnf_composer::tools::logger::LogLevel::INFO, "Coppeliasim Handler: All signals were reset.\n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
+		client.setIntegerSignal(SignalSignatures::START_SIM, false);
+		client.setIntegerSignal(SignalSignatures::SIM_STARTED, false);
+		client.setIntegerSignal(SignalSignatures::OBJECTS_CREATED, false);
+		client.setIntegerSignal(SignalSignatures::TARGET_OBJECT, 0);
+		client.setIntegerSignal(SignalSignatures::OBJECT1_EXISTS, false);
+		client.setIntegerSignal(SignalSignatures::OBJECT2_EXISTS, false);
+		client.setIntegerSignal(SignalSignatures::OBJECT3_EXISTS, false);
+		client.setIntegerSignal(SignalSignatures::OBJECT_GRASPED, false);
+		client.setIntegerSignal(SignalSignatures::OBJECT_PLACED, false);
 	}
 }

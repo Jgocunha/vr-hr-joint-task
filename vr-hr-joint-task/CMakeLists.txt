@@ -88,8 +88,8 @@ find_package(dynamic-neural-field-composer REQUIRED)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE dynamic-neural-field-composer)
 
 # Setup coppeliasim-cpp-client
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/coppeliasim-cpp-client/include)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/coppeliasim-cpp-client)
+find_package(coppeliasim-cpp-client REQUIRED)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE coppeliasim-cpp-client)
 
 target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC
                             HR_VR_PROJ=1
@@ -143,7 +143,13 @@ add_executable(${TEST_PROJECT}
     tests/test.cpp 
 )
 target_include_directories(${TEST_PROJECT} PRIVATE include)
-target_link_libraries(${TEST_PROJECT} PRIVATE Catch2::Catch2 Catch2::Catch2WithMain ${CMAKE_PROJECT_NAME} dynamic-neural-field-composer)
+target_link_libraries(${TEST_PROJECT} PRIVATE 
+	Catch2::Catch2 
+	Catch2::Catch2WithMain 
+	${CMAKE_PROJECT_NAME} 
+	dynamic-neural-field-composer
+	coppeliasim-cpp-client
+)
 
 # Automatically discover and add tests
 catch_discover_tests(${TEST_PROJECT})
