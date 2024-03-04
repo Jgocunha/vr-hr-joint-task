@@ -48,8 +48,8 @@ void DNFComposerHandler::run()
 
 void DNFComposerHandler::close()
 {
-	application->close();
 	dnfcomposerThread.join();
+	log(dnf_composer::tools::logger::LogLevel::INFO, "DNFComposer Handler: Thread has finished its execution.\n");
 }
 
 void DNFComposerHandler::setupUserInterface() const
