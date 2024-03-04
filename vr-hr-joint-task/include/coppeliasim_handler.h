@@ -6,68 +6,66 @@
 
 #include "client.h"
 
-namespace coppeliasim
+
+struct SignalSignatures
 {
-	struct SignalSignatures
-	{
-		static constexpr const char* START_SIM = "startSim";
-		static constexpr const char* SIM_STARTED = "simStarted";
+	static constexpr const char* START_SIM = "startSim";
+	static constexpr const char* SIM_STARTED = "simStarted";
 
-		static constexpr const char* OBJECTS_CREATED = "objectsCreated";
-		static constexpr const char* TARGET_OBJECT = "targetObject";
+	static constexpr const char* OBJECTS_CREATED = "objectsCreated";
+	static constexpr const char* TARGET_OBJECT = "targetObject";
 
-		static constexpr const char* OBJECT1_EXISTS = "object1";
-		static constexpr const char* OBJECT2_EXISTS = "object2";
-		static constexpr const char* OBJECT3_EXISTS = "object3";
+	static constexpr const char* OBJECT1_EXISTS = "object1";
+	static constexpr const char* OBJECT2_EXISTS = "object2";
+	static constexpr const char* OBJECT3_EXISTS = "object3";
 
-		static constexpr const char* OBJECT_GRASPED = "objectGrasped";
+	static constexpr const char* OBJECT_GRASPED = "objectGrasped";
 
-		static constexpr const char* OBJECT_PLACED = "objectPlaced";
-	};
+	static constexpr const char* OBJECT_PLACED = "objectPlaced";
+};
 
 
-	struct Signals
-	{
-		bool startSim = true;
-		bool simStarted = false;
+struct Signals
+{
+	bool startSim = true;
+	bool simStarted = false;
 
-		bool objectsCreated = false;
-		int targetObject = 0;
+	bool objectsCreated = false;
+	int targetObject = 0;
 
-		bool object1 = false;
-		bool object2 = false;
-		bool object3 = false;
+	bool object1 = false;
+	bool object2 = false;
+	bool object3 = false;
 
-		bool objectGrasped = false;
-		bool objectPlaced = false;
-	};
+	bool objectGrasped = false;
+	bool objectPlaced = false;
+};
 
-	class CoppeliasimHandler
-	{
-	private:
-		std::thread coppeliasimThread;
-		coppeliasim_cpp::CoppeliaSimClient client;
-		Signals signals;
-		bool wereSignalsChanged = false;
-		bool connected = false;
-	public:
-		CoppeliasimHandler();
-		~CoppeliasimHandler();
+class CoppeliasimHandler
+{
+private:
+	std::thread coppeliasimThread;
+	coppeliasim_cpp::CoppeliaSimClient client;
+	Signals signals;
+	bool wereSignalsChanged = false;
+	bool connected = false;
+public:
+	CoppeliasimHandler();
+	~CoppeliasimHandler();
 
-		void init();
-		void step();
-		void close();
+	void init();
+	void step();
+	void close();
 
-		void setSignal(const std::string& signalName, const int signalValue);
-		void setSignals(const Signals& sign);
-		Signals getSignals() const;
-		bool isConnected() const;
+	void setSignal(const std::string& signalName, const int signalValue);
+	void setSignals(const Signals& sign);
+	Signals getSignals() const;
+	bool isConnected() const;
 
-		void resetSignals() const;
-	private:
-		void writeSignals();
-		void readSignals();
-	};
-}
+	void resetSignals() const;
+private:
+	void writeSignals();
+	void readSignals();
+};
 
 

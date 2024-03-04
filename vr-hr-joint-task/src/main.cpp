@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 
 	constexpr int waitTime = 500;
 
-	coppeliasim::CoppeliasimHandler coppeliasimHandler;
+	CoppeliasimHandler coppeliasimHandler;
 
 	coppeliasimHandler.init();
 
@@ -37,17 +37,17 @@ int main(int argc, char* argv[])
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for connection with CoppeliaSim...\n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
 		Sleep(waitTime);
 	}
-	coppeliasimHandler.setSignal(coppeliasim::SignalSignatures::START_SIM, 1);
+	coppeliasimHandler.setSignal(SignalSignatures::START_SIM, 1);
 
 	bool hasSimStarted = coppeliasimHandler.getSignals().simStarted;
 	while(!hasSimStarted)
 	{
-		coppeliasimHandler.setSignal(coppeliasim::SignalSignatures::START_SIM, 1);
+		coppeliasimHandler.setSignal(SignalSignatures::START_SIM, 1);
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for CoppeliaSim to start...\n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
 		hasSimStarted = coppeliasimHandler.getSignals().simStarted;
 		Sleep(waitTime);
 	}
-	coppeliasimHandler.setSignal(coppeliasim::SignalSignatures::START_SIM, 0);
+	coppeliasimHandler.setSignal(SignalSignatures::START_SIM, 0);
 
 	bool haveObjectBeenCreated = coppeliasimHandler.getSignals().objectsCreated;
 	while (!haveObjectBeenCreated)
@@ -74,12 +74,12 @@ int main(int argc, char* argv[])
 		bool hasObjectBeenGrasped = coppeliasimHandler.getSignals().objectGrasped;
 		while (!hasObjectBeenGrasped)
 		{
-			coppeliasimHandler.setSignal(coppeliasim::SignalSignatures::TARGET_OBJECT, targetObject);
+			coppeliasimHandler.setSignal(SignalSignatures::TARGET_OBJECT, targetObject);
 			log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be grasped...\n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
 			hasObjectBeenGrasped = coppeliasimHandler.getSignals().objectGrasped;
 			Sleep(waitTime);
 		}
-		coppeliasimHandler.setSignal(coppeliasim::SignalSignatures::OBJECT_GRASPED, 0);
+		coppeliasimHandler.setSignal(SignalSignatures::OBJECT_GRASPED, 0);
 
 		bool hasObjectBeenPlaced = coppeliasimHandler.getSignals().objectPlaced;
 		while (!hasObjectBeenPlaced)
@@ -88,14 +88,13 @@ int main(int argc, char* argv[])
 			hasObjectBeenPlaced = coppeliasimHandler.getSignals().objectPlaced;
 			Sleep(waitTime);
 		}
-		coppeliasimHandler.setSignal(coppeliasim::SignalSignatures::OBJECT_PLACED, 0);
+		coppeliasimHandler.setSignal(SignalSignatures::OBJECT_PLACED, 0);
 
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Object " + std::to_string(i) + " has been placed.\n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
 		// Make sure signals are reset
 		Sleep(waitTime);
 	}
 
-	coppeliasimHandler.close();
 
 	return 0;
 	
