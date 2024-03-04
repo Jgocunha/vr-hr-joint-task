@@ -14,6 +14,7 @@
 #include <tools/logger.h>
 
 #include "coppeliasim_handler.h"
+#include "dnfcomposer_handler.h"
 
 int main(int argc, char* argv[])
 {
@@ -29,8 +30,10 @@ int main(int argc, char* argv[])
 	constexpr int waitTime = 500;
 
 	CoppeliasimHandler coppeliasimHandler;
+	DNFComposerHandler dnfcomposerHandler{{"hr-vr-experiment", 10}};
 
 	coppeliasimHandler.init();
+	dnfcomposerHandler.init();
 
 	while(!coppeliasimHandler.isConnected())
 	{
