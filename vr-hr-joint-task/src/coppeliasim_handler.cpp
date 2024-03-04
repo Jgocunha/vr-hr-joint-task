@@ -16,21 +16,20 @@ CoppeliasimHandler::~CoppeliasimHandler()
 void CoppeliasimHandler::init()
 {
 	log(dnf_composer::tools::logger::LogLevel::INFO, "Coppeliasim Handler: Thread will start.\n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
-	coppeliasimThread = std::thread(&CoppeliasimHandler::step, this);
+	coppeliasimThread = std::thread(&CoppeliasimHandler::run, this);
 }
 
-void CoppeliasimHandler::step()
+void CoppeliasimHandler::run()
 {
 	try
 	{
 		// keep trying to initialize the connection
 		while (!client.initialize());
-		connected = true;
 
 		resetSignals();
 		client.startSimulation();
 
-		while (true)
+		while (isConnected())
 		{
 			if (wereSignalsChanged)
 				writeSignals();
@@ -40,6 +39,7 @@ void CoppeliasimHandler::step()
 
 		resetSignals();
 		client.stopSimulation();
+		close();
 	}
 	catch (const std::exception& e)
 	{
@@ -49,7 +49,6 @@ void CoppeliasimHandler::step()
 	{
 		log(dnf_composer::tools::logger::LogLevel::FATAL, "Coppeliasim Handler: An unexpected error occurred.\n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
 	}
-
 }
 
 void CoppeliasimHandler::close()
@@ -78,7 +77,7 @@ Signals CoppeliasimHandler::getSignals() const
 
 bool CoppeliasimHandler::isConnected() const
 {
-	return connected;
+	return client.isConnected();
 }
 
 void CoppeliasimHandler::writeSignals()

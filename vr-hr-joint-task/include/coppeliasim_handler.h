@@ -48,13 +48,12 @@ private:
 	coppeliasim_cpp::CoppeliaSimClient client;
 	Signals signals;
 	bool wereSignalsChanged = false;
-	bool connected = false;
 public:
 	CoppeliasimHandler();
 	~CoppeliasimHandler();
 
 	void init();
-	void step();
+	void run();
 	void close();
 
 	void setSignal(const std::string& signalName, const int signalValue);
