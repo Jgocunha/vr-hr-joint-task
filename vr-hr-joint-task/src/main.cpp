@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 	// After creating the application, we can add the windows we want to display.
 	//app.activateUserInterfaceWindow(dnf_composer::user_interface::LOG_WINDOW);
 
-	constexpr int waitTime = 1000;
+	constexpr int waitTime = 500;
 
 	coppeliasim::CoppeliasimHandler coppeliasimHandler;
 
