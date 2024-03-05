@@ -24,7 +24,6 @@ struct SignalSignatures
 	static constexpr const char* OBJECT_PLACED = "objectPlaced";
 };
 
-
 struct Signals
 {
 	bool startSim = true;

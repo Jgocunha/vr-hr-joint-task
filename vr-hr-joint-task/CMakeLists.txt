@@ -54,12 +54,14 @@ add_compile_definitions(OUTPUT_DIRECTORY="${OUTPUT_DIRECTORY}")
 set(header
     "include/coppeliasim_handler.h"
     "include/dnfcomposer_handler.h"
+    "include/experiment.h"
 )
 
 # Set source files
 set(src 
     "src/coppeliasim_handler.cpp"
     "src/dnfcomposer_handler.cpp"
+    "src/experiment.cpp"
 )
 
 configure_file(./resources/resources.rc.in ./resources/resources.rc)
