@@ -59,6 +59,12 @@ int main(int argc, char* argv[])
 		Sleep(waitTime);
 	}
 
+	Sleep(4000);
+	coppeliasimHandler.setSignal(SignalSignatures::TARGET_OBJECT, 2);
+	Sleep(3000);
+	coppeliasimHandler.setSignal(SignalSignatures::TARGET_OBJECT, 3);
+	Sleep(2000);
+
 	for(int i = 1; i <= 3; i++)
 	{
 		objectPositions = { coppeliasimHandler.getSignals().object1, coppeliasimHandler.getSignals().object2, coppeliasimHandler.getSignals().object3 };

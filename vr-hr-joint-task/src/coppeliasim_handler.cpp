@@ -63,7 +63,7 @@ void CoppeliasimHandler::setSignal(const std::string& signalName, const int sign
 {
 	client.setIntegerSignal(signalName, signalValue);
 	log(dnf_composer::tools::logger::LogLevel::INFO, "Signal " + signalName + " was written as " + std::to_string(signalValue) + '\n');
-	wereSignalsChanged = true;
+	//wereSignalsChanged = true;
 }
 
 void CoppeliasimHandler::setSignals(const Signals& sign)
@@ -85,7 +85,7 @@ bool CoppeliasimHandler::isConnected() const
 void CoppeliasimHandler::writeSignals()
 {
 	client.setIntegerSignal(SignalSignatures::START_SIM, signals.startSim);
-	client.setIntegerSignal(SignalSignatures::TARGET_OBJECT, signals.targetObject);
+	//client.setIntegerSignal(SignalSignatures::TARGET_OBJECT, signals.targetObject);
 
 	wereSignalsChanged = false;
 }
