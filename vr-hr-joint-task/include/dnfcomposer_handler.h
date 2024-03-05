@@ -22,7 +22,7 @@ private:
 	std::thread dnfcomposerThread;
 public:
 	DNFComposerHandler(const SimulationParameters& simParams);
-	~DNFComposerHandler() = default;
+	~DNFComposerHandler();
 
 	void init();
 	void run();

@@ -89,6 +89,8 @@ int main(int argc, char* argv[])
 		Sleep(waitTime);
 	}
 
+	coppeliasimHandler.close();
+	dnfcomposerHandler.close();
 
 	return 0;
 }

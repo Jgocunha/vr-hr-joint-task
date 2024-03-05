@@ -8,6 +8,11 @@ DNFComposerHandler::DNFComposerHandler(const SimulationParameters& simParams)
 	setupUserInterface();
 }
 
+DNFComposerHandler::~DNFComposerHandler()
+{
+	close();
+}
+
 void DNFComposerHandler::init()
 {
 	log(dnf_composer::tools::logger::LogLevel::INFO, "DNFComposer Handler: Thread will start.\n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);

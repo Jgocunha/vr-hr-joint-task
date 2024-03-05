@@ -43,16 +43,18 @@ void CoppeliasimHandler::run()
 	}
 	catch (const std::exception& e)
 	{
-		log(dnf_composer::tools::logger::LogLevel::FATAL, "Coppeliasim Handler: " + std::string(e.what()) + '\n');
+		log(dnf_composer::tools::logger::LogLevel::FATAL, "Coppeliasim Handler: " + std::string(e.what()) + '\n', dnf_composer::tools::logger::LogOutputMode::CONSOLE);
 	}
 	catch (...)
 	{
-		log(dnf_composer::tools::logger::LogLevel::FATAL, "Coppeliasim Handler: An unexpected error occurred.\n");
+		log(dnf_composer::tools::logger::LogLevel::FATAL, "Coppeliasim Handler: An unexpected error occurred.\n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
 	}
 }
 
 void CoppeliasimHandler::close()
 {
+	if(isConnected())
+		client.stopSimulation();
 	coppeliasimThread.join();
 	log(dnf_composer::tools::logger::LogLevel::INFO, "Coppeliasim Handler: Thread has finished its execution.\n");
 }
