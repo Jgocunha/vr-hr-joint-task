@@ -4,7 +4,7 @@
 DNFComposerHandler::DNFComposerHandler(const SimulationParameters& simParams)
 	: experimentWindow(std::make_shared<ExperimentWindow>())
 {
-	simulation = std::make_shared<dnf_composer::Simulation>(simParams.identifier, simParams.deltaT, 0, 0);
+	simulation = getDynamicNeuralFieldArchitecture(simParams.identifier, simParams.deltaT);
 	application = std::make_shared<dnf_composer::Application>(simulation);
 	setupUserInterface();
 }
@@ -61,13 +61,88 @@ void DNFComposerHandler::close()
 
 int DNFComposerHandler::getTargetObject() const
 {
-	return experimentWindow->getTargetObject();
+	const auto ael = std::dynamic_pointer_cast<dnf_composer::element::NeuralField>(simulation->getElement("ael"));
+	const double centroid = ael->getCentroid();
+	const int size = ael->getMaxSpatialDimension();
+
+	// Function to calculate the circular distance between two points
+	auto circularDistance = [size](double point1, double point2) -> double {
+		const double directDistance = std::abs(point1 - point2);
+		const double circularDistance = size - directDistance;
+		return std::min(directDistance, circularDistance);
+		};
+
+	// Calculate distances to the three points
+	double distanceTo30 = circularDistance(centroid, 30);
+	double distanceTo60 = circularDistance(centroid, 60);
+	double distanceTo0 = circularDistance(centroid, 0); // This also works for distance to 100 due to circularity
+
+	// Determine the closest target and return the corresponding value
+	const double minDistance = std::min({ distanceTo30, distanceTo60, distanceTo0 });
+
+	if (minDistance == distanceTo30) {
+		return 1;
+	}
+	else if (minDistance == distanceTo60) {
+		return 1; // If 60 should return a different value, adjust this accordingly
+	}
+	else {
+		return 3;
+	}
 }
 
 
 void DNFComposerHandler::setupUserInterface() const
 {
-	application->activateUserInterfaceWindow(dnf_composer::user_interface::LOG_WINDOW);
-	application->activateUserInterfaceWindow(experimentWindow);
+	//application->activateUserInterfaceWindow(experimentWindow);
+
+	using namespace dnf_composer;
+	element::ElementSpatialDimensionParameters dim_params{ 90, 1.0 };
+
+	// Create User Interface windows
+	application->activateUserInterfaceWindow(user_interface::SIMULATION_WINDOW);
+	application->activateUserInterfaceWindow(user_interface::LOG_WINDOW);
+	application->activateUserInterfaceWindow(user_interface::ELEMENT_WINDOW);
+	application->activateUserInterfaceWindow(user_interface::MONITORING_WINDOW);
+
+	constexpr int yMax = 10;
+	constexpr int yMin = 8;
+
+	// Create a plot for each neural field
+	user_interface::PlotParameters aolPlotParameters;
+	aolPlotParameters.annotations = { "Action observation layer", "Spatial dimension", "Amplitude" };
+	aolPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
+	const auto aolPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, aolPlotParameters);
+	aolPlotWindow->addPlottingData("aol", "activation");
+	aolPlotWindow->addPlottingData("aol", "input");
+	aolPlotWindow->addPlottingData("aol", "output");
+	application->activateUserInterfaceWindow(aolPlotWindow);
+
+	user_interface::PlotParameters aslPlotParameters;
+	aslPlotParameters.annotations = { "Action simulation layer", "Spatial dimension", "Amplitude" };
+	aslPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
+	const auto aslPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, aslPlotParameters);
+	aslPlotWindow->addPlottingData("asl", "activation");
+	aslPlotWindow->addPlottingData("asl", "input");
+	aslPlotWindow->addPlottingData("asl", "output");
+	application->activateUserInterfaceWindow(aslPlotWindow);
+
+	user_interface::PlotParameters omlPlotParameters;
+	omlPlotParameters.annotations = { "Object memory layer", "Spatial dimension", "Amplitude" };
+	omlPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
+	const auto omlPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, omlPlotParameters);
+	omlPlotWindow->addPlottingData("oml", "activation");
+	omlPlotWindow->addPlottingData("oml", "input");
+	omlPlotWindow->addPlottingData("oml", "output");
+	application->activateUserInterfaceWindow(omlPlotWindow);
+
+	user_interface::PlotParameters aelPlotParameters;
+	aelPlotParameters.annotations = { "Action execution layer", "Spatial dimension", "Amplitude" };
+	aelPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
+	const auto aelPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, aelPlotParameters);
+	aelPlotWindow->addPlottingData("ael", "activation");
+	aelPlotWindow->addPlottingData("ael", "input");
+	aelPlotWindow->addPlottingData("ael", "output");
+	application->activateUserInterfaceWindow(aelPlotWindow);
 }
 

@@ -56,6 +56,7 @@ set(header
     "include/dnfcomposer_handler.h"
     "include/experiment.h"
     "include/experiment_window.h"
+    "include/dnf_architecture.h"
 )
 
 # Set source files
@@ -64,6 +65,7 @@ set(src
     "src/dnfcomposer_handler.cpp"
     "src/experiment.cpp"
     "src/experiment_window.cpp"
+    "src/dnf_architecture.cpp"
 )
 
 configure_file(./resources/resources.rc.in ./resources/resources.rc)

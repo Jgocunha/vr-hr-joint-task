@@ -2,8 +2,10 @@
 #include <simulation/simulation.h>
 #include <thread>
 #include <application/application.h>
+#include <user_interface/plot_window.h>
 
 #include "experiment_window.h"
+#include "dnf_architecture.h"
 
 
 struct SimulationParameters

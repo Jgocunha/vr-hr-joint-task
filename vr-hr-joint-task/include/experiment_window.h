@@ -9,7 +9,7 @@ private:
 	int targetObject;
 public:
 	ExperimentWindow();
-	~ExperimentWindow();
+	~ExperimentWindow() override;
 
 	void render() override;
 	int getTargetObject() const;
