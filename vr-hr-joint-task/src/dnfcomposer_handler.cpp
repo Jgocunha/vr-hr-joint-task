@@ -60,5 +60,6 @@ void DNFComposerHandler::close()
 void DNFComposerHandler::setupUserInterface() const
 {
 	application->activateUserInterfaceWindow(dnf_composer::user_interface::LOG_WINDOW);
+	application->activateUserInterfaceWindow(std::make_shared<ExperimentWindow>());
 }
 

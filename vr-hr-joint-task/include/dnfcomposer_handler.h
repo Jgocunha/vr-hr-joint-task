@@ -3,6 +3,9 @@
 #include <thread>
 #include <application/application.h>
 
+#include "experiment_window.h"
+
+
 struct SimulationParameters
 {
 	std::string identifier;
