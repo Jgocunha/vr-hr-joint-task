@@ -13,9 +13,7 @@ int main(int argc, char* argv[])
 
 	Experiment experiment("experiment", commsFrequency, 10);
 	experiment.init();
-
 	experiment.run();
-
 	experiment.close();
 
 	return 0;

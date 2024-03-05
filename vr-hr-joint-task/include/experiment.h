@@ -18,4 +18,8 @@ public:
 	void close();
 private:
 	void main();
+	void waitForConnection() const;
+	void waitForSimulationStart();
+	void waitForObjectsToBeCreated() const;
+	void pickAndPlaceObjects();
 };

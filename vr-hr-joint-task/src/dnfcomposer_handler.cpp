@@ -2,6 +2,7 @@
 
 
 DNFComposerHandler::DNFComposerHandler(const SimulationParameters& simParams)
+	: experimentWindow(std::make_shared<ExperimentWindow>())
 {
 	simulation = std::make_shared<dnf_composer::Simulation>(simParams.identifier, simParams.deltaT, 0, 0);
 	application = std::make_shared<dnf_composer::Application>(simulation);
@@ -57,9 +58,16 @@ void DNFComposerHandler::close()
 	log(dnf_composer::tools::logger::LogLevel::INFO, "DNFComposer Handler: Thread has finished its execution.\n");
 }
 
+
+int DNFComposerHandler::getTargetObject() const
+{
+	return experimentWindow->getTargetObject();
+}
+
+
 void DNFComposerHandler::setupUserInterface() const
 {
 	application->activateUserInterfaceWindow(dnf_composer::user_interface::LOG_WINDOW);
-	application->activateUserInterfaceWindow(std::make_shared<ExperimentWindow>());
+	application->activateUserInterfaceWindow(experimentWindow);
 }
 

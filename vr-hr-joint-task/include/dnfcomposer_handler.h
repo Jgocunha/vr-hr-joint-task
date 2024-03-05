@@ -22,6 +22,7 @@ class DNFComposerHandler
 private:
 	std::shared_ptr<dnf_composer::Simulation> simulation;
 	std::shared_ptr<dnf_composer::Application> application;
+	std::shared_ptr<ExperimentWindow> experimentWindow;
 	std::thread dnfcomposerThread;
 public:
 	DNFComposerHandler(const SimulationParameters& simParams);
@@ -30,6 +31,8 @@ public:
 	void init();
 	void run();
 	void close();
+
+	int getTargetObject() const;
 private:
 	void setupUserInterface() const;
 };

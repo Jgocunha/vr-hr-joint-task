@@ -29,13 +29,24 @@ void Experiment::close()
 
 void Experiment::main()
 {
+	waitForConnection();
+	waitForSimulationStart();
+	waitForObjectsToBeCreated();
+	pickAndPlaceObjects();
+}
+
+void Experiment::waitForConnection() const
+{
 	while (!coppeliasimHandler.isConnected())
 	{
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for connection with CoppeliaSim...\n");
 		Sleep(commsFrequency);
 	}
-	coppeliasimHandler.setSignal(SignalSignatures::START_SIM, 1);
+}
 
+void Experiment::waitForSimulationStart()
+{
+	coppeliasimHandler.setSignal(SignalSignatures::START_SIM, 1);
 	bool hasSimStarted = coppeliasimHandler.getSignals().simStarted;
 	while (!hasSimStarted)
 	{
@@ -45,7 +56,10 @@ void Experiment::main()
 		Sleep(commsFrequency);
 	}
 	coppeliasimHandler.setSignal(SignalSignatures::START_SIM, 0);
+}
 
+void Experiment::waitForObjectsToBeCreated() const
+{
 	bool haveObjectBeenCreated = coppeliasimHandler.getSignals().objectsCreated;
 	while (!haveObjectBeenCreated)
 	{
@@ -61,17 +75,20 @@ void Experiment::main()
 		objectPositions = { coppeliasimHandler.getSignals().object1, coppeliasimHandler.getSignals().object2, coppeliasimHandler.getSignals().object3 };
 		Sleep(commsFrequency);
 	}
+}
+
+void Experiment::pickAndPlaceObjects()
+{
 
 	for (int i = 1; i <= 3; i++)
 	{
-		objectPositions = { coppeliasimHandler.getSignals().object1, coppeliasimHandler.getSignals().object2, coppeliasimHandler.getSignals().object3 };
-		// randomly select an object from the available objects to be the target
-		const int targetObject = i;
-
 		bool hasObjectBeenGrasped = coppeliasimHandler.getSignals().objectGrasped;
 		while (!hasObjectBeenGrasped)
 		{
+			// Update the target object here
+			const int targetObject = dnfcomposerHandler.getTargetObject();
 			coppeliasimHandler.setSignal(SignalSignatures::TARGET_OBJECT, targetObject);
+
 			log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be grasped...\n");
 			hasObjectBeenGrasped = coppeliasimHandler.getSignals().objectGrasped;
 			Sleep(commsFrequency);
@@ -86,6 +103,8 @@ void Experiment::main()
 			Sleep(commsFrequency);
 		}
 		coppeliasimHandler.setSignal(SignalSignatures::OBJECT_PLACED, 0);
+
+		// Update the remaining objects here
 
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Object " + std::to_string(i) + " has been placed.\n");
 		// Make sure signals are reset
