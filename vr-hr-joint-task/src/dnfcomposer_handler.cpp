@@ -81,11 +81,11 @@ int DNFComposerHandler::getTargetObject() const
 	const double minDistance = std::min({ distanceTo30, distanceTo60, distanceTo0 });
 
 	if (minDistance == distanceTo30)
-		return 1;
-	else if (minDistance == distanceTo60) 
 		return 2;
-	else 
+	else if (minDistance == distanceTo60) 
 		return 3;
+	else 
+		return 1;
 }
 
 void DNFComposerHandler::removeTargetObject(int objectIndex) const
@@ -106,10 +106,10 @@ void DNFComposerHandler::setupUserInterface() const
 	element::ElementSpatialDimensionParameters dim_params{ 90, 1.0 };
 
 	// Create User Interface windows
-	application->activateUserInterfaceWindow(user_interface::SIMULATION_WINDOW);
+	//application->activateUserInterfaceWindow(user_interface::SIMULATION_WINDOW);
 	application->activateUserInterfaceWindow(user_interface::LOG_WINDOW);
 	application->activateUserInterfaceWindow(user_interface::ELEMENT_WINDOW);
-	application->activateUserInterfaceWindow(user_interface::MONITORING_WINDOW);
+	//application->activateUserInterfaceWindow(user_interface::MONITORING_WINDOW);
 
 	constexpr int yMax = 10;
 	constexpr int yMin = 8;
@@ -126,7 +126,7 @@ void DNFComposerHandler::setupUserInterface() const
 
 	user_interface::PlotParameters aslPlotParameters;
 	aslPlotParameters.annotations = { "Action simulation layer", "Spatial dimension", "Amplitude" };
-	aslPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
+	aslPlotParameters.dimensions = { 0, dim_params.x_max, -15, yMax, dim_params.d_x };
 	const auto aslPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, aslPlotParameters);
 	aslPlotWindow->addPlottingData("asl", "activation");
 	aslPlotWindow->addPlottingData("asl", "input");
