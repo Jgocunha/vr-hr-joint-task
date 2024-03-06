@@ -10,8 +10,10 @@
 int main(int argc, char* argv[])
 {
 	constexpr int commsFrequency = 500;
+	constexpr double deltaT = 10;
+	const std::string experimentName = "experiment";
 
-	Experiment experiment("experiment", commsFrequency, 10);
+	Experiment experiment(experimentName, commsFrequency, deltaT);
 	experiment.init();
 	experiment.run();
 	experiment.close();

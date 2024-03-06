@@ -80,22 +80,28 @@ int DNFComposerHandler::getTargetObject() const
 	// Determine the closest target and return the corresponding value
 	const double minDistance = std::min({ distanceTo30, distanceTo60, distanceTo0 });
 
-	if (minDistance == distanceTo30) {
+	if (minDistance == distanceTo30)
 		return 1;
-	}
-	else if (minDistance == distanceTo60) {
-		return 1; // If 60 should return a different value, adjust this accordingly
-	}
-	else {
+	else if (minDistance == distanceTo60) 
+		return 2;
+	else 
 		return 3;
-	}
 }
 
+void DNFComposerHandler::removeTargetObject(int objectIndex) const
+{
+	auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
+	if(objectIndex == 2)
+		oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 2"));
+	else if(objectIndex == 3)
+		oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
+
+	const dnf_composer::element::GaussStimulusParameters new_params = { 1, 0, 0 };
+	oml_stimulus->setParameters(new_params);
+}
 
 void DNFComposerHandler::setupUserInterface() const
 {
-	//application->activateUserInterfaceWindow(experimentWindow);
-
 	using namespace dnf_composer;
 	element::ElementSpatialDimensionParameters dim_params{ 90, 1.0 };
 

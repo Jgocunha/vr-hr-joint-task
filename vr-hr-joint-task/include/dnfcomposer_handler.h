@@ -35,6 +35,7 @@ public:
 	void close();
 
 	int getTargetObject() const;
+	void removeTargetObject(int objectIndex) const;
 private:
 	void setupUserInterface() const;
 };

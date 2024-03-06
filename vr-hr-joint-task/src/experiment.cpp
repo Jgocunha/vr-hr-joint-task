@@ -83,10 +83,11 @@ void Experiment::pickAndPlaceObjects()
 	for (int i = 1; i <= 3; i++)
 	{
 		bool hasObjectBeenGrasped = coppeliasimHandler.getSignals().objectGrasped;
+		int targetObject = dnfcomposerHandler.getTargetObject();
 		while (!hasObjectBeenGrasped)
 		{
 			// Update the target object here
-			const int targetObject = dnfcomposerHandler.getTargetObject();
+			targetObject = dnfcomposerHandler.getTargetObject();
 			coppeliasimHandler.setSignal(SignalSignatures::TARGET_OBJECT, targetObject);
 
 			log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be grasped...\n");
@@ -94,6 +95,23 @@ void Experiment::pickAndPlaceObjects()
 			Sleep(commsFrequency);
 		}
 		coppeliasimHandler.setSignal(SignalSignatures::OBJECT_GRASPED, 0);
+
+		Sleep(commsFrequency);
+
+		// Update the remaining objects here
+		if (targetObject == 1)
+			coppeliasimHandler.setSignal(SignalSignatures::OBJECT1_EXISTS, 0);
+		else if (targetObject == 2)
+			coppeliasimHandler.setSignal(SignalSignatures::OBJECT2_EXISTS, 0);
+		else if (targetObject == 3)
+			coppeliasimHandler.setSignal(SignalSignatures::OBJECT3_EXISTS, 0);
+		dnfcomposerHandler.removeTargetObject(targetObject);
+
+
+		// Also update the target object here
+		targetObject = dnfcomposerHandler.getTargetObject();
+		coppeliasimHandler.setSignal(SignalSignatures::TARGET_OBJECT, targetObject);
+
 
 		bool hasObjectBeenPlaced = coppeliasimHandler.getSignals().objectPlaced;
 		while (!hasObjectBeenPlaced)
@@ -103,8 +121,6 @@ void Experiment::pickAndPlaceObjects()
 			Sleep(commsFrequency);
 		}
 		coppeliasimHandler.setSignal(SignalSignatures::OBJECT_PLACED, 0);
-
-		// Update the remaining objects here
 
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Object " + std::to_string(i) + " has been placed.\n");
 		// Make sure signals are reset

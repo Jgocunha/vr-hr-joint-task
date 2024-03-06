@@ -38,7 +38,6 @@ void CoppeliasimHandler::run()
 		}
 
 		resetSignals();
-		client.stopSimulation();
 		close();
 	}
 	catch (const std::exception& e)
