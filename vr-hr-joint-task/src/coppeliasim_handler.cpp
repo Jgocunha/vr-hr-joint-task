@@ -98,6 +98,9 @@ void CoppeliasimHandler::readSignals()
 	signals.object3 = client.getIntegerSignal(SignalSignatures::OBJECT3_EXISTS);
 	signals.objectGrasped = client.getIntegerSignal(SignalSignatures::OBJECT_GRASPED);
 	signals.objectPlaced = client.getIntegerSignal(SignalSignatures::OBJECT_PLACED);
+	signals.hand_x = client.getFloatSignal(SignalSignatures::HAND_X);
+	signals.hand_y = client.getFloatSignal(SignalSignatures::HAND_Y);
+	signals.hand_z = client.getFloatSignal(SignalSignatures::HAND_Z);
 }
 
 void CoppeliasimHandler::resetSignals() const
@@ -111,5 +114,8 @@ void CoppeliasimHandler::resetSignals() const
 	client.setIntegerSignal(SignalSignatures::OBJECT3_EXISTS, false);
 	client.setIntegerSignal(SignalSignatures::OBJECT_GRASPED, false);
 	client.setIntegerSignal(SignalSignatures::OBJECT_PLACED, false);
+	client.setFloatSignal(SignalSignatures::HAND_X, 0.0);
+	client.setFloatSignal(SignalSignatures::HAND_Y, 0.0);
+	client.setFloatSignal(SignalSignatures::HAND_Z, 0.0);
 }
 

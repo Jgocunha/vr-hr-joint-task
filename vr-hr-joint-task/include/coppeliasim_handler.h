@@ -22,6 +22,13 @@ struct SignalSignatures
 	static constexpr const char* OBJECT_GRASPED = "objectGrasped";
 
 	static constexpr const char* OBJECT_PLACED = "objectPlaced";
+
+	// There is a better way to do this using pack and unpack
+	// But changes to coppeliasim-cpp-client need to be made.
+	static constexpr const char* HAND_X = "hand_x";
+	static constexpr const char* HAND_Y = "hand_y";
+	static constexpr const char* HAND_Z = "hand_z";
+
 };
 
 struct Signals
@@ -38,6 +45,10 @@ struct Signals
 
 	bool objectGrasped = false;
 	bool objectPlaced = false;
+
+	float hand_x = 0.0;
+	float hand_y = 0.0;
+	float hand_z = 0.0;
 };
 
 class CoppeliasimHandler

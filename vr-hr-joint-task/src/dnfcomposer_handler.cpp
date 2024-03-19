@@ -59,6 +59,16 @@ void DNFComposerHandler::close()
 }
 
 
+void DNFComposerHandler::setHandStimulus(const std::array<double, 3>& handPosition)
+{
+	// auto aol_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
+	
+	// const std::array<double, 3> objectPosition {0.0, 0.0, 0.70607};
+	// const double amplitude = calculateCloseness(handPosition, objectPosition);
+	// const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, amplitude, 50};
+	// aol_stimulus->setParameters(new_params);
+}
+
 int DNFComposerHandler::getTargetObject() const
 {
 	const auto ael = std::dynamic_pointer_cast<dnf_composer::element::NeuralField>(simulation->getElement("ael"));
@@ -152,3 +162,10 @@ void DNFComposerHandler::setupUserInterface() const
 	application->activateUserInterfaceWindow(aelPlotWindow);
 }
 
+// double DNFComposerHandler::calculateCloseness(const std::array<double, 3>& point1, const std::array<double, 3>& point2)
+// {
+// 	//const double dx = point2[0] - point1[0];
+// 	const double dy = point2[1] - point1[1];
+// 	const double dz = point2[2] - point1[2];
+// 	return sqrt(dy * dy + dz * dz);
+// }

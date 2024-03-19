@@ -33,9 +33,10 @@ public:
 	void init();
 	void run();
 	void close();
-
+	void setHandStimulus(const std::array<double, 3>& handPosition);
 	int getTargetObject() const;
 	void removeTargetObject(int objectIndex) const;
 private:
 	void setupUserInterface() const;
+	//double calculateCloseness(const std::array<double, 3>& point1, const std::array<double, 3>& point2);
 };

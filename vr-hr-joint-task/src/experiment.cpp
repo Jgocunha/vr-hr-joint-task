@@ -86,7 +86,10 @@ void Experiment::pickAndPlaceObjects()
 		int targetObject = dnfcomposerHandler.getTargetObject();
 		while (!hasObjectBeenGrasped)
 		{
-			// Update the target object here
+			// const std::array<double, 3> pos = {coppeliasimHandler.getSignals().hand_x, 
+			// 									coppeliasimHandler.getSignals().hand_y,
+			// 									coppeliasimHandler.getSignals().hand_z};
+			//dnfcomposerHandler.setHandStimulus(pos);
 			targetObject = dnfcomposerHandler.getTargetObject();
 			coppeliasimHandler.setSignal(SignalSignatures::TARGET_OBJECT, targetObject);
 
