@@ -101,6 +101,10 @@ void CoppeliasimHandler::readSignals()
 	signals.hand_x = client.getFloatSignal(SignalSignatures::HAND_X);
 	signals.hand_y = client.getFloatSignal(SignalSignatures::HAND_Y);
 	signals.hand_z = client.getFloatSignal(SignalSignatures::HAND_Z);
+
+	std::cout << "Position x=" << signals.hand_x <<
+		" y=" << signals.hand_y <<
+		" z=" << signals.hand_z << std::endl;
 }
 
 void CoppeliasimHandler::resetSignals() const
