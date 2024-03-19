@@ -6,6 +6,7 @@
 
 #include "experiment_window.h"
 #include "dnf_architecture.h"
+#include "misc.h"
 
 
 struct SimulationParameters
@@ -33,9 +34,11 @@ public:
 	void init();
 	void run();
 	void close();
-	void setHandStimulus(const std::array<double, 3>& handPosition);
+	void setHandStimulus(const Position& handPosition);
 	int getTargetObject() const;
 	void removeTargetObject(int objectIndex) const;
 private:
 	void setupUserInterface() const;
+	double calculateDistanceToObjects(const Position& handPosition);
+	double calculateClosenessToObjects(double distance, double safeZone = 0.01);
 };

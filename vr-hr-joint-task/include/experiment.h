@@ -2,6 +2,7 @@
 
 #include "coppeliasim_handler.h"
 #include "dnfcomposer_handler.h"
+#include "misc.h"
 
 class Experiment
 {
@@ -9,6 +10,8 @@ private:
 	CoppeliasimHandler coppeliasimHandler;
 	DNFComposerHandler dnfcomposerHandler;
 	int commsFrequency;
+	std::thread signalsThread;
+	bool finished;
 public:
 	Experiment(std::string name, int commsFreq, double deltaT);
 	~Experiment();
@@ -22,4 +25,6 @@ private:
 	void waitForSimulationStart();
 	void waitForObjectsToBeCreated() const;
 	void pickAndPlaceObjects();
+	void setHandStimulus();
+	void updateSignals();
 };

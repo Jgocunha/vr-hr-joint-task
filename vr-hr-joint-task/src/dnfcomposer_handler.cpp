@@ -59,14 +59,12 @@ void DNFComposerHandler::close()
 }
 
 
-void DNFComposerHandler::setHandStimulus(const std::array<double, 3>& handPosition)
+void DNFComposerHandler::setHandStimulus(const Position& handPosition)
 {
-	// auto aol_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
-	
-	// const std::array<double, 3> objectPosition {0.0, 0.0, 0.70607};
-	// const double amplitude = calculateCloseness(handPosition, objectPosition);
-	// const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, amplitude, 50};
-	// aol_stimulus->setParameters(new_params);
+	auto aol_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
+	const double amplitude = calculateClosenessToObjects(calculateDistanceToObjects(handPosition));
+	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, amplitude, 50};
+	aol_stimulus->setParameters(new_params);
 }
 
 int DNFComposerHandler::getTargetObject() const
@@ -162,10 +160,30 @@ void DNFComposerHandler::setupUserInterface() const
 	application->activateUserInterfaceWindow(aelPlotWindow);
 }
 
-// double DNFComposerHandler::calculateCloseness(const std::array<double, 3>& point1, const std::array<double, 3>& point2)
-// {
-// 	//const double dx = point2[0] - point1[0];
-// 	const double dy = point2[1] - point1[1];
-// 	const double dz = point2[2] - point1[2];
-// 	return sqrt(dy * dy + dz * dz);
-// }
+// Function to calculate the distance of the hand to the middle line of the table
+ double DNFComposerHandler::calculateDistanceToObjects(const Position& handPosition)
+ {
+ 	// Table center and dimensions
+	 const double tableCenterY = -0.15 + 0.4; // there is an offset determined by the vr setup
+	 const double tableCenterZ = 0.631 + 0.15;
+
+	 // Calculate the distance in the Y dimension (X is Y in vr - different reference)
+	 const double distanceY = std::abs(handPosition.x - tableCenterY);
+	 // Calculate the distance in the Z dimension
+	 const double distanceZ = std::abs(handPosition.z - tableCenterZ);
+	 // Calculate the total distance (Euclidean distance in Y-Z plane)
+	 const double distance = std::sqrt(distanceY * distanceY + distanceZ * distanceZ);
+	 //const double distance = std::sqrt(distanceZ * distanceZ);// + distanceZ * distanceZ);
+
+
+	 return distance;
+ }
+
+ // Function to invert the distance to represent the closeness
+ double DNFComposerHandler::calculateClosenessToObjects(double distance, double safeZone)
+ {
+	 // Ensure distance is always greater than zero to avoid division by zero
+	 distance = std::max(distance, safeZone);
+	 // Invert the distance
+	 return 1.0 / distance;
+ }

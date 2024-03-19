@@ -3,7 +3,9 @@
 
 Experiment::Experiment(std::string name, int commsFreq, double deltaT)
 		: coppeliasimHandler(), dnfcomposerHandler({ std::move(name), deltaT }), commsFrequency(commsFreq)
-{ }
+{
+	finished = false;
+}
 
 Experiment::~Experiment()
 {
@@ -18,6 +20,7 @@ void Experiment::init()
 
 void Experiment::run()
 {
+	signalsThread = std::thread(&Experiment::updateSignals, this);
 	main();
 }
 
@@ -90,7 +93,7 @@ void Experiment::pickAndPlaceObjects()
 			coppeliasimHandler.setSignal(SignalSignatures::TARGET_OBJECT, targetObject);
 
 			log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be grasped...\n");
-			hasObjectBeenGrasped = coppeliasimHandler.getSignals().objectGrasped;
+			//hasObjectBeenGrasped = coppeliasimHandler.getSignals().objectGrasped;
 			Sleep(commsFrequency);
 		}
 		coppeliasimHandler.setSignal(SignalSignatures::OBJECT_GRASPED, 0);
@@ -124,5 +127,25 @@ void Experiment::pickAndPlaceObjects()
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Object " + std::to_string(i) + " has been placed.\n");
 		// Make sure signals are reset
 		Sleep(commsFrequency);
+	}
+	finished = true;
+}
+
+
+void Experiment::setHandStimulus()
+{
+	const Position handPosition{ coppeliasimHandler.getSignals().hand_x, coppeliasimHandler.getSignals().hand_y, coppeliasimHandler.getSignals().hand_z };
+	dnfcomposerHandler.setHandStimulus(handPosition);
+}
+
+void Experiment::updateSignals()
+{
+	while (!finished)
+	{
+		// Update hand position
+		setHandStimulus();
+		// Update object existence
+		// Update target object
+		Sleep(1);
 	}
 }
