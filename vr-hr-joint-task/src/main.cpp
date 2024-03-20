@@ -9,7 +9,7 @@
 
 int main(int argc, char* argv[])
 {
-	constexpr int commsFrequency = 500;
+	constexpr int commsFrequency = 200;
 	constexpr double deltaT = 10;
 	const std::string experimentName = "experiment";
 

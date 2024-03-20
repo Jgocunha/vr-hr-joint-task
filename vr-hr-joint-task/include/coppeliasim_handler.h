@@ -23,12 +23,6 @@ struct SignalSignatures
 
 	static constexpr const char* OBJECT_PLACED = "objectPlaced";
 
-	//// There is a better way to do this using pack and unpack
-	//// But changes to coppeliasim-cpp-client need to be made.
-	//static constexpr const char* HAND_X = "hand_x";
-	//static constexpr const char* HAND_Y = "hand_y";
-	//static constexpr const char* HAND_Z = "hand_z";
-
 };
 
 struct Signals
@@ -47,12 +41,9 @@ struct Signals
 	bool objectPlaced = false;
 };
 
-struct SimulationData
+struct Data
 {
 	coppeliasim_cpp::Position handPosition;
-	coppeliasim_cpp::Position object1Position;
-	coppeliasim_cpp::Position object2Position;
-	coppeliasim_cpp::Position object3Position;
 };
 
 class CoppeliasimHandler
@@ -61,7 +52,7 @@ private:
 	std::thread coppeliasimThread;
 	coppeliasim_cpp::CoppeliaSimClient client;
 	Signals signals;
-	SimulationData data;
+	Data data;
 	bool wereSignalsChanged = false;
 public:
 	CoppeliasimHandler();
@@ -71,10 +62,12 @@ public:
 	void run();
 	void close();
 
+	bool hasSignalMajorityValue(const std::string& signalName, int requiredValue, int sampleSize) const;
+
 	void setSignal(const std::string& signalName, const int signalValue);
 	void setSignals(const Signals& sign);
 	Signals getSignals() const;
-	SimulationData getSimulationData() const;
+	Data getSimulationData() const;
 	bool isConnected() const;
 
 	void resetSignals() const;

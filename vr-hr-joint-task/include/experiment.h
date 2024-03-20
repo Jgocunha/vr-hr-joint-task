@@ -11,7 +11,7 @@ private:
 	DNFComposerHandler dnfcomposerHandler;
 	int commsFrequency;
 	std::thread signalsThread;
-	bool finished;
+	//bool areThereObjectsRemaining;
 public:
 	Experiment(std::string name, int commsFreq, double deltaT);
 	~Experiment();
@@ -25,9 +25,11 @@ private:
 	void waitForSimulationStart();
 	void waitForObjectsToBeCreated() const;
 	void pickAndPlaceObjects();
+
 	void updateHandPosition() const;
 	void updateAvailableObjects();
 	void updateTargetObject();
 	void updateSignals();
-	static bool isObjectInWorkspace(const coppeliasim_cpp::Position& position);
+
+	bool areObjectsPresent() const;
 };

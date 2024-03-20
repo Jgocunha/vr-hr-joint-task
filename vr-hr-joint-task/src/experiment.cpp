@@ -3,9 +3,7 @@
 
 Experiment::Experiment(std::string name, int commsFreq, double deltaT)
 		: coppeliasimHandler(), dnfcomposerHandler({ std::move(name), deltaT }), commsFrequency(commsFreq)
-{
-	finished = false;
-}
+{}
 
 Experiment::~Experiment()
 {
@@ -20,11 +18,13 @@ void Experiment::init()
 
 void Experiment::run()
 {
+	signalsThread = std::thread(&Experiment::updateSignals, this);
 	main();
 }
 
 void Experiment::close()
 {
+	signalsThread.join();
 	coppeliasimHandler.close();
 	dnfcomposerHandler.close();
 }
@@ -34,7 +34,6 @@ void Experiment::main()
 	waitForConnection();
 	waitForSimulationStart();
 	waitForObjectsToBeCreated();
-	signalsThread = std::thread(&Experiment::updateSignals, this);
 	pickAndPlaceObjects();
 }
 
@@ -63,13 +62,13 @@ void Experiment::waitForSimulationStart()
 
 void Experiment::waitForObjectsToBeCreated() const
 {
-	bool haveObjectBeenCreated = coppeliasimHandler.getSignals().objectsCreated;
+	/*bool haveObjectBeenCreated = coppeliasimHandler.getSignals().objectsCreated;
 	while (!haveObjectBeenCreated)
 	{
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for objects to be created...\n");
 		haveObjectBeenCreated = coppeliasimHandler.getSignals().objectsCreated;
 		Sleep(commsFrequency);
-	}
+	}*/
 
 	std::tuple<int, int, int> objectPositions = { coppeliasimHandler.getSignals().object1, coppeliasimHandler.getSignals().object2, coppeliasimHandler.getSignals().object3 };
 	while (std::get<0>(objectPositions) == 0 || std::get<1>(objectPositions) == 0 || std::get<2>(objectPositions) == 0)
@@ -79,14 +78,15 @@ void Experiment::waitForObjectsToBeCreated() const
 		Sleep(commsFrequency);
 	}
 
+	log(dnf_composer::tools::logger::LogLevel::INFO, "Pick and place will now start...\n");
 }
 
 void Experiment::pickAndPlaceObjects()
 {
 
-	for (int i = 1; i <= 3; i++)
+	while(areObjectsPresent())
 	{
-		bool hasObjectBeenGrasped = coppeliasimHandler.getSignals().objectGrasped;
+		bool hasObjectBeenGrasped = false;
 		while (!hasObjectBeenGrasped)
 		{
 			log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be grasped...\n");
@@ -97,8 +97,7 @@ void Experiment::pickAndPlaceObjects()
 
 		Sleep(commsFrequency);
 
-
-		bool hasObjectBeenPlaced = coppeliasimHandler.getSignals().objectPlaced;
+		bool hasObjectBeenPlaced = false;
 		while (!hasObjectBeenPlaced)
 		{
 			log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be placed...\n");
@@ -106,101 +105,169 @@ void Experiment::pickAndPlaceObjects()
 			Sleep(commsFrequency);
 		}
 		coppeliasimHandler.setSignal(SignalSignatures::OBJECT_PLACED, 0);
+		//updateAvailableObjects();
+		//Sleep(commsFrequency);
+		//updateAvailableObjects();
+		//Sleep(commsFrequency);
+		//updateAvailableObjects();
+		//Sleep(commsFrequency);
+		//updateAvailableObjects();
+		//Sleep(commsFrequency);
+		//updateAvailableObjects();
 
-		log(dnf_composer::tools::logger::LogLevel::INFO, "Object " + std::to_string(i) + " has been placed.\n");
+		log(dnf_composer::tools::logger::LogLevel::INFO, "Object has been placed.\n");
 		// Make sure signals are reset
 		Sleep(commsFrequency);
 	}
-	finished = true;
 }
 
 
 void Experiment::updateHandPosition() const
 {
+	static coppeliasim_cpp::Position lastHandPosition = coppeliasimHandler.getSimulationData().handPosition;
+	// Get the current hand position from CoppeliaSim
 	coppeliasim_cpp::Position handPosition = coppeliasimHandler.getSimulationData().handPosition;
-	dnfcomposerHandler.setHandStimulus({handPosition.x, handPosition.y, handPosition.z});
+
+	// Define a threshold for position change
+	constexpr double positionChangeThreshold = 0.9; // You can adjust this threshold based on your application's requirements
+
+	// Calculate the difference between the current hand position and the previous hand position across all dimensions
+	double positionDifference = std::sqrt(std::pow(handPosition.x - lastHandPosition.x, 2) +
+		std::pow(handPosition.y - lastHandPosition.y, 2) +
+		std::pow(handPosition.z - lastHandPosition.z, 2));
+
+	// Check if the position difference exceeds the threshold
+	if (positionDifference > positionChangeThreshold)
+	{
+		// If the difference is too large, discard the new hand position and use the previous one
+		dnfcomposerHandler.setHandStimulus({ lastHandPosition.x, lastHandPosition.y, lastHandPosition.z });
+	}
+	else
+	{
+		// If the difference is within the threshold, use the new hand position
+		dnfcomposerHandler.setHandStimulus({ handPosition.x, handPosition.y, handPosition.z });
+
+		// Update the last hand position for future comparison
+		lastHandPosition = handPosition;
+	}
 }
+
+//void Experiment::updateHandPosition() const
+//{
+//	static coppeliasim_cpp::Position lastHandPosition = coppeliasimHandler.getSimulationData().handPosition;
+//
+//	// Define a threshold for position change
+//	constexpr double positionChangeThreshold = 0.9; // You can adjust this threshold based on your application's requirements
+//
+//	// Get the current hand position from CoppeliaSim
+//	coppeliasim_cpp::Position handPosition = coppeliasimHandler.getSimulationData().handPosition;
+//
+//	// Calculate the difference between the current hand position and the previous hand position across all dimensions
+//	double positionDifference = std::sqrt(std::pow(handPosition.x - lastHandPosition.x, 2) +
+//		std::pow(handPosition.y - lastHandPosition.y, 2) +
+//		std::pow(handPosition.z - lastHandPosition.z, 2));
+//
+//	// Check if the position difference exceeds the threshold
+//	if (positionDifference > positionChangeThreshold)
+//	{
+//		// If the difference is too large, reset the last hand position to the current hand position
+//		lastHandPosition = handPosition;
+//	}
+//	else
+//	{
+//		// If the difference is within the threshold, use the new hand position
+//		dnfcomposerHandler.setHandStimulus({ handPosition.x, handPosition.y, handPosition.z });
+//	}
+//}
 
 void Experiment::updateAvailableObjects()
 {
-	const coppeliasim_cpp::Position object1Position = coppeliasimHandler.getSimulationData().object1Position;
-	const coppeliasim_cpp::Position object2Position = coppeliasimHandler.getSimulationData().object2Position;
-	const coppeliasim_cpp::Position object3Position = coppeliasimHandler.getSimulationData().object3Position;
+	const int sampleSize = 5; // Number of reads to determine the majority
 
-	// this needs to die quickly ugghhh
-
-	if (!isObjectInWorkspace(object1Position))
+	// Object 1
+	if (coppeliasimHandler.hasSignalMajorityValue(SignalSignatures::OBJECT1_EXISTS, 0, sampleSize))
 	{
-		coppeliasimHandler.setSignal(SignalSignatures::OBJECT1_EXISTS, 0);
 		dnfcomposerHandler.removeTargetObject(1);
 	}
-	else
+	else if (coppeliasimHandler.hasSignalMajorityValue(SignalSignatures::OBJECT1_EXISTS, 1, sampleSize))
 	{
-		coppeliasimHandler.setSignal(SignalSignatures::OBJECT1_EXISTS, 1);
 		dnfcomposerHandler.addTargetObject(1);
 	}
 
-	if (!isObjectInWorkspace(object2Position))
+	// Object 2
+	if (coppeliasimHandler.hasSignalMajorityValue(SignalSignatures::OBJECT2_EXISTS, 0, sampleSize))
 	{
-		coppeliasimHandler.setSignal(SignalSignatures::OBJECT2_EXISTS, 0);
 		dnfcomposerHandler.removeTargetObject(2);
 	}
-	else
+	else if (coppeliasimHandler.hasSignalMajorityValue(SignalSignatures::OBJECT2_EXISTS, 1, sampleSize))
 	{
-		coppeliasimHandler.setSignal(SignalSignatures::OBJECT2_EXISTS, 1);
 		dnfcomposerHandler.addTargetObject(2);
 	}
 
-	if (!isObjectInWorkspace(object3Position))
+	// Object 3
+	if (coppeliasimHandler.hasSignalMajorityValue(SignalSignatures::OBJECT3_EXISTS, 0, sampleSize))
 	{
-		coppeliasimHandler.setSignal(SignalSignatures::OBJECT3_EXISTS, 0);
 		dnfcomposerHandler.removeTargetObject(3);
 	}
-	else
+	else if (coppeliasimHandler.hasSignalMajorityValue(SignalSignatures::OBJECT3_EXISTS, 1, sampleSize))
 	{
-		coppeliasimHandler.setSignal(SignalSignatures::OBJECT3_EXISTS, 1);
 		dnfcomposerHandler.addTargetObject(3);
 	}
 }
 
+
+//void Experiment::updateAvailableObjects()
+//{
+//	// not stable and not clean
+//	// but kinda working
+//	if (!coppeliasimHandler.getSignals().object1)
+//	{
+//		dnfcomposerHandler.removeTargetObject(1);
+//	}
+//	else
+//	{
+//		dnfcomposerHandler.addTargetObject(1);
+//	}
+//
+//	if (!coppeliasimHandler.getSignals().object2)
+//	{
+//		dnfcomposerHandler.removeTargetObject(2);
+//	}
+//	else
+//	{
+//		dnfcomposerHandler.addTargetObject(2);
+//	}
+//
+//	if (!coppeliasimHandler.getSignals().object3)
+//	{
+//		dnfcomposerHandler.removeTargetObject(3);
+//	}
+//	else
+//	{
+//		dnfcomposerHandler.addTargetObject(3);
+//	}
+//}
+
 void Experiment::updateTargetObject()
 {
-	const int targetObject = dnfcomposerHandler.getTargetObject();
-	coppeliasimHandler.setSignal(SignalSignatures::TARGET_OBJECT, targetObject);
+	coppeliasimHandler.setSignal(SignalSignatures::TARGET_OBJECT, dnfcomposerHandler.getTargetObject());
 }
-
 
 void Experiment::updateSignals()
 {
-	while (!finished)
+	while (areObjectsPresent())
 	{
 		updateHandPosition();
 		updateAvailableObjects();
 		updateTargetObject();
-		Sleep(1);
+		Sleep(10);
 	}
 }
 
-bool Experiment::isObjectInWorkspace(const coppeliasim_cpp::Position& position)
+bool Experiment::areObjectsPresent() const
 {
-	log(dnf_composer::tools::logger::LogLevel::DEBUG, "Checking if object is in workspace...\n");
-	log(dnf_composer::tools::logger::LogLevel::DEBUG, "Object position: " + std::to_string(position.x) + ", " + std::to_string(position.y) + ", " + std::to_string(position.z) + '\n');
-
-	if(position.z < 0.65)
-	{
-		log(dnf_composer::tools::logger::LogLevel::FATAL, "Object is not in workspace.\n");
-		return true;
-	}
-
-	// Define workspace bounds
-	constexpr double min_x = 0.55; // Minimum x-coordinate
-	constexpr double max_x = 0.65;  // Maximum x-coordinate
-	constexpr double min_y = -0.4; // Minimum y-coordinate
-	constexpr double max_y = 0.1;  // Maximum y-coordinate
-	constexpr double min_z = 0.65;  // Minimum z-coordinate
-	constexpr double max_z = 0.75;  // Maximum z-coordinate
-
-	return position.x >= min_x && position.x <= max_x &&
-		position.y >= min_y && position.y <= max_y &&
-		position.z >= min_z && position.z <= max_z;
+	auto signals = coppeliasimHandler.getSignals();
+	bool isPresent = signals.object1 != 0 || signals.object2 != 0 || signals.object3 != 0;
+	return isPresent;
 }
+

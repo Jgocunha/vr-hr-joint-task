@@ -58,7 +58,8 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitecture(cons
 	simulation->createInteraction("aol -> asl", "output", "asl");
 
 	// Object memory layer
-	element::GaussStimulusParameters oml_gsp = { 3, 5, 0 };
+	//element::GaussStimulusParameters oml_gsp = { 3, 5, 0 };
+	element::GaussStimulusParameters oml_gsp = { 3, 5, 60 };
 	const auto oml_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS, { "object stimulus 1", dim_params }, { oml_gsp });
 	simulation->addElement(oml_stimulus_1);
 
@@ -66,7 +67,7 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitecture(cons
 	const auto oml_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS, { "object stimulus 2", dim_params }, { oml_gsp });
 	simulation->addElement(oml_stimulus_2);
 
-	oml_gsp = { 3, 5, 60 };
+	oml_gsp = { 3, 5, 0 };
 	const auto oml_stimulus_3 = factory.createElement(element::GAUSS_STIMULUS, { "object stimulus 3", dim_params }, { oml_gsp });
 	simulation->addElement(oml_stimulus_3);
 

@@ -31,6 +31,7 @@ void DNFComposerHandler::run()
 		{
 			application->step();
 			userRequestClose = application->getCloseUI();
+			Sleep(2);
 		}
 		application->close();
 	}
@@ -59,15 +60,42 @@ void DNFComposerHandler::close()
 }
 
 
+//void DNFComposerHandler::setHandStimulus(const Position& handPosition) const
+//{
+//	const auto aol_stimulus = 
+//		std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
+//	const double amplitude = calculateClosenessToObjects(calculateDistanceToObjects(handPosition));
+//	const double position = normalizeHandPosition(handPosition.y);
+//	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, amplitude, position};
+//	aol_stimulus->setParameters(new_params);
+//}
+
 void DNFComposerHandler::setHandStimulus(const Position& handPosition) const
 {
-	const auto aol_stimulus = 
-		std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
+	const auto aol_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(
+		simulation->getElement("hand position stimulus"));
+
+	// Constants for exponential smoothing
+	constexpr double smoothing_factor = 0.2; // You can adjust this value based on the desired smoothing effect
+
+	// Calculate the amplitude and position based on the hand position
 	const double amplitude = calculateClosenessToObjects(calculateDistanceToObjects(handPosition));
 	const double position = normalizeHandPosition(handPosition.y);
-	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, amplitude, position};
+
+	// Exponential smoothing for amplitude and position
+	static double smoothed_amplitude = amplitude;
+	static double smoothed_position = position;
+
+	// Apply exponential smoothing
+	smoothed_amplitude = (1.0 - smoothing_factor) * smoothed_amplitude + smoothing_factor * amplitude;
+	smoothed_position = (1.0 - smoothing_factor) * smoothed_position + smoothing_factor * position;
+
+	// Set the smoothed parameters to the stimulus
+	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus->getParameters().sigma, smoothed_amplitude, smoothed_position };
 	aol_stimulus->setParameters(new_params);
 }
+
+
 
 int DNFComposerHandler::getTargetObject() const
 {
@@ -90,11 +118,12 @@ int DNFComposerHandler::getTargetObject() const
 	// Determine the closest target and return the corresponding value
 	const double minDistance = std::min({ distanceTo30, distanceTo60, distanceTo0 });
 
+	// 0 - 3 // 30 - 2 // 60 - 1
 	if (minDistance == distanceTo30)
 		return 2;
 	if (minDistance == distanceTo60) 
-		return 3;
-	return 1;
+		return 1;
+	return 3;
 }
 
 void DNFComposerHandler::addTargetObject(int objectIndex) const
@@ -102,7 +131,7 @@ void DNFComposerHandler::addTargetObject(int objectIndex) const
 	if(objectIndex == 1)
 	{
 		auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
-		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 0 };
+		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 60 };
 		oml_stimulus->setParameters(new_params);
 	}
 	if (objectIndex == 2)
@@ -114,7 +143,7 @@ void DNFComposerHandler::addTargetObject(int objectIndex) const
 	if(objectIndex == 3)
 	{
 		auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
-		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 60 };
+		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 0 };
 		oml_stimulus->setParameters(new_params);
 	}
 }
@@ -188,7 +217,7 @@ void DNFComposerHandler::setupUserInterface() const
  {
  	// Table center and dimensions
 	constexpr double tableCenterX = 0.6;
-	constexpr double tableCenterZ = 0.631 + 0.15;
+	constexpr double tableCenterZ = 0.631 + 0.1;
 
 	// Calculate the distance in the X dimension
 	const double distanceX = std::abs(handPosition.x - tableCenterX);

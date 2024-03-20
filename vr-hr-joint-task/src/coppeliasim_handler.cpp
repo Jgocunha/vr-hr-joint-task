@@ -31,8 +31,8 @@ void CoppeliasimHandler::run()
 
 		while (isConnected())
 		{
-			if (wereSignalsChanged)
-				writeSignals();
+			//if (wereSignalsChanged)
+				//writeSignals();
 			readSignals();
 			updateData();
 			Sleep(10);
@@ -62,7 +62,7 @@ void CoppeliasimHandler::close()
 void CoppeliasimHandler::setSignal(const std::string& signalName, const int signalValue)
 {
 	client.setIntegerSignal(signalName, signalValue);
-	log(dnf_composer::tools::logger::LogLevel::INFO, "Signal " + signalName + " was written as " + std::to_string(signalValue) + '\n');
+	//log(dnf_composer::tools::logger::LogLevel::INFO, "Signal " + signalName + " was written as " + std::to_string(signalValue) + '\n');
 	//wereSignalsChanged = true;
 }
 
@@ -77,7 +77,7 @@ Signals CoppeliasimHandler::getSignals() const
 	return signals;
 }
 
-SimulationData CoppeliasimHandler::getSimulationData() const
+Data CoppeliasimHandler::getSimulationData() const
 {
 	return data;
 }
@@ -105,16 +105,56 @@ void CoppeliasimHandler::readSignals()
 	signals.objectPlaced = client.getIntegerSignal(SignalSignatures::OBJECT_PLACED);
 }
 
+//void CoppeliasimHandler::readSignals()
+//{
+//	// Define how many times to retry reading and the delay between retries (in milliseconds)
+//	const int retryCount = 5;
+//	const int retryDelayMs = 3;
+//
+//	// Temporary variables to store signal values during confirmation process
+//	int tempSimStarted, tempObjectsCreated, tempObject1, tempObject2, tempObject3, tempObjectGrasped, tempObjectPlaced;
+//
+//	// A lambda function to read a signal multiple times and check for consistency
+//	auto readSignalWithConfirmation = [this, retryCount, retryDelayMs](const std::string& signalName) -> int {
+//		int lastValue = client.getIntegerSignal(signalName);
+//		bool valueConfirmed = false;
+//
+//		for (int i = 1; i < retryCount; ++i) {
+//			Sleep(retryDelayMs); // Wait a bit before the next read
+//			int newValue = client.getIntegerSignal(signalName);
+//			if (newValue == lastValue) {
+//				valueConfirmed = true;
+//				break; // The value is consistent, proceed
+//			}
+//			lastValue = newValue; // Update the last value for the next iteration
+//		}
+//
+//		if (valueConfirmed) {
+//			return lastValue; // Return the confirmed value
+//		}
+//		else {
+//			// Handle the case where values were not consistent
+//			// For now, we return the last read value, but you might want to handle this differently
+//			return lastValue;
+//		}
+//	};
+//
+//	// Use the lambda function to read and confirm each signal
+//	signals.simStarted = readSignalWithConfirmation(SignalSignatures::SIM_STARTED);
+//	signals.objectsCreated = readSignalWithConfirmation(SignalSignatures::OBJECTS_CREATED);
+//	signals.object1 = readSignalWithConfirmation(SignalSignatures::OBJECT1_EXISTS);
+//	signals.object2 = readSignalWithConfirmation(SignalSignatures::OBJECT2_EXISTS);
+//	signals.object3 = readSignalWithConfirmation(SignalSignatures::OBJECT3_EXISTS);
+//	signals.objectGrasped = readSignalWithConfirmation(SignalSignatures::OBJECT_GRASPED);
+//	signals.objectPlaced = readSignalWithConfirmation(SignalSignatures::OBJECT_PLACED);
+//}
+
+
+
 void CoppeliasimHandler::updateData()
 {
-	const int object1Handle = client.getObjectHandle("object_1");
-	data.object1Position = client.getObjectPosition(object1Handle);
-	const int object2Handle = client.getObjectHandle("object_2");
-	data.object2Position = client.getObjectPosition(object2Handle);
-	const int object3Handle = client.getObjectHandle("object_3");
-	data.object3Position = client.getObjectPosition(object3Handle);
-	//const int handHandle = client.getObjectHandle("RightController");
-	//data.handPosition = client.getObjectPosition(handHandle);
+	const int handHandle = client.getObjectHandle("RightController");
+	data.handPosition = client.getObjectPosition(handHandle);
 }
 
 void CoppeliasimHandler::resetSignals() const
@@ -128,5 +168,20 @@ void CoppeliasimHandler::resetSignals() const
 	client.setIntegerSignal(SignalSignatures::OBJECT3_EXISTS, false);
 	client.setIntegerSignal(SignalSignatures::OBJECT_GRASPED, false);
 	client.setIntegerSignal(SignalSignatures::OBJECT_PLACED, false);
+}
+
+bool CoppeliasimHandler::hasSignalMajorityValue(const std::string& signalName, int requiredValue, int sampleSize) const
+{
+	int count = 0;
+	for (int i = 0; i < sampleSize; ++i)
+	{
+		int signalValue = client.getIntegerSignal(signalName);
+		if (signalValue == requiredValue)
+		{
+			++count;
+		}
+	}
+	// Check if the majority of the samples have the required value
+	return count > sampleSize / 2;
 }
 
