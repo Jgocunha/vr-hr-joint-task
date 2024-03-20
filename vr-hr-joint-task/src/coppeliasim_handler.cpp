@@ -34,6 +34,7 @@ void CoppeliasimHandler::run()
 			if (wereSignalsChanged)
 				writeSignals();
 			readSignals();
+			updateData();
 			Sleep(10);
 		}
 
@@ -76,6 +77,11 @@ Signals CoppeliasimHandler::getSignals() const
 	return signals;
 }
 
+SimulationData CoppeliasimHandler::getSimulationData() const
+{
+	return data;
+}
+
 bool CoppeliasimHandler::isConnected() const
 {
 	return client.isConnected();
@@ -84,7 +90,6 @@ bool CoppeliasimHandler::isConnected() const
 void CoppeliasimHandler::writeSignals()
 {
 	client.setIntegerSignal(SignalSignatures::START_SIM, signals.startSim);
-	//client.setIntegerSignal(SignalSignatures::TARGET_OBJECT, signals.targetObject);
 
 	wereSignalsChanged = false;
 }
@@ -98,13 +103,18 @@ void CoppeliasimHandler::readSignals()
 	signals.object3 = client.getIntegerSignal(SignalSignatures::OBJECT3_EXISTS);
 	signals.objectGrasped = client.getIntegerSignal(SignalSignatures::OBJECT_GRASPED);
 	signals.objectPlaced = client.getIntegerSignal(SignalSignatures::OBJECT_PLACED);
-	signals.hand_x = client.getFloatSignal(SignalSignatures::HAND_X);
-	signals.hand_y = client.getFloatSignal(SignalSignatures::HAND_Y);
-	signals.hand_z = client.getFloatSignal(SignalSignatures::HAND_Z);
+}
 
-	std::cout << "Position x=" << signals.hand_x <<
-		" y=" << signals.hand_y <<
-		" z=" << signals.hand_z << std::endl;
+void CoppeliasimHandler::updateData()
+{
+	const int object1Handle = client.getObjectHandle("object_1");
+	data.object1Position = client.getObjectPosition(object1Handle);
+	const int object2Handle = client.getObjectHandle("object_2");
+	data.object2Position = client.getObjectPosition(object2Handle);
+	const int object3Handle = client.getObjectHandle("object_3");
+	data.object3Position = client.getObjectPosition(object3Handle);
+	//const int handHandle = client.getObjectHandle("RightController");
+	//data.handPosition = client.getObjectPosition(handHandle);
 }
 
 void CoppeliasimHandler::resetSignals() const
@@ -118,8 +128,5 @@ void CoppeliasimHandler::resetSignals() const
 	client.setIntegerSignal(SignalSignatures::OBJECT3_EXISTS, false);
 	client.setIntegerSignal(SignalSignatures::OBJECT_GRASPED, false);
 	client.setIntegerSignal(SignalSignatures::OBJECT_PLACED, false);
-	client.setFloatSignal(SignalSignatures::HAND_X, 0.0);
-	client.setFloatSignal(SignalSignatures::HAND_Y, 0.0);
-	client.setFloatSignal(SignalSignatures::HAND_Z, 0.0);
 }
 

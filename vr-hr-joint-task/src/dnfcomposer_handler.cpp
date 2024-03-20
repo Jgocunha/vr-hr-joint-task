@@ -59,11 +59,13 @@ void DNFComposerHandler::close()
 }
 
 
-void DNFComposerHandler::setHandStimulus(const Position& handPosition)
+void DNFComposerHandler::setHandStimulus(const Position& handPosition) const
 {
-	auto aol_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
+	const auto aol_stimulus = 
+		std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
 	const double amplitude = calculateClosenessToObjects(calculateDistanceToObjects(handPosition));
-	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, amplitude, 50};
+	const double position = normalizeHandPosition(handPosition.y);
+	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, amplitude, position};
 	aol_stimulus->setParameters(new_params);
 }
 
@@ -90,10 +92,31 @@ int DNFComposerHandler::getTargetObject() const
 
 	if (minDistance == distanceTo30)
 		return 2;
-	else if (minDistance == distanceTo60) 
+	if (minDistance == distanceTo60) 
 		return 3;
-	else 
-		return 1;
+	return 1;
+}
+
+void DNFComposerHandler::addTargetObject(int objectIndex) const
+{
+	if(objectIndex == 1)
+	{
+		auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
+		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 0 };
+		oml_stimulus->setParameters(new_params);
+	}
+	if (objectIndex == 2)
+	{
+		auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 2"));
+		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 30 };
+		oml_stimulus->setParameters(new_params);
+	}
+	if(objectIndex == 3)
+	{
+		auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
+		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 60 };
+		oml_stimulus->setParameters(new_params);
+	}
 }
 
 void DNFComposerHandler::removeTargetObject(int objectIndex) const
@@ -164,19 +187,17 @@ void DNFComposerHandler::setupUserInterface() const
  double DNFComposerHandler::calculateDistanceToObjects(const Position& handPosition)
  {
  	// Table center and dimensions
-	 const double tableCenterY = -0.15 + 0.4; // there is an offset determined by the vr setup
-	 const double tableCenterZ = 0.631 + 0.15;
+	constexpr double tableCenterX = 0.6;
+	constexpr double tableCenterZ = 0.631 + 0.15;
 
-	 // Calculate the distance in the Y dimension (X is Y in vr - different reference)
-	 const double distanceY = std::abs(handPosition.x - tableCenterY);
-	 // Calculate the distance in the Z dimension
-	 const double distanceZ = std::abs(handPosition.z - tableCenterZ);
-	 // Calculate the total distance (Euclidean distance in Y-Z plane)
-	 const double distance = std::sqrt(distanceY * distanceY + distanceZ * distanceZ);
-	 //const double distance = std::sqrt(distanceZ * distanceZ);// + distanceZ * distanceZ);
+	// Calculate the distance in the X dimension
+	const double distanceX = std::abs(handPosition.x - tableCenterX);
+	// Calculate the distance in the Z dimension
+	const double distanceZ = std::abs(handPosition.z - tableCenterZ);
+	// Calculate the total distance (Euclidean distance in X-Z plane)
+	const double distance = std::sqrt(distanceX * distanceX + distanceZ * distanceZ);
 
-
-	 return distance;
+	return distance;
  }
 
  // Function to invert the distance to represent the closeness
@@ -186,4 +207,21 @@ void DNFComposerHandler::setupUserInterface() const
 	 distance = std::max(distance, safeZone);
 	 // Invert the distance
 	 return 1.0 / distance;
+ }
+
+ // Function to normalize hand's Y position to a 0-100 scale
+ double DNFComposerHandler::normalizeHandPosition(double pos_y)
+ {
+	 // Define the min and max of the table in Y dimension
+	 constexpr double yMin = -0.4;
+	 constexpr double yMax = 0.1;
+
+	 // Define the min and max of the scale
+	 constexpr double scaleMin = 0;
+	 constexpr double scaleMax = 100;
+
+	 // Normalize pos_x to the 0-100 scale
+	 const double normalizedScale = scaleMin + (scaleMax - scaleMin) * (pos_y - yMin) / (yMax - yMin);
+
+	 return normalizedScale;
  }

@@ -25,6 +25,9 @@ private:
 	void waitForSimulationStart();
 	void waitForObjectsToBeCreated() const;
 	void pickAndPlaceObjects();
-	void setHandStimulus();
+	void updateHandPosition() const;
+	void updateAvailableObjects();
+	void updateTargetObject();
 	void updateSignals();
+	static bool isObjectInWorkspace(const coppeliasim_cpp::Position& position);
 };
