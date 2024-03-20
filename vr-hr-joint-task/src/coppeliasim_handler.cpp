@@ -97,58 +97,12 @@ void CoppeliasimHandler::writeSignals()
 void CoppeliasimHandler::readSignals()
 {
 	signals.simStarted = client.getIntegerSignal(SignalSignatures::SIM_STARTED);
-	signals.objectsCreated = client.getIntegerSignal(SignalSignatures::OBJECTS_CREATED);
 	signals.object1 = client.getIntegerSignal(SignalSignatures::OBJECT1_EXISTS);
 	signals.object2 = client.getIntegerSignal(SignalSignatures::OBJECT2_EXISTS);
 	signals.object3 = client.getIntegerSignal(SignalSignatures::OBJECT3_EXISTS);
 	signals.objectGrasped = client.getIntegerSignal(SignalSignatures::OBJECT_GRASPED);
 	signals.objectPlaced = client.getIntegerSignal(SignalSignatures::OBJECT_PLACED);
 }
-
-//void CoppeliasimHandler::readSignals()
-//{
-//	// Define how many times to retry reading and the delay between retries (in milliseconds)
-//	const int retryCount = 5;
-//	const int retryDelayMs = 3;
-//
-//	// Temporary variables to store signal values during confirmation process
-//	int tempSimStarted, tempObjectsCreated, tempObject1, tempObject2, tempObject3, tempObjectGrasped, tempObjectPlaced;
-//
-//	// A lambda function to read a signal multiple times and check for consistency
-//	auto readSignalWithConfirmation = [this, retryCount, retryDelayMs](const std::string& signalName) -> int {
-//		int lastValue = client.getIntegerSignal(signalName);
-//		bool valueConfirmed = false;
-//
-//		for (int i = 1; i < retryCount; ++i) {
-//			Sleep(retryDelayMs); // Wait a bit before the next read
-//			int newValue = client.getIntegerSignal(signalName);
-//			if (newValue == lastValue) {
-//				valueConfirmed = true;
-//				break; // The value is consistent, proceed
-//			}
-//			lastValue = newValue; // Update the last value for the next iteration
-//		}
-//
-//		if (valueConfirmed) {
-//			return lastValue; // Return the confirmed value
-//		}
-//		else {
-//			// Handle the case where values were not consistent
-//			// For now, we return the last read value, but you might want to handle this differently
-//			return lastValue;
-//		}
-//	};
-//
-//	// Use the lambda function to read and confirm each signal
-//	signals.simStarted = readSignalWithConfirmation(SignalSignatures::SIM_STARTED);
-//	signals.objectsCreated = readSignalWithConfirmation(SignalSignatures::OBJECTS_CREATED);
-//	signals.object1 = readSignalWithConfirmation(SignalSignatures::OBJECT1_EXISTS);
-//	signals.object2 = readSignalWithConfirmation(SignalSignatures::OBJECT2_EXISTS);
-//	signals.object3 = readSignalWithConfirmation(SignalSignatures::OBJECT3_EXISTS);
-//	signals.objectGrasped = readSignalWithConfirmation(SignalSignatures::OBJECT_GRASPED);
-//	signals.objectPlaced = readSignalWithConfirmation(SignalSignatures::OBJECT_PLACED);
-//}
-
 
 
 void CoppeliasimHandler::updateData()
@@ -161,7 +115,6 @@ void CoppeliasimHandler::resetSignals() const
 {
 	client.setIntegerSignal(SignalSignatures::START_SIM, false);
 	client.setIntegerSignal(SignalSignatures::SIM_STARTED, false);
-	client.setIntegerSignal(SignalSignatures::OBJECTS_CREATED, false);
 	client.setIntegerSignal(SignalSignatures::TARGET_OBJECT, 0);
 	client.setIntegerSignal(SignalSignatures::OBJECT1_EXISTS, false);
 	client.setIntegerSignal(SignalSignatures::OBJECT2_EXISTS, false);

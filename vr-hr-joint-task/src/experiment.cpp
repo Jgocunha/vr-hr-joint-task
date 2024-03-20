@@ -3,7 +3,9 @@
 
 Experiment::Experiment(std::string name, int commsFreq, double deltaT)
 		: coppeliasimHandler(), dnfcomposerHandler({ std::move(name), deltaT }), commsFrequency(commsFreq)
-{}
+{
+	taskFinished = false;
+}
 
 Experiment::~Experiment()
 {
@@ -68,7 +70,7 @@ void Experiment::waitForObjectsToBeCreated() const
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for objects to be created...\n");
 		haveObjectBeenCreated = coppeliasimHandler.getSignals().objectsCreated;
 		Sleep(commsFrequency);
-	}*/
+	}
 
 	std::tuple<int, int, int> objectPositions = { coppeliasimHandler.getSignals().object1, coppeliasimHandler.getSignals().object2, coppeliasimHandler.getSignals().object3 };
 	while (std::get<0>(objectPositions) == 0 || std::get<1>(objectPositions) == 0 || std::get<2>(objectPositions) == 0)
@@ -76,7 +78,7 @@ void Experiment::waitForObjectsToBeCreated() const
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for objects to be positioned...\n");
 		objectPositions = { coppeliasimHandler.getSignals().object1, coppeliasimHandler.getSignals().object2, coppeliasimHandler.getSignals().object3 };
 		Sleep(commsFrequency);
-	}
+	}*/
 
 	log(dnf_composer::tools::logger::LogLevel::INFO, "Pick and place will now start...\n");
 }
@@ -84,41 +86,29 @@ void Experiment::waitForObjectsToBeCreated() const
 void Experiment::pickAndPlaceObjects()
 {
 
-	while(areObjectsPresent())
-	{
-		bool hasObjectBeenGrasped = false;
-		while (!hasObjectBeenGrasped)
-		{
+	do {
+
+		do {
 			log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be grasped...\n");
-			hasObjectBeenGrasped = coppeliasimHandler.getSignals().objectGrasped;
 			Sleep(commsFrequency);
-		}
+		} while (!coppeliasimHandler.getSignals().objectGrasped);
 		coppeliasimHandler.setSignal(SignalSignatures::OBJECT_GRASPED, 0);
 
 		Sleep(commsFrequency);
 
-		bool hasObjectBeenPlaced = false;
-		while (!hasObjectBeenPlaced)
-		{
+		do {
 			log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be placed...\n");
-			hasObjectBeenPlaced = coppeliasimHandler.getSignals().objectPlaced;
 			Sleep(commsFrequency);
-		}
+		} while (!coppeliasimHandler.getSignals().objectPlaced);
 		coppeliasimHandler.setSignal(SignalSignatures::OBJECT_PLACED, 0);
-		//updateAvailableObjects();
-		//Sleep(commsFrequency);
-		//updateAvailableObjects();
-		//Sleep(commsFrequency);
-		//updateAvailableObjects();
-		//Sleep(commsFrequency);
-		//updateAvailableObjects();
-		//Sleep(commsFrequency);
-		//updateAvailableObjects();
 
-		log(dnf_composer::tools::logger::LogLevel::INFO, "Object has been placed.\n");
-		// Make sure signals are reset
+		log(dnf_composer::tools::logger::LogLevel::INFO, "An object has been placed by the robot.\n");
 		Sleep(commsFrequency);
-	}
+
+	} while (areObjectsPresent());
+
+	Sleep(commsFrequency);
+	taskFinished = true;
 }
 
 
@@ -152,33 +142,6 @@ void Experiment::updateHandPosition() const
 	}
 }
 
-//void Experiment::updateHandPosition() const
-//{
-//	static coppeliasim_cpp::Position lastHandPosition = coppeliasimHandler.getSimulationData().handPosition;
-//
-//	// Define a threshold for position change
-//	constexpr double positionChangeThreshold = 0.9; // You can adjust this threshold based on your application's requirements
-//
-//	// Get the current hand position from CoppeliaSim
-//	coppeliasim_cpp::Position handPosition = coppeliasimHandler.getSimulationData().handPosition;
-//
-//	// Calculate the difference between the current hand position and the previous hand position across all dimensions
-//	double positionDifference = std::sqrt(std::pow(handPosition.x - lastHandPosition.x, 2) +
-//		std::pow(handPosition.y - lastHandPosition.y, 2) +
-//		std::pow(handPosition.z - lastHandPosition.z, 2));
-//
-//	// Check if the position difference exceeds the threshold
-//	if (positionDifference > positionChangeThreshold)
-//	{
-//		// If the difference is too large, reset the last hand position to the current hand position
-//		lastHandPosition = handPosition;
-//	}
-//	else
-//	{
-//		// If the difference is within the threshold, use the new hand position
-//		dnfcomposerHandler.setHandStimulus({ handPosition.x, handPosition.y, handPosition.z });
-//	}
-//}
 
 void Experiment::updateAvailableObjects()
 {
@@ -215,39 +178,6 @@ void Experiment::updateAvailableObjects()
 	}
 }
 
-
-//void Experiment::updateAvailableObjects()
-//{
-//	// not stable and not clean
-//	// but kinda working
-//	if (!coppeliasimHandler.getSignals().object1)
-//	{
-//		dnfcomposerHandler.removeTargetObject(1);
-//	}
-//	else
-//	{
-//		dnfcomposerHandler.addTargetObject(1);
-//	}
-//
-//	if (!coppeliasimHandler.getSignals().object2)
-//	{
-//		dnfcomposerHandler.removeTargetObject(2);
-//	}
-//	else
-//	{
-//		dnfcomposerHandler.addTargetObject(2);
-//	}
-//
-//	if (!coppeliasimHandler.getSignals().object3)
-//	{
-//		dnfcomposerHandler.removeTargetObject(3);
-//	}
-//	else
-//	{
-//		dnfcomposerHandler.addTargetObject(3);
-//	}
-//}
-
 void Experiment::updateTargetObject()
 {
 	coppeliasimHandler.setSignal(SignalSignatures::TARGET_OBJECT, dnfcomposerHandler.getTargetObject());
@@ -255,13 +185,13 @@ void Experiment::updateTargetObject()
 
 void Experiment::updateSignals()
 {
-	while (areObjectsPresent())
+	do
 	{
 		updateHandPosition();
 		updateAvailableObjects();
 		updateTargetObject();
-		Sleep(10);
-	}
+		Sleep(26);
+	} while (!taskFinished);
 }
 
 bool Experiment::areObjectsPresent() const

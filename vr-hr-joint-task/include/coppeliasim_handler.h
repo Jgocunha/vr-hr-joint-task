@@ -12,7 +12,6 @@ struct SignalSignatures
 	static constexpr const char* START_SIM = "startSim";
 	static constexpr const char* SIM_STARTED = "simStarted";
 
-	static constexpr const char* OBJECTS_CREATED = "objectsCreated";
 	static constexpr const char* TARGET_OBJECT = "targetObject";
 
 	static constexpr const char* OBJECT1_EXISTS = "object1";

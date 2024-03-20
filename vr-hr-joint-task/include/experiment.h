@@ -1,5 +1,3 @@
-#pragma once
-
 #include "coppeliasim_handler.h"
 #include "dnfcomposer_handler.h"
 #include "misc.h"
@@ -11,7 +9,7 @@ private:
 	DNFComposerHandler dnfcomposerHandler;
 	int commsFrequency;
 	std::thread signalsThread;
-	//bool areThereObjectsRemaining;
+	bool taskFinished;
 public:
 	Experiment(std::string name, int commsFreq, double deltaT);
 	~Experiment();
