@@ -29,12 +29,11 @@ void CoppeliasimHandler::run()
 		resetSignals();
 		client.startSimulation();
 
+		handHandle = client.getObjectHandle("RightController");
+
 		while (isConnected())
 		{
-			//if (wereSignalsChanged)
-				//writeSignals();
 			readSignals();
-			updateData();
 			Sleep(10);
 		}
 
@@ -63,13 +62,6 @@ void CoppeliasimHandler::setSignal(const std::string& signalName, const int sign
 {
 	client.setIntegerSignal(signalName, signalValue);
 	//log(dnf_composer::tools::logger::LogLevel::INFO, "Signal " + signalName + " was written as " + std::to_string(signalValue) + '\n');
-	//wereSignalsChanged = true;
-}
-
-void CoppeliasimHandler::setSignals(const Signals& sign)
-{
-	wereSignalsChanged = true;
-	signals = sign;
 }
 
 Signals CoppeliasimHandler::getSignals() const
@@ -77,21 +69,9 @@ Signals CoppeliasimHandler::getSignals() const
 	return signals;
 }
 
-Data CoppeliasimHandler::getSimulationData() const
-{
-	return data;
-}
-
 bool CoppeliasimHandler::isConnected() const
 {
 	return client.isConnected();
-}
-
-void CoppeliasimHandler::writeSignals()
-{
-	client.setIntegerSignal(SignalSignatures::START_SIM, signals.startSim);
-
-	wereSignalsChanged = false;
 }
 
 void CoppeliasimHandler::readSignals()
@@ -102,13 +82,8 @@ void CoppeliasimHandler::readSignals()
 	signals.object3 = client.getIntegerSignal(SignalSignatures::OBJECT3_EXISTS);
 	signals.objectGrasped = client.getIntegerSignal(SignalSignatures::OBJECT_GRASPED);
 	signals.objectPlaced = client.getIntegerSignal(SignalSignatures::OBJECT_PLACED);
-}
-
-
-void CoppeliasimHandler::updateData()
-{
-	const int handHandle = client.getObjectHandle("RightController");
-	data.handPosition = client.getObjectPosition(handHandle);
+	signals.hand_proximity = client.getFloatSignal(SignalSignatures::HAND_PROXIMITY);
+	signals.hand_y = client.getFloatSignal(SignalSignatures::HAND_Y);
 }
 
 void CoppeliasimHandler::resetSignals() const
@@ -121,6 +96,9 @@ void CoppeliasimHandler::resetSignals() const
 	client.setIntegerSignal(SignalSignatures::OBJECT3_EXISTS, false);
 	client.setIntegerSignal(SignalSignatures::OBJECT_GRASPED, false);
 	client.setIntegerSignal(SignalSignatures::OBJECT_PLACED, false);
+	client.setFloatSignal(SignalSignatures::HAND_PROXIMITY, 0.00f);
+	client.setFloatSignal(SignalSignatures::HAND_Y, 0.00f);
+
 }
 
 bool CoppeliasimHandler::hasSignalMajorityValue(const std::string& signalName, int requiredValue, int sampleSize) const

@@ -1,6 +1,7 @@
 #include "coppeliasim_handler.h"
 #include "dnfcomposer_handler.h"
 #include "misc.h"
+#include <algorithm> 
 
 class Experiment
 {

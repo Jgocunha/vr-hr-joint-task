@@ -59,43 +59,15 @@ void DNFComposerHandler::close()
 	log(dnf_composer::tools::logger::LogLevel::INFO, "DNFComposer Handler: Thread has finished its execution.\n");
 }
 
-
-//void DNFComposerHandler::setHandStimulus(const Position& handPosition) const
-//{
-//	const auto aol_stimulus = 
-//		std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
-//	const double amplitude = calculateClosenessToObjects(calculateDistanceToObjects(handPosition));
-//	const double position = normalizeHandPosition(handPosition.y);
-//	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, amplitude, position};
-//	aol_stimulus->setParameters(new_params);
-//}
-
-void DNFComposerHandler::setHandStimulus(const Position& handPosition) const
+void DNFComposerHandler::setHandStimulus(const double& hand_y, const double& hand_proximity) const
 {
-	const auto aol_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(
-		simulation->getElement("hand position stimulus"));
-
-	// Constants for exponential smoothing
-	constexpr double smoothing_factor = 0.2; // You can adjust this value based on the desired smoothing effect
-
-	// Calculate the amplitude and position based on the hand position
-	const double amplitude = calculateClosenessToObjects(calculateDistanceToObjects(handPosition));
-	const double position = normalizeHandPosition(handPosition.y);
-
-	// Exponential smoothing for amplitude and position
-	static double smoothed_amplitude = amplitude;
-	static double smoothed_position = position;
-
-	// Apply exponential smoothing
-	smoothed_amplitude = (1.0 - smoothing_factor) * smoothed_amplitude + smoothing_factor * amplitude;
-	smoothed_position = (1.0 - smoothing_factor) * smoothed_position + smoothing_factor * position;
-
-	// Set the smoothed parameters to the stimulus
-	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus->getParameters().sigma, smoothed_amplitude, smoothed_position };
+	const auto aol_stimulus = 
+		std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
+	//const double amplitude = calculateClosenessToObjects(calculateDistanceToObjects(handPosition));
+	// double position = normalizeHandPosition(handPosition.y);
+	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, hand_proximity, hand_y };
 	aol_stimulus->setParameters(new_params);
 }
-
-
 
 int DNFComposerHandler::getTargetObject() const
 {
@@ -211,46 +183,3 @@ void DNFComposerHandler::setupUserInterface() const
 	aelPlotWindow->addPlottingData("ael", "output");
 	application->activateUserInterfaceWindow(aelPlotWindow);
 }
-
-// Function to calculate the distance of the hand to the middle line of the table
- double DNFComposerHandler::calculateDistanceToObjects(const Position& handPosition)
- {
- 	// Table center and dimensions
-	constexpr double tableCenterX = 0.6;
-	constexpr double tableCenterZ = 0.631 + 0.1;
-
-	// Calculate the distance in the X dimension
-	const double distanceX = std::abs(handPosition.x - tableCenterX);
-	// Calculate the distance in the Z dimension
-	const double distanceZ = std::abs(handPosition.z - tableCenterZ);
-	// Calculate the total distance (Euclidean distance in X-Z plane)
-	const double distance = std::sqrt(distanceX * distanceX + distanceZ * distanceZ);
-
-	return distance;
- }
-
- // Function to invert the distance to represent the closeness
- double DNFComposerHandler::calculateClosenessToObjects(double distance, double safeZone)
- {
-	 // Ensure distance is always greater than zero to avoid division by zero
-	 distance = std::max(distance, safeZone);
-	 // Invert the distance
-	 return 1.0 / distance;
- }
-
- // Function to normalize hand's Y position to a 0-100 scale
- double DNFComposerHandler::normalizeHandPosition(double pos_y)
- {
-	 // Define the min and max of the table in Y dimension
-	 constexpr double yMin = -0.4;
-	 constexpr double yMax = 0.1;
-
-	 // Define the min and max of the scale
-	 constexpr double scaleMin = 0;
-	 constexpr double scaleMax = 100;
-
-	 // Normalize pos_x to the 0-100 scale
-	 const double normalizedScale = scaleMin + (scaleMax - scaleMin) * (pos_y - yMin) / (yMax - yMin);
-
-	 return normalizedScale;
- }

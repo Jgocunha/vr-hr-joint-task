@@ -22,6 +22,9 @@ struct SignalSignatures
 
 	static constexpr const char* OBJECT_PLACED = "objectPlaced";
 
+	static constexpr const char* HAND_Y = "hand_y";
+	static constexpr const char* HAND_PROXIMITY = "hand_proximity";
+
 };
 
 struct Signals
@@ -38,11 +41,9 @@ struct Signals
 
 	bool objectGrasped = false;
 	bool objectPlaced = false;
-};
 
-struct Data
-{
-	coppeliasim_cpp::Position handPosition;
+	float hand_y = 0.00f;
+	float hand_proximity = 0.00f;
 };
 
 class CoppeliasimHandler
@@ -51,8 +52,8 @@ private:
 	std::thread coppeliasimThread;
 	coppeliasim_cpp::CoppeliaSimClient client;
 	Signals signals;
-	Data data;
 	bool wereSignalsChanged = false;
+	int handHandle = 0;
 public:
 	CoppeliasimHandler();
 	~CoppeliasimHandler();
@@ -64,16 +65,12 @@ public:
 	bool hasSignalMajorityValue(const std::string& signalName, int requiredValue, int sampleSize) const;
 
 	void setSignal(const std::string& signalName, const int signalValue);
-	void setSignals(const Signals& sign);
 	Signals getSignals() const;
-	Data getSimulationData() const;
 	bool isConnected() const;
 
 	void resetSignals() const;
 private:
-	void writeSignals();
 	void readSignals();
-	void updateData();
 };
 
 

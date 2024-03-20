@@ -112,36 +112,42 @@ void Experiment::pickAndPlaceObjects()
 }
 
 
-void Experiment::updateHandPosition() const
+//void Experiment::updateHandPosition() const
+//{
+//	const double hand_proximity = coppeliasimHandler.getSignals().hand_proximity;
+//	const double hand_y = coppeliasimHandler.getSignals().hand_y;
+//
+//	// Do some interpretation here.
+//	// values of hand proximity can go as high as 40abs
+//	// values from hand_y are normalized but can be negative and over 100abs
+//	// consider only positive values up until 100abs
+//	dnfcomposerHandler.setHandStimulus(hand_y, hand_proximity);
+//}
+
+
+void Experiment::updateHandPosition() const 
 {
-	static coppeliasim_cpp::Position lastHandPosition = coppeliasimHandler.getSimulationData().handPosition;
-	// Get the current hand position from CoppeliaSim
-	coppeliasim_cpp::Position handPosition = coppeliasimHandler.getSimulationData().handPosition;
+	static double lastHandProximityEMA = 0;
+	static double lastHandYEMA = 0;
+	double alpha = 0.1; // Smoothing factor. Adjust as needed for smoother or more responsive filtering
 
-	// Define a threshold for position change
-	constexpr double positionChangeThreshold = 0.9; // You can adjust this threshold based on your application's requirements
+	auto signals = coppeliasimHandler.getSignals();
 
-	// Calculate the difference between the current hand position and the previous hand position across all dimensions
-	double positionDifference = std::sqrt(std::pow(handPosition.x - lastHandPosition.x, 2) +
-		std::pow(handPosition.y - lastHandPosition.y, 2) +
-		std::pow(handPosition.z - lastHandPosition.z, 2));
+	// Initial handling to limit the raw values
+	double rawHandProximity = std::min(signals.hand_proximity, 10.0f);
+	double rawHandY = std::max(0.0f, std::min(signals.hand_y, 100.0f));
 
-	// Check if the position difference exceeds the threshold
-	if (positionDifference > positionChangeThreshold)
-	{
-		// If the difference is too large, discard the new hand position and use the previous one
-		dnfcomposerHandler.setHandStimulus({ lastHandPosition.x, lastHandPosition.y, lastHandPosition.z });
-	}
-	else
-	{
-		// If the difference is within the threshold, use the new hand position
-		dnfcomposerHandler.setHandStimulus({ handPosition.x, handPosition.y, handPosition.z });
+	// Apply exponential moving average (EMA) filter
+	double handProximityEMA = (alpha * rawHandProximity) + ((1 - alpha) * lastHandProximityEMA);
+	double handYEMA = (alpha * rawHandY) + ((1 - alpha) * lastHandYEMA);
 
-		// Update the last hand position for future comparison
-		lastHandPosition = handPosition;
-	}
+	// Update the last EMA values for the next call
+	lastHandProximityEMA = handProximityEMA;
+	lastHandYEMA = handYEMA;
+
+	// Now use the smoothed values for further processing
+	dnfcomposerHandler.setHandStimulus(handYEMA, handProximityEMA);
 }
-
 
 void Experiment::updateAvailableObjects()
 {
@@ -190,7 +196,7 @@ void Experiment::updateSignals()
 		updateHandPosition();
 		updateAvailableObjects();
 		updateTargetObject();
-		Sleep(26);
+		Sleep(10);
 	} while (!taskFinished);
 }
 
