@@ -20,13 +20,13 @@ void Experiment::init()
 
 void Experiment::run()
 {
-	signalsThread = std::thread(&Experiment::updateSignals, this);
 	main();
 }
 
 void Experiment::close()
 {
 	signalsThread.join();
+	handPositionThread.join();
 	coppeliasimHandler.close();
 	dnfcomposerHandler.close();
 }
@@ -36,7 +36,9 @@ void Experiment::main()
 	waitForConnection();
 	waitForSimulationStart();
 	waitForObjectsToBeCreated();
-	pickAndPlaceObjects();
+	signalsThread = std::thread(&Experiment::updateSignals, this);
+	handPositionThread = std::thread(&Experiment::updateHandPosition, this);
+	//pickAndPlaceObjects();
 }
 
 void Experiment::waitForConnection() const
@@ -59,7 +61,7 @@ void Experiment::waitForSimulationStart()
 		hasSimStarted = coppeliasimHandler.getSignals().simStarted;
 		Sleep(commsFrequency);
 	}
-	coppeliasimHandler.setSignal(SignalSignatures::START_SIM, 0);
+	//coppeliasimHandler.setSignal(SignalSignatures::START_SIM, 0);
 }
 
 void Experiment::waitForObjectsToBeCreated() const
@@ -88,21 +90,22 @@ void Experiment::pickAndPlaceObjects()
 
 	do {
 
-		do {
-			log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be grasped...\n");
-			Sleep(commsFrequency);
-		} while (!coppeliasimHandler.getSignals().objectGrasped);
-		coppeliasimHandler.setSignal(SignalSignatures::OBJECT_GRASPED, 0);
+		//do {
+		//	//log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be grasped...\n");
+		//	Sleep(commsFrequency);
+		//} while (!coppeliasimHandler.getSignals().objectGrasped);
+		//coppeliasimHandler.setSignal(SignalSignatures::OBJECT_GRASPED, 0);
 
-		Sleep(commsFrequency);
+		//Sleep(commsFrequency);
 
-		do {
-			log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be placed...\n");
-			Sleep(commsFrequency);
-		} while (!coppeliasimHandler.getSignals().objectPlaced);
-		coppeliasimHandler.setSignal(SignalSignatures::OBJECT_PLACED, 0);
+		//do {
+		//	//log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be placed...\n");
+		//	Sleep(commsFrequency);
+		//} while (!coppeliasimHandler.getSignals().objectPlaced);
+		//coppeliasimHandler.setSignal(SignalSignatures::OBJECT_PLACED, 0);
 
-		log(dnf_composer::tools::logger::LogLevel::INFO, "An object has been placed by the robot.\n");
+		////log(dnf_composer::tools::logger::LogLevel::INFO, "An object has been placed by the robot.\n");
+		////Sleep(commsFrequency);
 		Sleep(commsFrequency);
 
 	} while (areObjectsPresent());
@@ -112,41 +115,35 @@ void Experiment::pickAndPlaceObjects()
 }
 
 
-//void Experiment::updateHandPosition() const
-//{
-//	const double hand_proximity = coppeliasimHandler.getSignals().hand_proximity;
-//	const double hand_y = coppeliasimHandler.getSignals().hand_y;
-//
-//	// Do some interpretation here.
-//	// values of hand proximity can go as high as 40abs
-//	// values from hand_y are normalized but can be negative and over 100abs
-//	// consider only positive values up until 100abs
-//	dnfcomposerHandler.setHandStimulus(hand_y, hand_proximity);
-//}
-
-
-void Experiment::updateHandPosition() const 
+void Experiment::updateHandPosition()
 {
-	static double lastHandProximityEMA = 0;
-	static double lastHandYEMA = 0;
-	double alpha = 0.1; // Smoothing factor. Adjust as needed for smoother or more responsive filtering
+	do
+	{
+		bool validValues = true;
+		double hand_proximity = coppeliasimHandler.getSignals().hand_proximity;
+		double hand_y = coppeliasimHandler.getSignals().hand_y;
+		double filtered_hand_proximity = hand_proximity;
+		double filtered_hand_y = hand_y;
 
-	auto signals = coppeliasimHandler.getSignals();
+		// Filter out bad readings
+		if (filtered_hand_y < 0.1 || filtered_hand_y > 90)
+			validValues = false;
+		if (filtered_hand_proximity < 0.1 || filtered_hand_proximity > 20)
+			validValues = false;
 
-	// Initial handling to limit the raw values
-	double rawHandProximity = std::min(signals.hand_proximity, 10.0f);
-	double rawHandY = std::max(0.0f, std::min(signals.hand_y, 100.0f));
+		// Filter out of range values
+		if (filtered_hand_y == -1)
+		{
+			filtered_hand_proximity = 0;
+			filtered_hand_y = 0;
+			validValues = true;
+		}
 
-	// Apply exponential moving average (EMA) filter
-	double handProximityEMA = (alpha * rawHandProximity) + ((1 - alpha) * lastHandProximityEMA);
-	double handYEMA = (alpha * rawHandY) + ((1 - alpha) * lastHandYEMA);
+		if (validValues)
+			dnfcomposerHandler.setHandStimulus(filtered_hand_y, filtered_hand_proximity);
 
-	// Update the last EMA values for the next call
-	lastHandProximityEMA = handProximityEMA;
-	lastHandYEMA = handYEMA;
-
-	// Now use the smoothed values for further processing
-	dnfcomposerHandler.setHandStimulus(handYEMA, handProximityEMA);
+		//Sleep(1);
+	} while (!taskFinished);
 }
 
 void Experiment::updateAvailableObjects()
@@ -193,10 +190,9 @@ void Experiment::updateSignals()
 {
 	do
 	{
-		updateHandPosition();
 		updateAvailableObjects();
 		updateTargetObject();
-		Sleep(10);
+		//Sleep(10);
 	} while (!taskFinished);
 }
 

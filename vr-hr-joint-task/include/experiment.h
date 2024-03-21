@@ -10,6 +10,7 @@ private:
 	DNFComposerHandler dnfcomposerHandler;
 	int commsFrequency;
 	std::thread signalsThread;
+	std::thread handPositionThread;
 	bool taskFinished;
 public:
 	Experiment(std::string name, int commsFreq, double deltaT);
@@ -25,7 +26,7 @@ private:
 	void waitForObjectsToBeCreated() const;
 	void pickAndPlaceObjects();
 
-	void updateHandPosition() const;
+	void updateHandPosition();
 	void updateAvailableObjects();
 	void updateTargetObject();
 	void updateSignals();

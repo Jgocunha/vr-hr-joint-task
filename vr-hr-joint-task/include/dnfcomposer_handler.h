@@ -34,13 +34,11 @@ public:
 	void init();
 	void run();
 	void close();
-	void setHandStimulus(const double& hand_y, const double& hand_proximity) const;
+	void setHandStimulus(const double& hand_y, const double& hand_proximity);
 	int getTargetObject() const;
 	void addTargetObject(int objectIndex) const;
 	void removeTargetObject(int objectIndex) const;
 private:
 	void setupUserInterface() const;
-	static double calculateDistanceToObjects(const Position& handPosition);
-	static double calculateClosenessToObjects(double distance, double safeZone = 0.01);
-	static double normalizeHandPosition(double pos_y);
+	static double transformXToCircular(const double& x);
 };

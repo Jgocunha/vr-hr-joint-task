@@ -34,7 +34,7 @@ void CoppeliasimHandler::run()
 		while (isConnected())
 		{
 			readSignals();
-			Sleep(10);
+			//Sleep(10);
 		}
 
 		resetSignals();

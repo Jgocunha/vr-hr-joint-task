@@ -31,7 +31,7 @@ void DNFComposerHandler::run()
 		{
 			application->step();
 			userRequestClose = application->getCloseUI();
-			Sleep(2);
+			//Sleep(2);
 		}
 		application->close();
 	}
@@ -59,13 +59,35 @@ void DNFComposerHandler::close()
 	log(dnf_composer::tools::logger::LogLevel::INFO, "DNFComposer Handler: Thread has finished its execution.\n");
 }
 
-void DNFComposerHandler::setHandStimulus(const double& hand_y, const double& hand_proximity) const
+
+double DNFComposerHandler::transformXToCircular(const double& x) 
+{
+	if (x < 20) {
+		// Assuming a linear transformation below 20
+		return 0; // Maps directly to 0 in the circular scale
+	}
+	else if (x < 40) {
+		// Linear transformation for x in [20, 40) to [0, 30) in circular scale
+		return (x - 20) * 1.5;
+	}
+	else if (x < 80) {
+		// Linear transformation for x in [40, 80) to [30, 60) in circular scale
+		return 30 + (x - 40) * 0.75;
+	}
+	else {
+		// Assuming linear transformation for x in [80, 90] to [60, 90] in circular scale
+		// Note: Since 90 is the same as 0 in the circular scale, this part needs careful handling.
+		// Here, we map [80,90] linearly to [60,0), but you might adjust this based on your needs.
+		return 60 + (x - 80) * 3 / 2;
+	}
+}
+
+void DNFComposerHandler::setHandStimulus(const double& hand_y, const double& hand_proximity)
 {
 	const auto aol_stimulus = 
 		std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
-	//const double amplitude = calculateClosenessToObjects(calculateDistanceToObjects(handPosition));
-	// double position = normalizeHandPosition(handPosition.y);
-	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, hand_proximity, hand_y };
+	double new_hand_y = transformXToCircular(hand_y);
+	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, hand_proximity,new_hand_y };
 	aol_stimulus->setParameters(new_params);
 }
 
@@ -73,6 +95,9 @@ int DNFComposerHandler::getTargetObject() const
 {
 	const auto ael = std::dynamic_pointer_cast<dnf_composer::element::NeuralField>(simulation->getElement("ael"));
 	const double centroid = ael->getCentroid();
+	if (centroid < 0)
+		return 0;
+
 	const int size = ael->getMaxSpatialDimension();
 
 	// Function to calculate the circular distance between two points
