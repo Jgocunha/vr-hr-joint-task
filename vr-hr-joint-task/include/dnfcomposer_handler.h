@@ -6,6 +6,7 @@
 
 #include "experiment_window.h"
 #include "dnf_architecture.h"
+#include "misc.h"
 
 
 struct SimulationParameters
@@ -33,9 +34,11 @@ public:
 	void init();
 	void run();
 	void close();
-
+	void setHandStimulus(const double& hand_y, const double& hand_proximity);
 	int getTargetObject() const;
+	void addTargetObject(int objectIndex) const;
 	void removeTargetObject(int objectIndex) const;
 private:
 	void setupUserInterface() const;
+	static double transformXToCircular(const double& x);
 };

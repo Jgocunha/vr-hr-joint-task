@@ -1,7 +1,7 @@
-#pragma once
-
 #include "coppeliasim_handler.h"
 #include "dnfcomposer_handler.h"
+#include "misc.h"
+#include <algorithm> 
 
 class Experiment
 {
@@ -9,6 +9,9 @@ private:
 	CoppeliasimHandler coppeliasimHandler;
 	DNFComposerHandler dnfcomposerHandler;
 	int commsFrequency;
+	std::thread signalsThread;
+	std::thread handPositionThread;
+	bool taskFinished;
 public:
 	Experiment(std::string name, int commsFreq, double deltaT);
 	~Experiment();
@@ -22,4 +25,11 @@ private:
 	void waitForSimulationStart();
 	void waitForObjectsToBeCreated() const;
 	void pickAndPlaceObjects();
+
+	void updateHandPosition();
+	void updateAvailableObjects();
+	void updateTargetObject();
+	void updateSignals();
+
+	bool areObjectsPresent() const;
 };

@@ -57,6 +57,7 @@ set(header
     "include/experiment.h"
     "include/experiment_window.h"
     "include/dnf_architecture.h"
+    "include/misc.h"
 )
 
 # Set source files
@@ -66,6 +67,7 @@ set(src
     "src/experiment.cpp"
     "src/experiment_window.cpp"
     "src/dnf_architecture.cpp"
+    "src/misc.cpp"
 )
 
 configure_file(./resources/resources.rc.in ./resources/resources.rc)

@@ -31,6 +31,7 @@ void DNFComposerHandler::run()
 		{
 			application->step();
 			userRequestClose = application->getCloseUI();
+			//Sleep(2);
 		}
 		application->close();
 	}
@@ -59,10 +60,44 @@ void DNFComposerHandler::close()
 }
 
 
+double DNFComposerHandler::transformXToCircular(const double& x) 
+{
+	if (x < 20) {
+		// Assuming a linear transformation below 20
+		return 0; // Maps directly to 0 in the circular scale
+	}
+	else if (x < 40) {
+		// Linear transformation for x in [20, 40) to [0, 30) in circular scale
+		return (x - 20) * 1.5;
+	}
+	else if (x < 80) {
+		// Linear transformation for x in [40, 80) to [30, 60) in circular scale
+		return 30 + (x - 40) * 0.75;
+	}
+	else {
+		// Assuming linear transformation for x in [80, 90] to [60, 90] in circular scale
+		// Note: Since 90 is the same as 0 in the circular scale, this part needs careful handling.
+		// Here, we map [80,90] linearly to [60,0), but you might adjust this based on your needs.
+		return 60 + (x - 80) * 3 / 2;
+	}
+}
+
+void DNFComposerHandler::setHandStimulus(const double& hand_y, const double& hand_proximity)
+{
+	const auto aol_stimulus = 
+		std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
+	double new_hand_y = transformXToCircular(hand_y);
+	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, hand_proximity,new_hand_y };
+	aol_stimulus->setParameters(new_params);
+}
+
 int DNFComposerHandler::getTargetObject() const
 {
 	const auto ael = std::dynamic_pointer_cast<dnf_composer::element::NeuralField>(simulation->getElement("ael"));
 	const double centroid = ael->getCentroid();
+	if (centroid < 0)
+		return 0;
+
 	const int size = ael->getMaxSpatialDimension();
 
 	// Function to calculate the circular distance between two points
@@ -80,12 +115,34 @@ int DNFComposerHandler::getTargetObject() const
 	// Determine the closest target and return the corresponding value
 	const double minDistance = std::min({ distanceTo30, distanceTo60, distanceTo0 });
 
+	// 0 - 3 // 30 - 2 // 60 - 1
 	if (minDistance == distanceTo30)
 		return 2;
-	else if (minDistance == distanceTo60) 
-		return 3;
-	else 
+	if (minDistance == distanceTo60) 
 		return 1;
+	return 3;
+}
+
+void DNFComposerHandler::addTargetObject(int objectIndex) const
+{
+	if(objectIndex == 1)
+	{
+		auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
+		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 60 };
+		oml_stimulus->setParameters(new_params);
+	}
+	if (objectIndex == 2)
+	{
+		auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 2"));
+		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 30 };
+		oml_stimulus->setParameters(new_params);
+	}
+	if(objectIndex == 3)
+	{
+		auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
+		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 0 };
+		oml_stimulus->setParameters(new_params);
+	}
 }
 
 void DNFComposerHandler::removeTargetObject(int objectIndex) const
@@ -151,4 +208,3 @@ void DNFComposerHandler::setupUserInterface() const
 	aelPlotWindow->addPlottingData("ael", "output");
 	application->activateUserInterfaceWindow(aelPlotWindow);
 }
-
