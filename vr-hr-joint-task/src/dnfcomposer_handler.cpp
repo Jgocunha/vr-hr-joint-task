@@ -31,7 +31,7 @@ void DNFComposerHandler::run()
 		{
 			application->step();
 			userRequestClose = application->getCloseUI();
-			//Sleep(2);
+			Sleep(1);
 		}
 		application->close();
 	}
@@ -87,7 +87,7 @@ void DNFComposerHandler::setHandStimulus(const double& hand_y, const double& han
 	const auto aol_stimulus = 
 		std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
 	double new_hand_y = transformXToCircular(hand_y);
-	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, hand_proximity,new_hand_y };
+	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, hand_proximity, hand_y };
 	aol_stimulus->setParameters(new_params);
 }
 

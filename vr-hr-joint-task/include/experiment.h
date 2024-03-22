@@ -10,7 +10,8 @@ private:
 	DNFComposerHandler dnfcomposerHandler;
 	int commsFrequency;
 	std::thread signalsThread;
-	std::thread handPositionThread;
+	IncomingSignals coppeliasimSignals;
+	OutgoingSignals dnfcomposerSignals;
 	bool taskFinished;
 public:
 	Experiment(std::string name, int commsFreq, double deltaT);
@@ -23,10 +24,10 @@ private:
 	void main();
 	void waitForConnection() const;
 	void waitForSimulationStart();
-	void waitForObjectsToBeCreated() const;
-	void pickAndPlaceObjects();
+	//void waitForObjectsToBeCreated() const;
 
 	void updateHandPosition();
+	void updateObjectsInWorkspace();
 	void updateAvailableObjects();
 	void updateTargetObject();
 	void updateSignals();

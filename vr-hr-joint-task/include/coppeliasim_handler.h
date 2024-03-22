@@ -27,50 +27,47 @@ struct SignalSignatures
 
 };
 
-struct Signals
+struct IncomingSignals
 {
-	bool startSim = true;
 	bool simStarted = false;
-
 	bool objectsCreated = false;
-	int targetObject = 0;
-
 	bool object1 = false;
 	bool object2 = false;
 	bool object3 = false;
-
 	bool objectGrasped = false;
 	bool objectPlaced = false;
-
 	float hand_y = 0.00f;
 	float hand_proximity = 0.00f;
+};
+
+struct OutgoingSignals
+{
+	bool startSim = false;
+	int targetObject = 0;
 };
 
 class CoppeliasimHandler
 {
 private:
-	std::thread coppeliasimThread;
 	coppeliasim_cpp::CoppeliaSimClient client;
-	Signals signals;
+	IncomingSignals signals_in;
+	OutgoingSignals signals_out;
+	std::thread coppeliasimThread;
 	bool wereSignalsChanged = false;
 	int handHandle = 0;
 public:
 	CoppeliasimHandler();
 	~CoppeliasimHandler();
-
 	void init();
 	void run();
 	void close();
-
-	bool hasSignalMajorityValue(const std::string& signalName, int requiredValue, int sampleSize) const;
-
-	void setSignal(const std::string& signalName, const int signalValue);
-	Signals getSignals() const;
+	void setSignals(const OutgoingSignals& signals);
+	IncomingSignals getSignals() const;
 	bool isConnected() const;
-
 	void resetSignals() const;
 private:
 	void readSignals();
+	void writeSignals();
 };
 
 

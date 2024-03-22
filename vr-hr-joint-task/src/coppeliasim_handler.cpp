@@ -23,7 +23,6 @@ void CoppeliasimHandler::run()
 {
 	try
 	{
-		// keep trying to initialize the connection
 		while (!client.initialize());
 
 		resetSignals();
@@ -33,8 +32,10 @@ void CoppeliasimHandler::run()
 
 		while (isConnected())
 		{
+			if (wereSignalsChanged)
+				writeSignals();
 			readSignals();
-			//Sleep(10);
+			Sleep(10);
 		}
 
 		resetSignals();
@@ -58,32 +59,21 @@ void CoppeliasimHandler::close()
 	log(dnf_composer::tools::logger::LogLevel::INFO, "Coppeliasim Handler: Thread has finished its execution.\n");
 }
 
-void CoppeliasimHandler::setSignal(const std::string& signalName, const int signalValue)
+void CoppeliasimHandler::setSignals(const OutgoingSignals& signals)
 {
-	client.setIntegerSignal(signalName, signalValue);
-	//log(dnf_composer::tools::logger::LogLevel::INFO, "Signal " + signalName + " was written as " + std::to_string(signalValue) + '\n');
+	signals_out = signals;
+	wereSignalsChanged = true;
 }
 
-Signals CoppeliasimHandler::getSignals() const
+
+IncomingSignals CoppeliasimHandler::getSignals() const
 {
-	return signals;
+	return signals_in;
 }
 
 bool CoppeliasimHandler::isConnected() const
 {
 	return client.isConnected();
-}
-
-void CoppeliasimHandler::readSignals()
-{
-	signals.simStarted = client.getIntegerSignal(SignalSignatures::SIM_STARTED);
-	signals.object1 = client.getIntegerSignal(SignalSignatures::OBJECT1_EXISTS);
-	signals.object2 = client.getIntegerSignal(SignalSignatures::OBJECT2_EXISTS);
-	signals.object3 = client.getIntegerSignal(SignalSignatures::OBJECT3_EXISTS);
-	signals.objectGrasped = client.getIntegerSignal(SignalSignatures::OBJECT_GRASPED);
-	signals.objectPlaced = client.getIntegerSignal(SignalSignatures::OBJECT_PLACED);
-	signals.hand_proximity = client.getFloatSignal(SignalSignatures::HAND_PROXIMITY);
-	signals.hand_y = client.getFloatSignal(SignalSignatures::HAND_Y);
 }
 
 void CoppeliasimHandler::resetSignals() const
@@ -98,21 +88,56 @@ void CoppeliasimHandler::resetSignals() const
 	client.setIntegerSignal(SignalSignatures::OBJECT_PLACED, false);
 	client.setFloatSignal(SignalSignatures::HAND_PROXIMITY, 0.00f);
 	client.setFloatSignal(SignalSignatures::HAND_Y, 0.00f);
-
 }
 
-bool CoppeliasimHandler::hasSignalMajorityValue(const std::string& signalName, int requiredValue, int sampleSize) const
+void CoppeliasimHandler::readSignals()
 {
-	int count = 0;
-	for (int i = 0; i < sampleSize; ++i)
-	{
-		int signalValue = client.getIntegerSignal(signalName);
-		if (signalValue == requiredValue)
-		{
-			++count;
-		}
-	}
-	// Check if the majority of the samples have the required value
-	return count > sampleSize / 2;
+	signals_in.simStarted = client.getIntegerSignal(SignalSignatures::SIM_STARTED);
+	signals_in.object1 = client.getIntegerSignal(SignalSignatures::OBJECT1_EXISTS);
+	signals_in.object2 = client.getIntegerSignal(SignalSignatures::OBJECT2_EXISTS);
+	signals_in.object3 = client.getIntegerSignal(SignalSignatures::OBJECT3_EXISTS);
+	signals_in.objectGrasped = client.getIntegerSignal(SignalSignatures::OBJECT_GRASPED);
+	signals_in.objectPlaced = client.getIntegerSignal(SignalSignatures::OBJECT_PLACED);
+	signals_in.hand_proximity = client.getFloatSignal(SignalSignatures::HAND_PROXIMITY);
+	signals_in.hand_y = client.getFloatSignal(SignalSignatures::HAND_Y);
+
+	
+	log(dnf_composer::tools::logger::LogLevel::INFO, "Reading incoming signals\n");
+	
+	std::string msg = "Signal SIM_STARTED : " + std::to_string(signals_in.simStarted) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
+	msg = "Signal OBJ_1 : " + std::to_string(signals_in.object1) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
+	msg = "Signal OBJ_2 : " + std::to_string(signals_in.object2) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
+	msg = "Signal OBJ_3 : " + std::to_string(signals_in.object3) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
+	msg = "Signal OBJ_GRASPED : " + std::to_string(signals_in.objectGrasped) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
+	msg = "Signal OBJ_PLACED : " + std::to_string(signals_in.objectPlaced) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
+	msg = "Signal HAND_PROX : " + std::to_string(signals_in.hand_proximity) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
+	msg = "Signal HAND_Y : " + std::to_string(signals_in.hand_y) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
+
+	log(dnf_composer::tools::logger::LogLevel::INFO, "\n\n");
+	
 }
 
+void CoppeliasimHandler::writeSignals()
+{
+	client.setIntegerSignal(SignalSignatures::START_SIM, signals_out.startSim);
+	client.setIntegerSignal(SignalSignatures::TARGET_OBJECT, signals_out.targetObject);
+
+	wereSignalsChanged = false;
+
+	log(dnf_composer::tools::logger::LogLevel::INFO, "Writing outgoing signals\n");
+
+	std::string msg = "Signal START_SIM : " + std::to_string(signals_out.startSim) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
+	msg = "Signal TARGET_OBJECT : " + std::to_string(signals_out.targetObject) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
+
+	log(dnf_composer::tools::logger::LogLevel::INFO, "\n\n");
+}

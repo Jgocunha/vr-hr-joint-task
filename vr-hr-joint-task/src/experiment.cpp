@@ -25,20 +25,18 @@ void Experiment::run()
 
 void Experiment::close()
 {
-	signalsThread.join();
-	handPositionThread.join();
 	coppeliasimHandler.close();
 	dnfcomposerHandler.close();
+	signalsThread.join();
 }
 
 void Experiment::main()
 {
 	waitForConnection();
-	waitForSimulationStart();
-	waitForObjectsToBeCreated();
+	Sleep(commsFrequency);
 	signalsThread = std::thread(&Experiment::updateSignals, this);
-	handPositionThread = std::thread(&Experiment::updateHandPosition, this);
-	//pickAndPlaceObjects();
+	waitForSimulationStart();
+	//waitForObjectsToBeCreated();
 }
 
 void Experiment::waitForConnection() const
@@ -52,78 +50,44 @@ void Experiment::waitForConnection() const
 
 void Experiment::waitForSimulationStart()
 {
-	coppeliasimHandler.setSignal(SignalSignatures::START_SIM, 1);
-	bool hasSimStarted = coppeliasimHandler.getSignals().simStarted;
+	dnfcomposerSignals.startSim = true;
+	bool hasSimStarted = coppeliasimSignals.simStarted;
 	while (!hasSimStarted)
 	{
-		coppeliasimHandler.setSignal(SignalSignatures::START_SIM, 1);
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for CoppeliaSim to start...\n");
-		hasSimStarted = coppeliasimHandler.getSignals().simStarted;
+		hasSimStarted = coppeliasimSignals.simStarted;
 		Sleep(commsFrequency);
 	}
-	//coppeliasimHandler.setSignal(SignalSignatures::START_SIM, 0);
 }
 
-void Experiment::waitForObjectsToBeCreated() const
-{
-	/*bool haveObjectBeenCreated = coppeliasimHandler.getSignals().objectsCreated;
-	while (!haveObjectBeenCreated)
-	{
-		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for objects to be created...\n");
-		haveObjectBeenCreated = coppeliasimHandler.getSignals().objectsCreated;
-		Sleep(commsFrequency);
-	}
-
-	std::tuple<int, int, int> objectPositions = { coppeliasimHandler.getSignals().object1, coppeliasimHandler.getSignals().object2, coppeliasimHandler.getSignals().object3 };
-	while (std::get<0>(objectPositions) == 0 || std::get<1>(objectPositions) == 0 || std::get<2>(objectPositions) == 0)
-	{
-		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for objects to be positioned...\n");
-		objectPositions = { coppeliasimHandler.getSignals().object1, coppeliasimHandler.getSignals().object2, coppeliasimHandler.getSignals().object3 };
-		Sleep(commsFrequency);
-	}*/
-
-	log(dnf_composer::tools::logger::LogLevel::INFO, "Pick and place will now start...\n");
-}
-
-void Experiment::pickAndPlaceObjects()
-{
-
-	do {
-
-		//do {
-		//	//log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be grasped...\n");
-		//	Sleep(commsFrequency);
-		//} while (!coppeliasimHandler.getSignals().objectGrasped);
-		//coppeliasimHandler.setSignal(SignalSignatures::OBJECT_GRASPED, 0);
-
-		//Sleep(commsFrequency);
-
-		//do {
-		//	//log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for object to be placed...\n");
-		//	Sleep(commsFrequency);
-		//} while (!coppeliasimHandler.getSignals().objectPlaced);
-		//coppeliasimHandler.setSignal(SignalSignatures::OBJECT_PLACED, 0);
-
-		////log(dnf_composer::tools::logger::LogLevel::INFO, "An object has been placed by the robot.\n");
-		////Sleep(commsFrequency);
-		Sleep(commsFrequency);
-
-	} while (areObjectsPresent());
-
-	Sleep(commsFrequency);
-	taskFinished = true;
-}
-
+//void Experiment::waitForObjectsToBeCreated() const
+//{
+//	bool haveObjectBeenCreated = signals.objectsCreated;
+//	while (!haveObjectBeenCreated)
+//	{
+//		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for objects to be created...\n");
+//		haveObjectBeenCreated = signals.objectsCreated;
+//		Sleep(commsFrequency);
+//	}
+//
+//	std::tuple<int, int, int> objectPositions = { signals.object1, signals.object2, signals.object3 };
+//	while (std::get<0>(objectPositions) == 0 || std::get<1>(objectPositions) == 0 || std::get<2>(objectPositions) == 0)
+//	{
+//		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for objects to be positioned...\n");
+//		objectPositions = { signals.object1, signals.object2, signals.object3 };
+//		Sleep(commsFrequency);
+//	}
+//
+//	log(dnf_composer::tools::logger::LogLevel::INFO, "Pick and place will now start...\n");
+//}
 
 void Experiment::updateHandPosition()
 {
-	do
-	{
+	//do
+	//{
 		bool validValues = true;
-		double hand_proximity = coppeliasimHandler.getSignals().hand_proximity;
-		double hand_y = coppeliasimHandler.getSignals().hand_y;
-		double filtered_hand_proximity = hand_proximity;
-		double filtered_hand_y = hand_y;
+		double filtered_hand_proximity = coppeliasimSignals.hand_proximity;
+		double filtered_hand_y = coppeliasimSignals.hand_y;
 
 		// Filter out bad readings
 		if (filtered_hand_y < 0.1 || filtered_hand_y > 90)
@@ -140,10 +104,14 @@ void Experiment::updateHandPosition()
 		}
 
 		if (validValues)
+		{
 			dnfcomposerHandler.setHandStimulus(filtered_hand_y, filtered_hand_proximity);
+			//const std::string msg = "Filtered hand_y: " + std::to_string(filtered_hand_y) + " Filtered hand_proximity: " + std::to_string(filtered_hand_proximity) + '\n';
+			//log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str(), dnf_composer::tools::logger::LogOutputMode::GUI);
+		}
 
 		//Sleep(1);
-	} while (!taskFinished);
+	//} while (!taskFinished);
 }
 
 void Experiment::updateAvailableObjects()
@@ -151,55 +119,56 @@ void Experiment::updateAvailableObjects()
 	const int sampleSize = 5; // Number of reads to determine the majority
 
 	// Object 1
-	if (coppeliasimHandler.hasSignalMajorityValue(SignalSignatures::OBJECT1_EXISTS, 0, sampleSize))
-	{
+	if (!coppeliasimSignals.object1)
 		dnfcomposerHandler.removeTargetObject(1);
-	}
-	else if (coppeliasimHandler.hasSignalMajorityValue(SignalSignatures::OBJECT1_EXISTS, 1, sampleSize))
-	{
+	else
 		dnfcomposerHandler.addTargetObject(1);
-	}
 
 	// Object 2
-	if (coppeliasimHandler.hasSignalMajorityValue(SignalSignatures::OBJECT2_EXISTS, 0, sampleSize))
-	{
+	if (!coppeliasimSignals.object2)
 		dnfcomposerHandler.removeTargetObject(2);
-	}
-	else if (coppeliasimHandler.hasSignalMajorityValue(SignalSignatures::OBJECT2_EXISTS, 1, sampleSize))
-	{
+	else
 		dnfcomposerHandler.addTargetObject(2);
-	}
 
 	// Object 3
-	if (coppeliasimHandler.hasSignalMajorityValue(SignalSignatures::OBJECT3_EXISTS, 0, sampleSize))
-	{
+	if (!coppeliasimSignals.object3)
 		dnfcomposerHandler.removeTargetObject(3);
-	}
-	else if (coppeliasimHandler.hasSignalMajorityValue(SignalSignatures::OBJECT3_EXISTS, 1, sampleSize))
-	{
+	else 
 		dnfcomposerHandler.addTargetObject(3);
-	}
 }
 
 void Experiment::updateTargetObject()
 {
-	coppeliasimHandler.setSignal(SignalSignatures::TARGET_OBJECT, dnfcomposerHandler.getTargetObject());
+	//coppeliasimHandler.setSignal(SignalSignatures::TARGET_OBJECT, dnfcomposerHandler.getTargetObject());
+	dnfcomposerSignals.targetObject = dnfcomposerHandler.getTargetObject();
+	//coppeliasimHandler.setSignals(dnfcomposerSignals);
 }
 
 void Experiment::updateSignals()
 {
 	do
 	{
+		coppeliasimSignals = coppeliasimHandler.getSignals();
+		updateHandPosition();
 		updateAvailableObjects();
 		updateTargetObject();
-		//Sleep(10);
-	} while (!taskFinished);
+		coppeliasimHandler.setSignals(dnfcomposerSignals);
+		Sleep(10);
+	} while (true);
 }
 
 bool Experiment::areObjectsPresent() const
 {
-	auto signals = coppeliasimHandler.getSignals();
-	bool isPresent = signals.object1 != 0 || signals.object2 != 0 || signals.object3 != 0;
+	bool isPresent = coppeliasimSignals.object1 != 0 || coppeliasimSignals.object2 != 0 || coppeliasimSignals.object3 != 0;
 	return isPresent;
 }
 
+void Experiment::updateObjectsInWorkspace()
+{
+	do
+	{
+		updateAvailableObjects();
+		updateTargetObject();
+		Sleep(1);
+	} while (!taskFinished);
+}
