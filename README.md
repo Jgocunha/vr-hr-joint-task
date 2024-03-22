@@ -61,10 +61,15 @@ https://github.com/BorisBogaerts/CoppeliaSim-VR-Toolbox
     - Run ```copyToVrep.bat``` as admin.
 4. To test you can open CoppeliaSim, open the Hello_vr_world.ttt scene, run the CoppeliaSim VR interface, and then run the scene. You should see the scene load to your vr headset.
 
+**Notes:**
+- Both the HTC VIVE and HTC VIVE Pro Eye have been tested and work.
+- Dynamic loading option not working, so objects cannot be loaded programatically once the simulation is already loaded.
+- Vrep-vive mostly crashes in the first launch, but then works fine.
+
 ## Up and running
 
 1. Clone the project.
 2. Open the CoppeliaSim scene ```scene.ttt```.
 3. Run the build.bat file.
-3. Run the ```vr-hr-joint-task-exe.ttt```.
+3. Run the ```vr-hr-joint-task-exe```.
 4. Run the scene.
