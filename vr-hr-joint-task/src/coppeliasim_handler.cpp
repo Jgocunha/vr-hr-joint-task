@@ -78,7 +78,7 @@ bool CoppeliasimHandler::isConnected() const
 
 void CoppeliasimHandler::resetSignals() const
 {
-	client.setIntegerSignal(SignalSignatures::START_SIM, false);
+	client.setIntegerSignal(SignalSignatures::START_SIM, true);
 	client.setIntegerSignal(SignalSignatures::SIM_STARTED, false);
 	client.setIntegerSignal(SignalSignatures::TARGET_OBJECT, 0);
 	client.setIntegerSignal(SignalSignatures::OBJECT1_EXISTS, false);
