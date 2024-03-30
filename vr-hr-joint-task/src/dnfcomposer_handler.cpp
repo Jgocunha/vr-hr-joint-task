@@ -20,7 +20,7 @@ void DNFComposerHandler::init()
 	dnfcomposerThread = std::thread(&DNFComposerHandler::run, this);
 }
 
-void DNFComposerHandler::run()
+void DNFComposerHandler::run() const
 {
 	try
 	{
@@ -31,7 +31,7 @@ void DNFComposerHandler::run()
 		{
 			application->step();
 			userRequestClose = application->getCloseUI();
-			Sleep(1);
+			Sleep(10);
 		}
 		application->close();
 	}
@@ -39,17 +39,14 @@ void DNFComposerHandler::run()
 	{
 		const std::string errorMessage = "Exception: " + std::string(ex.what()) + " ErrorCode: " + std::to_string(static_cast<int>(ex.getErrorCode())) + ". \n";
 		log(dnf_composer::tools::logger::LogLevel::FATAL, errorMessage, dnf_composer::tools::logger::LogOutputMode::CONSOLE);
-		//return static_cast<int>(ex.getErrorCode());
 	}
 	catch (const std::exception& ex)
 	{
 		log(dnf_composer::tools::logger::LogLevel::FATAL, "Exception caught: " + std::string(ex.what()) + ". \n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
-		//return 1;
 	}
 	catch (...)
 	{
 		log(dnf_composer::tools::logger::LogLevel::FATAL, "Unknown exception occurred. \n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
-		//return 1;
 	}
 }
 
@@ -82,7 +79,7 @@ double DNFComposerHandler::transformXToCircular(const double& x)
 	}
 }
 
-void DNFComposerHandler::setHandStimulus(const double& hand_y, const double& hand_proximity)
+void DNFComposerHandler::setHandStimulus(const double& hand_y, const double& hand_proximity) const
 {
 	const auto aol_stimulus = 
 		std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
@@ -127,19 +124,19 @@ void DNFComposerHandler::addTargetObject(int objectIndex) const
 {
 	if(objectIndex == 1)
 	{
-		auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
+		const auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
 		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 60 };
 		oml_stimulus->setParameters(new_params);
 	}
 	if (objectIndex == 2)
 	{
-		auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 2"));
+		const auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 2"));
 		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 30 };
 		oml_stimulus->setParameters(new_params);
 	}
 	if(objectIndex == 3)
 	{
-		auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
+		const auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
 		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 0 };
 		oml_stimulus->setParameters(new_params);
 	}

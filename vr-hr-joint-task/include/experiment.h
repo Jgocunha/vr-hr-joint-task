@@ -12,7 +12,6 @@ private:
 	std::thread signalsThread;
 	IncomingSignals coppeliasimSignals;
 	OutgoingSignals dnfcomposerSignals;
-	bool taskFinished;
 public:
 	Experiment(std::string name, int commsFreq, double deltaT);
 	~Experiment();
@@ -24,11 +23,11 @@ private:
 	void main();
 	void waitForConnection() const;
 	void waitForSimulationStart();
-	//void waitForObjectsToBeCreated() const;
+	void waitForObjectsToBeCreated() const;
+	void keepAliveWhileTaskIsRunning() const;
 
-	void updateHandPosition();
-	void updateObjectsInWorkspace();
-	void updateAvailableObjects();
+	void updateHandPosition() const;
+	void updateAvailableObjects() const;
 	void updateTargetObject();
 	void updateSignals();
 

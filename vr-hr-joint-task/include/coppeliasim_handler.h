@@ -24,7 +24,6 @@ struct SignalSignatures
 
 	static constexpr const char* HAND_Y = "hand_y";
 	static constexpr const char* HAND_PROXIMITY = "hand_proximity";
-
 };
 
 struct IncomingSignals
@@ -53,7 +52,7 @@ private:
 	IncomingSignals signals_in;
 	OutgoingSignals signals_out;
 	std::thread coppeliasimThread;
-	bool wereSignalsChanged = false;
+	bool wereSignalsChanged = true;
 	int handHandle = 0;
 public:
 	CoppeliasimHandler();
@@ -68,6 +67,7 @@ public:
 private:
 	void readSignals();
 	void writeSignals();
+	void printSignals() const;
 };
 
 

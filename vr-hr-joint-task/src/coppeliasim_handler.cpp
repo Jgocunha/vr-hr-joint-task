@@ -26,9 +26,8 @@ void CoppeliasimHandler::run()
 		while (!client.initialize());
 
 		resetSignals();
-		client.startSimulation();
-
 		handHandle = client.getObjectHandle("RightController");
+		client.startSimulation();
 
 		while (isConnected())
 		{
@@ -100,29 +99,6 @@ void CoppeliasimHandler::readSignals()
 	signals_in.objectPlaced = client.getIntegerSignal(SignalSignatures::OBJECT_PLACED);
 	signals_in.hand_proximity = client.getFloatSignal(SignalSignatures::HAND_PROXIMITY);
 	signals_in.hand_y = client.getFloatSignal(SignalSignatures::HAND_Y);
-
-	
-	log(dnf_composer::tools::logger::LogLevel::INFO, "Reading incoming signals\n");
-	
-	std::string msg = "Signal SIM_STARTED : " + std::to_string(signals_in.simStarted) + '\n';
-	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
-	msg = "Signal OBJ_1 : " + std::to_string(signals_in.object1) + '\n';
-	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
-	msg = "Signal OBJ_2 : " + std::to_string(signals_in.object2) + '\n';
-	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
-	msg = "Signal OBJ_3 : " + std::to_string(signals_in.object3) + '\n';
-	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
-	msg = "Signal OBJ_GRASPED : " + std::to_string(signals_in.objectGrasped) + '\n';
-	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
-	msg = "Signal OBJ_PLACED : " + std::to_string(signals_in.objectPlaced) + '\n';
-	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
-	msg = "Signal HAND_PROX : " + std::to_string(signals_in.hand_proximity) + '\n';
-	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
-	msg = "Signal HAND_Y : " + std::to_string(signals_in.hand_y) + '\n';
-	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
-
-	log(dnf_composer::tools::logger::LogLevel::INFO, "\n\n");
-	
 }
 
 void CoppeliasimHandler::writeSignals()
@@ -131,13 +107,37 @@ void CoppeliasimHandler::writeSignals()
 	client.setIntegerSignal(SignalSignatures::TARGET_OBJECT, signals_out.targetObject);
 
 	wereSignalsChanged = false;
+}
+
+void CoppeliasimHandler::printSignals() const
+{
+	log(dnf_composer::tools::logger::LogLevel::INFO, "Reading incoming signals\n");
+
+	std::string msg = "Signal SIM_STARTED : " + std::to_string(signals_in.simStarted) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg);
+	msg = "Signal OBJ_1 : " + std::to_string(signals_in.object1) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg);
+	msg = "Signal OBJ_2 : " + std::to_string(signals_in.object2) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg);
+	msg = "Signal OBJ_3 : " + std::to_string(signals_in.object3) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg);
+	msg = "Signal OBJ_GRASPED : " + std::to_string(signals_in.objectGrasped) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg);
+	msg = "Signal OBJ_PLACED : " + std::to_string(signals_in.objectPlaced) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg);
+	msg = "Signal HAND_PROX : " + std::to_string(signals_in.hand_proximity) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg);
+	msg = "Signal HAND_Y : " + std::to_string(signals_in.hand_y) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg);
+
+	log(dnf_composer::tools::logger::LogLevel::INFO, "\n\n");
 
 	log(dnf_composer::tools::logger::LogLevel::INFO, "Writing outgoing signals\n");
 
-	std::string msg = "Signal START_SIM : " + std::to_string(signals_out.startSim) + '\n';
-	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
+	msg = "Signal START_SIM : " + std::to_string(signals_out.startSim) + '\n';
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg);
 	msg = "Signal TARGET_OBJECT : " + std::to_string(signals_out.targetObject) + '\n';
-	log(dnf_composer::tools::logger::LogLevel::INFO, msg.c_str());
+	log(dnf_composer::tools::logger::LogLevel::INFO, msg);
 
 	log(dnf_composer::tools::logger::LogLevel::INFO, "\n\n");
 }

@@ -32,9 +32,9 @@ public:
 	~DNFComposerHandler();
 
 	void init();
-	void run();
+	void run() const;
 	void close();
-	void setHandStimulus(const double& hand_y, const double& hand_proximity);
+	void setHandStimulus(const double& hand_y, const double& hand_proximity) const;
 	int getTargetObject() const;
 	void addTargetObject(int objectIndex) const;
 	void removeTargetObject(int objectIndex) const;
