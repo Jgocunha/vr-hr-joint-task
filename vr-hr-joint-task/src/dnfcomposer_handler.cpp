@@ -56,35 +56,11 @@ void DNFComposerHandler::close()
 	log(dnf_composer::tools::logger::LogLevel::INFO, "DNFComposer Handler: Thread has finished its execution.\n");
 }
 
-
-double DNFComposerHandler::transformXToCircular(const double& x) 
-{
-	if (x < 20) {
-		// Assuming a linear transformation below 20
-		return 0; // Maps directly to 0 in the circular scale
-	}
-	else if (x < 40) {
-		// Linear transformation for x in [20, 40) to [0, 30) in circular scale
-		return (x - 20) * 1.5;
-	}
-	else if (x < 80) {
-		// Linear transformation for x in [40, 80) to [30, 60) in circular scale
-		return 30 + (x - 40) * 0.75;
-	}
-	else {
-		// Assuming linear transformation for x in [80, 90] to [60, 90] in circular scale
-		// Note: Since 90 is the same as 0 in the circular scale, this part needs careful handling.
-		// Here, we map [80,90] linearly to [60,0), but you might adjust this based on your needs.
-		return 60 + (x - 80) * 3 / 2;
-	}
-}
-
 void DNFComposerHandler::setHandStimulus(const double& hand_y, const double& hand_proximity) const
 {
 	const auto aol_stimulus = 
 		std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
-	double new_hand_y = transformXToCircular(hand_y);
-	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, hand_proximity, hand_y };
+	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, hand_proximity, hand_y, false, false };
 	aol_stimulus->setParameters(new_params);
 }
 
@@ -105,19 +81,21 @@ int DNFComposerHandler::getTargetObject() const
 		};
 
 	// Calculate distances to the three points
-	double distanceTo30 = circularDistance(centroid, 30);
-	double distanceTo60 = circularDistance(centroid, 60);
-	double distanceTo0 = circularDistance(centroid, 0); // This also works for distance to 100 due to circularity
+	double distanceToObject1 = circularDistance(centroid, 37.5);
+	double distanceToObject2 = circularDistance(centroid, 25);
+	double distanceToObject3 = circularDistance(centroid, 12.5); 
 
 	// Determine the closest target and return the corresponding value
-	const double minDistance = std::min({ distanceTo30, distanceTo60, distanceTo0 });
+	const double minDistance = std::min({ distanceToObject1, distanceToObject2, distanceToObject3 });
 
 	// 0 - 3 // 30 - 2 // 60 - 1
-	if (minDistance == distanceTo30)
-		return 2;
-	if (minDistance == distanceTo60) 
+	if (minDistance == distanceToObject1)
 		return 1;
-	return 3;
+	if (minDistance == distanceToObject2)
+		return 2;
+	if (minDistance == distanceToObject3)
+		return 3;
+	return 0;
 }
 
 void DNFComposerHandler::addTargetObject(int objectIndex) const
@@ -125,19 +103,22 @@ void DNFComposerHandler::addTargetObject(int objectIndex) const
 	if(objectIndex == 1)
 	{
 		const auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
-		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 60 };
+		const auto oml_stimulus_parameters = oml_stimulus->getParameters();
+		const dnf_composer::element::GaussStimulusParameters new_params = { oml_stimulus_parameters.sigma, 5, oml_stimulus_parameters.position, false, false};
 		oml_stimulus->setParameters(new_params);
 	}
 	if (objectIndex == 2)
 	{
 		const auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 2"));
-		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 30 };
+		const auto oml_stimulus_parameters = oml_stimulus->getParameters();
+		const dnf_composer::element::GaussStimulusParameters new_params = { oml_stimulus_parameters.sigma, 5, oml_stimulus_parameters.position, false, false };
 		oml_stimulus->setParameters(new_params);
 	}
 	if(objectIndex == 3)
 	{
 		const auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
-		const dnf_composer::element::GaussStimulusParameters new_params = { 3, 5, 0 };
+		const auto oml_stimulus_parameters = oml_stimulus->getParameters();
+		const dnf_composer::element::GaussStimulusParameters new_params = { oml_stimulus_parameters.sigma, 5, oml_stimulus_parameters.position, false, false };
 		oml_stimulus->setParameters(new_params);
 	}
 }
@@ -145,24 +126,31 @@ void DNFComposerHandler::addTargetObject(int objectIndex) const
 void DNFComposerHandler::removeTargetObject(int objectIndex) const
 {
 	auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
+	auto oml_stimulus_parameters = oml_stimulus->getParameters();
 	if(objectIndex == 2)
+	{
 		oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 2"));
+		oml_stimulus_parameters = oml_stimulus->getParameters();
+	}
 	else if(objectIndex == 3)
+	{
 		oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
+		oml_stimulus_parameters = oml_stimulus->getParameters();
+	}
 
-	const dnf_composer::element::GaussStimulusParameters new_params = { 1, 0, 0 };
+	const dnf_composer::element::GaussStimulusParameters new_params = { oml_stimulus_parameters.sigma, 0, oml_stimulus_parameters.position, false, false };
 	oml_stimulus->setParameters(new_params);
 }
 
 void DNFComposerHandler::setupUserInterface() const
 {
 	using namespace dnf_composer;
-	element::ElementSpatialDimensionParameters dim_params{ 90, 1.0 };
+	element::ElementSpatialDimensionParameters dim_params{ 50, 0.2 };
 
 	// Create User Interface windows
 	//application->activateUserInterfaceWindow(user_interface::SIMULATION_WINDOW);
 	application->activateUserInterfaceWindow(user_interface::LOG_WINDOW);
-	application->activateUserInterfaceWindow(user_interface::ELEMENT_WINDOW);
+	//application->activateUserInterfaceWindow(user_interface::ELEMENT_WINDOW);
 	//application->activateUserInterfaceWindow(user_interface::MONITORING_WINDOW);
 
 	constexpr int yMax = 10;
@@ -171,7 +159,8 @@ void DNFComposerHandler::setupUserInterface() const
 	// Create a plot for each neural field
 	user_interface::PlotParameters aolPlotParameters;
 	aolPlotParameters.annotations = { "Action observation layer", "Spatial dimension", "Amplitude" };
-	aolPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
+	aolPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax+2, dim_params.d_x };
+	aolPlotParameters.renderDataSelector = false;
 	const auto aolPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, aolPlotParameters);
 	aolPlotWindow->addPlottingData("aol", "activation");
 	aolPlotWindow->addPlottingData("aol", "input");
@@ -180,7 +169,8 @@ void DNFComposerHandler::setupUserInterface() const
 
 	user_interface::PlotParameters aslPlotParameters;
 	aslPlotParameters.annotations = { "Action simulation layer", "Spatial dimension", "Amplitude" };
-	aslPlotParameters.dimensions = { 0, dim_params.x_max, -15, yMax, dim_params.d_x };
+	aslPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
+	aslPlotParameters.renderDataSelector = false;
 	const auto aslPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, aslPlotParameters);
 	aslPlotWindow->addPlottingData("asl", "activation");
 	aslPlotWindow->addPlottingData("asl", "input");
@@ -190,6 +180,7 @@ void DNFComposerHandler::setupUserInterface() const
 	user_interface::PlotParameters omlPlotParameters;
 	omlPlotParameters.annotations = { "Object memory layer", "Spatial dimension", "Amplitude" };
 	omlPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
+	omlPlotParameters.renderDataSelector = false;
 	const auto omlPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, omlPlotParameters);
 	omlPlotWindow->addPlottingData("oml", "activation");
 	omlPlotWindow->addPlottingData("oml", "input");
@@ -198,7 +189,8 @@ void DNFComposerHandler::setupUserInterface() const
 
 	user_interface::PlotParameters aelPlotParameters;
 	aelPlotParameters.annotations = { "Action execution layer", "Spatial dimension", "Amplitude" };
-	aelPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
+	aelPlotParameters.dimensions = { 0, dim_params.x_max, -yMin-20, yMax, dim_params.d_x };
+	aelPlotParameters.renderDataSelector = false;
 	const auto aelPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, aelPlotParameters);
 	aelPlotWindow->addPlottingData("ael", "activation");
 	aelPlotWindow->addPlottingData("ael", "input");

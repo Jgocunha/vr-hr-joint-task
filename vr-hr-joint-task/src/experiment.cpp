@@ -79,6 +79,9 @@ void Experiment::keepAliveWhileTaskIsRunning() const
 	{
 		Sleep(commsFrequency);
 	}
+	// For now let's keep alive
+	// for a few seconds after the task is done.
+	Sleep(10000);
 }
 
 void Experiment::updateHandPosition() const
