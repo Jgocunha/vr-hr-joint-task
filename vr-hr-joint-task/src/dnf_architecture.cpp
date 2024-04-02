@@ -67,43 +67,43 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitecture(cons
 	simulation->createInteraction("aol -> asl", "output", "asl");
 
 	// Object memory layer
-	element::GaussStimulusParameters oml_gsp = { stimulus_sigma, stimulus_amplitude, 12.5, circularity, normalization };
-	const auto oml_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS, { "object stimulus 3", dim_params }, { oml_gsp });
-	simulation->addElement(oml_stimulus_1);
+	element::GaussStimulusParameters orl_gsp = { stimulus_sigma, stimulus_amplitude, 12.5, circularity, normalization };
+	const auto orl_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS, { "object stimulus 3", dim_params }, { orl_gsp });
+	simulation->addElement(orl_stimulus_1);
 
-	oml_gsp = { stimulus_sigma, stimulus_amplitude, 25, circularity, normalization };
-	const auto oml_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS, { "object stimulus 2", dim_params }, { oml_gsp });
-	simulation->addElement(oml_stimulus_2);
+	orl_gsp = { stimulus_sigma, stimulus_amplitude, 25, circularity, normalization };
+	const auto orl_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS, { "object stimulus 2", dim_params }, { orl_gsp });
+	simulation->addElement(orl_stimulus_2);
 
-	oml_gsp = { stimulus_sigma, stimulus_amplitude, 37.5, circularity, normalization };
-	const auto oml_stimulus_3 = factory.createElement(element::GAUSS_STIMULUS, { "object stimulus 1", dim_params }, { oml_gsp });
-	simulation->addElement(oml_stimulus_3);
+	orl_gsp = { stimulus_sigma, stimulus_amplitude, 37.5, circularity, normalization };
+	const auto orl_stimulus_3 = factory.createElement(element::GAUSS_STIMULUS, { "object stimulus 1", dim_params }, { orl_gsp });
+	simulation->addElement(orl_stimulus_3);
 
-	element::SigmoidFunction oml_af = { x_shift, steepness };
-	element::NeuralFieldParameters oml_params = { tau, resting_level, oml_af };
-	const auto oml = factory.createElement(element::NEURAL_FIELD, { "oml", dim_params }, { oml_params });
-	simulation->addElement(oml);
+	element::SigmoidFunction orl_af = { x_shift, steepness };
+	element::NeuralFieldParameters orl_params = { tau, resting_level, orl_af };
+	const auto orl = factory.createElement(element::NEURAL_FIELD, { "orl", dim_params }, { orl_params });
+	simulation->addElement(orl);
 
-	element::GaussKernelParameters oml_oml_k_params = { 1, 2, circularity, normalization };
-	const auto oml_oml_k = factory.createElement(element::GAUSS_KERNEL, { "oml -> oml", dim_params }, { oml_oml_k_params });
-	simulation->addElement(oml_oml_k);
+	element::GaussKernelParameters orl_orl_k_params = { 1, 2, circularity, normalization };
+	const auto orl_orl_k = factory.createElement(element::GAUSS_KERNEL, { "orl -> orl", dim_params }, { orl_orl_k_params });
+	simulation->addElement(orl_orl_k);
 
-	element::GaussKernelParameters oml_asl_k_params = { 1.9, 0.7, circularity, normalization };
-	const auto oml_asl_k = factory.createElement(element::GAUSS_KERNEL, { "oml -> asl", dim_params }, { oml_asl_k_params });
-	simulation->addElement(oml_asl_k);
+	element::GaussKernelParameters orl_asl_k_params = { 1.9, 0.7, circularity, normalization };
+	const auto orl_asl_k = factory.createElement(element::GAUSS_KERNEL, { "orl -> asl", dim_params }, { orl_asl_k_params });
+	simulation->addElement(orl_asl_k);
 
-	element::NormalNoiseParameters oml_nn_params = { noise_amplitude };
-	const auto oml_nn = factory.createElement(element::NORMAL_NOISE, { "normal noise oml", dim_params }, oml_nn_params);
-	simulation->addElement(oml_nn);
+	element::NormalNoiseParameters orl_nn_params = { noise_amplitude };
+	const auto orl_nn = factory.createElement(element::NORMAL_NOISE, { "normal noise orl", dim_params }, orl_nn_params);
+	simulation->addElement(orl_nn);
 
-	simulation->createInteraction("oml", "output", "oml -> asl");
-	simulation->createInteraction("oml -> asl", "output", "asl");
-	simulation->createInteraction("oml", "output", "oml -> oml");
-	simulation->createInteraction("oml -> oml", "output", "oml");
-	simulation->createInteraction("normal noise oml", "output", "oml");
-	simulation->createInteraction("object stimulus 1", "output", "oml");
-	simulation->createInteraction("object stimulus 2", "output", "oml");
-	simulation->createInteraction("object stimulus 3", "output", "oml");
+	simulation->createInteraction("orl", "output", "orl -> asl");
+	simulation->createInteraction("orl -> asl", "output", "asl");
+	simulation->createInteraction("orl", "output", "orl -> orl");
+	simulation->createInteraction("orl -> orl", "output", "orl");
+	simulation->createInteraction("normal noise orl", "output", "orl");
+	simulation->createInteraction("object stimulus 1", "output", "orl");
+	simulation->createInteraction("object stimulus 2", "output", "orl");
+	simulation->createInteraction("object stimulus 3", "output", "orl");
 
 	// Action execution layer
 	element::SigmoidFunction ael_af = { x_shift, steepness };
@@ -119,9 +119,9 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitecture(cons
 	const auto ael_ael_k = factory.createElement(element::LATERAL_INTERACTIONS, { "ael -> ael", dim_params }, { ael_ael_k_params });
 	simulation->addElement(ael_ael_k);
 
-	element::GaussKernelParameters oml_ael_k_params = { 2, 1.5, circularity, normalization };
-	const auto oml_ael_k = factory.createElement(element::GAUSS_KERNEL, { "oml -> ael", dim_params }, { oml_ael_k_params });
-	simulation->addElement(oml_ael_k);
+	element::GaussKernelParameters orl_ael_k_params = { 2, 1.5, circularity, normalization };
+	const auto orl_ael_k = factory.createElement(element::GAUSS_KERNEL, { "orl -> ael", dim_params }, { orl_ael_k_params });
+	simulation->addElement(orl_ael_k);
 
 	element::NormalNoiseParameters ael_nn_params = { noise_amplitude };
 	const auto ael_nn = factory.createElement(element::NORMAL_NOISE, { "normal noise ael", dim_params }, ael_nn_params);
@@ -132,8 +132,8 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitecture(cons
 	simulation->createInteraction("normal noise ael", "output", "ael");
 	simulation->createInteraction("asl", "output", "asl -> ael");
 	simulation->createInteraction("asl -> ael", "output", "ael");
-	simulation->createInteraction("oml -> ael", "output", "ael");
-	simulation->createInteraction("oml", "output", "oml -> ael");
+	simulation->createInteraction("orl -> ael", "output", "ael");
+	simulation->createInteraction("orl", "output", "orl -> ael");
 
 	return simulation;
 }

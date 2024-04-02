@@ -102,44 +102,44 @@ void DNFComposerHandler::addTargetObject(int objectIndex) const
 {
 	if(objectIndex == 1)
 	{
-		const auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
-		const auto oml_stimulus_parameters = oml_stimulus->getParameters();
-		const dnf_composer::element::GaussStimulusParameters new_params = { oml_stimulus_parameters.sigma, 5, oml_stimulus_parameters.position, false, false};
-		oml_stimulus->setParameters(new_params);
+		const auto orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
+		const auto orl_stimulus_parameters = orl_stimulus->getParameters();
+		const dnf_composer::element::GaussStimulusParameters new_params = { orl_stimulus_parameters.sigma, 5, orl_stimulus_parameters.position, false, false};
+		orl_stimulus->setParameters(new_params);
 	}
 	if (objectIndex == 2)
 	{
-		const auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 2"));
-		const auto oml_stimulus_parameters = oml_stimulus->getParameters();
-		const dnf_composer::element::GaussStimulusParameters new_params = { oml_stimulus_parameters.sigma, 5, oml_stimulus_parameters.position, false, false };
-		oml_stimulus->setParameters(new_params);
+		const auto orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 2"));
+		const auto orl_stimulus_parameters = orl_stimulus->getParameters();
+		const dnf_composer::element::GaussStimulusParameters new_params = { orl_stimulus_parameters.sigma, 5, orl_stimulus_parameters.position, false, false };
+		orl_stimulus->setParameters(new_params);
 	}
 	if(objectIndex == 3)
 	{
-		const auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
-		const auto oml_stimulus_parameters = oml_stimulus->getParameters();
-		const dnf_composer::element::GaussStimulusParameters new_params = { oml_stimulus_parameters.sigma, 5, oml_stimulus_parameters.position, false, false };
-		oml_stimulus->setParameters(new_params);
+		const auto orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
+		const auto orl_stimulus_parameters = orl_stimulus->getParameters();
+		const dnf_composer::element::GaussStimulusParameters new_params = { orl_stimulus_parameters.sigma, 5, orl_stimulus_parameters.position, false, false };
+		orl_stimulus->setParameters(new_params);
 	}
 }
 
 void DNFComposerHandler::removeTargetObject(int objectIndex) const
 {
-	auto oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
-	auto oml_stimulus_parameters = oml_stimulus->getParameters();
+	auto orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
+	auto orl_stimulus_parameters = orl_stimulus->getParameters();
 	if(objectIndex == 2)
 	{
-		oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 2"));
-		oml_stimulus_parameters = oml_stimulus->getParameters();
+		orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 2"));
+		orl_stimulus_parameters = orl_stimulus->getParameters();
 	}
 	else if(objectIndex == 3)
 	{
-		oml_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
-		oml_stimulus_parameters = oml_stimulus->getParameters();
+		orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
+		orl_stimulus_parameters = orl_stimulus->getParameters();
 	}
 
-	const dnf_composer::element::GaussStimulusParameters new_params = { oml_stimulus_parameters.sigma, 0, oml_stimulus_parameters.position, false, false };
-	oml_stimulus->setParameters(new_params);
+	const dnf_composer::element::GaussStimulusParameters new_params = { orl_stimulus_parameters.sigma, 0, orl_stimulus_parameters.position, false, false };
+	orl_stimulus->setParameters(new_params);
 }
 
 void DNFComposerHandler::setupUserInterface() const
@@ -177,15 +177,15 @@ void DNFComposerHandler::setupUserInterface() const
 	aslPlotWindow->addPlottingData("asl", "output");
 	application->activateUserInterfaceWindow(aslPlotWindow);
 
-	user_interface::PlotParameters omlPlotParameters;
-	omlPlotParameters.annotations = { "Object memory layer", "Spatial dimension", "Amplitude" };
-	omlPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
-	omlPlotParameters.renderDataSelector = false;
-	const auto omlPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, omlPlotParameters);
-	omlPlotWindow->addPlottingData("oml", "activation");
-	omlPlotWindow->addPlottingData("oml", "input");
-	omlPlotWindow->addPlottingData("oml", "output");
-	application->activateUserInterfaceWindow(omlPlotWindow);
+	user_interface::PlotParameters orlPlotParameters;
+	orlPlotParameters.annotations = { "Object representation layer", "Spatial dimension", "Amplitude" };
+	orlPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
+	orlPlotParameters.renderDataSelector = false;
+	const auto orlPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, orlPlotParameters);
+	orlPlotWindow->addPlottingData("orl", "activation");
+	orlPlotWindow->addPlottingData("orl", "input");
+	orlPlotWindow->addPlottingData("orl", "output");
+	application->activateUserInterfaceWindow(orlPlotWindow);
 
 	user_interface::PlotParameters aelPlotParameters;
 	aelPlotParameters.annotations = { "Action execution layer", "Spatial dimension", "Amplitude" };
