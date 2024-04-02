@@ -19,9 +19,17 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitecture(cons
 	constexpr double noise_amplitude = 0.001;
 
 	// Action observation layer
-	element::GaussStimulusParameters hand_position_gsp = { stimulus_sigma+1, 0, 0, circularity, normalization };
-	const auto hand_position_stimulus = factory.createElement(element::GAUSS_STIMULUS, { "hand position stimulus", dim_params }, { hand_position_gsp });
-	simulation->addElement(hand_position_stimulus);
+	element::GaussStimulusParameters hand_position_gsp = { stimulus_sigma, 0, 12.5, circularity, normalization };
+	const auto hand_position_stimulus_3 = factory.createElement(element::GAUSS_STIMULUS, { "hand position stimulus 3", dim_params }, { hand_position_gsp });
+	simulation->addElement(hand_position_stimulus_3);
+
+	hand_position_gsp = { stimulus_sigma, 0, 25, circularity, normalization };
+	const auto hand_position_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS, { "hand position stimulus 2", dim_params }, { hand_position_gsp });
+	simulation->addElement(hand_position_stimulus_2);
+
+	hand_position_gsp = { stimulus_sigma, 0, 37.5, circularity, normalization };
+	const auto hand_position_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS, { "hand position stimulus 2", dim_params }, { hand_position_gsp });
+	simulation->addElement(hand_position_stimulus_1);
 
 	const element::SigmoidFunction aol_af = { x_shift, steepness };
 	element::NeuralFieldParameters aol_params = { tau, resting_level, aol_af };
@@ -39,7 +47,9 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitecture(cons
 	simulation->createInteraction("aol", "output", "aol -> aol");
 	simulation->createInteraction("aol -> aol", "output", "aol");
 	simulation->createInteraction("normal noise aol", "output", "aol");
-	simulation->createInteraction("hand position stimulus", "output", "aol");
+	simulation->createInteraction("hand position stimulus 3", "output", "aol");
+	simulation->createInteraction("hand position stimulus 2", "output", "aol");
+	simulation->createInteraction("hand position stimulus 1", "output", "aol");
 
 	// Action simulation layer
 	const element::SigmoidFunction asl_af = { x_shift, steepness };
