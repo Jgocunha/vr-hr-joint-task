@@ -145,7 +145,7 @@ void DNFComposerHandler::removeTargetObject(int objectIndex) const
 void DNFComposerHandler::setupUserInterface() const
 {
 	using namespace dnf_composer;
-	element::ElementSpatialDimensionParameters dim_params{ 50, 0.2 };
+	element::ElementSpatialDimensionParameters dim_params{ 50, 0.5 };
 
 	// Create User Interface windows
 	//application->activateUserInterfaceWindow(user_interface::SIMULATION_WINDOW);

@@ -7,7 +7,7 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitecture(cons
 	auto simulation = std::make_shared<Simulation>(id, deltaT, 0, 0);
 
 	element::ElementFactory factory;
-	element::ElementSpatialDimensionParameters dim_params{ 50, 0.2 };
+	element::ElementSpatialDimensionParameters dim_params{ 50, 0.5 };
 	constexpr bool circularity = false;
 	constexpr bool normalization = false;
 	constexpr double tau = 25;
@@ -19,7 +19,7 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitecture(cons
 	constexpr double noise_amplitude = 0.001;
 
 	// Action observation layer
-	element::GaussStimulusParameters hand_position_gsp = { stimulus_sigma, 0, 0, circularity, normalization };
+	element::GaussStimulusParameters hand_position_gsp = { stimulus_sigma+1, 0, 0, circularity, normalization };
 	const auto hand_position_stimulus = factory.createElement(element::GAUSS_STIMULUS, { "hand position stimulus", dim_params }, { hand_position_gsp });
 	simulation->addElement(hand_position_stimulus);
 
