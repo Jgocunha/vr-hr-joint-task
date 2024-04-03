@@ -15,6 +15,12 @@ struct SignalSignatures
 	static constexpr const char* OBJECT_PLACED = "objectPlaced";
 	static constexpr const char* HAND_Y = "hand_y";
 	static constexpr const char* HAND_PROXIMITY = "hand_proximity";
+	static constexpr const char* HUMAN_GRASP_OBJ1 = "humanGraspObj1";
+	static constexpr const char* HUMAN_GRASP_OBJ2 = "humanGraspObj2";
+	static constexpr const char* HUMAN_GRASP_OBJ3 = "humanGraspObj3";
+	static constexpr const char* HUMAN_PLACE_OBJ1 = "humanPlaceObj1";
+	static constexpr const char* HUMAN_PLACE_OBJ2 = "humanPlaceObj2";
+	static constexpr const char* HUMAN_PLACE_OBJ3 = "humanPlaceObj3";
 };
 
 struct IncomingSignals
@@ -27,6 +33,12 @@ struct IncomingSignals
 	bool objectPlaced;
 	float hand_y;
 	float hand_proximity;
+	bool humanGraspObj1;
+	bool humanGraspObj2;
+	bool humanGraspObj3;
+	bool humanPlaceObj1;
+	bool humanPlaceObj2;
+	bool humanPlaceObj3;
 
 	IncomingSignals()
 		: simStarted(false)
@@ -37,6 +49,12 @@ struct IncomingSignals
 		,objectPlaced(false)
 	,hand_y(0.0f)
 	,hand_proximity(0.0f)
+	, humanGraspObj1(false)
+	, humanGraspObj2(false)
+	, humanGraspObj3(false)
+	, humanPlaceObj1(false)
+	, humanPlaceObj2(false)
+	, humanPlaceObj3(false)
 	{
 	}
 
@@ -51,6 +69,12 @@ struct IncomingSignals
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Object placed: " + std::to_string(objectPlaced));
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Hand y: " + std::to_string(hand_y));
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Hand proximity: " + std::to_string(hand_proximity));
+		log(dnf_composer::tools::logger::LogLevel::INFO, "Human grasp obj1: " + std::to_string(humanGraspObj1));
+		log(dnf_composer::tools::logger::LogLevel::INFO, "Human grasp obj2: " + std::to_string(humanGraspObj2));
+		log(dnf_composer::tools::logger::LogLevel::INFO, "Human grasp obj3: " + std::to_string(humanGraspObj3));
+		log(dnf_composer::tools::logger::LogLevel::INFO, "Human place obj1: " + std::to_string(humanPlaceObj1));
+		log(dnf_composer::tools::logger::LogLevel::INFO, "Human place obj2: " + std::to_string(humanPlaceObj2));
+		log(dnf_composer::tools::logger::LogLevel::INFO, "Human place obj3: " + std::to_string(humanPlaceObj3));
 	}
 };
 

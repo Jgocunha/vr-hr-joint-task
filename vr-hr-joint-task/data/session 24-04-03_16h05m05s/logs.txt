@@ -1,0 +1,14 @@
+2024-04-03 16:05:05 INFO Session started at  24-04-03_16h05m05s
+2024-04-03 16:05:05 INFO Connection with CoppeliaSim established.
+2024-04-03 16:05:07 INFO Simulation started.
+2024-04-03 16:05:07 INFO Objects created.
+2024-04-03 16:05:07 INFO Robot is targeting object 1.
+2024-04-03 16:05:07 INFO Object 1 has been grasped by the robot.
+2024-04-03 16:05:07 INFO Object 1 has been placed by the robot.
+2024-04-03 16:05:11 INFO Robot is targeting object 2.
+2024-04-03 16:05:11 INFO Object 2 has been grasped by the robot.
+2024-04-03 16:05:11 INFO Robot is targeting object 3.
+2024-04-03 16:05:11 INFO Object 3 has been grasped by the robot.
+2024-04-03 16:05:12 INFO Object 3 has been placed by the robot.
+2024-04-03 16:05:14 INFO Robot is targeting object 2.
+2024-04-03 16:05:19 INFO All objects have been placed in the container.
