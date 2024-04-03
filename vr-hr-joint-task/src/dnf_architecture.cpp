@@ -28,7 +28,7 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitecture(cons
 	simulation->addElement(hand_position_stimulus_2);
 
 	hand_position_gsp = { stimulus_sigma, 0, 37.5, circularity, normalization };
-	const auto hand_position_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS, { "hand position stimulus 2", dim_params }, { hand_position_gsp });
+	const auto hand_position_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS, { "hand position stimulus 1", dim_params }, { hand_position_gsp });
 	simulation->addElement(hand_position_stimulus_1);
 
 	const element::SigmoidFunction aol_af = { x_shift, steepness };
@@ -39,6 +39,10 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitecture(cons
 	element::GaussKernelParameters aol_aol_k_params = { 1, 1.5, circularity, normalization };
 	const auto aol_aol_k = factory.createElement(element::GAUSS_KERNEL, { "aol -> aol", dim_params }, { aol_aol_k_params });
 	simulation->addElement(aol_aol_k);
+
+	//element::LateralInteractionsParameters aol_aol_k_params = { 4.75, 5.37, 3.375, 5.677, -2.5,  circularity, normalization };
+	//const auto aol_aol_k = factory.createElement(element::LATERAL_INTERACTIONS, { "aol -> aol", dim_params }, { aol_aol_k_params });
+	//simulation->addElement(aol_aol_k);
 
 	const element::NormalNoiseParameters aol_nn_params = { noise_amplitude };
 	const auto aol_nn = factory.createElement(element::NORMAL_NOISE, { "normal noise aol", dim_params }, aol_nn_params);
@@ -57,7 +61,7 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitecture(cons
 	const auto asl = factory.createElement(element::NEURAL_FIELD, { "asl", dim_params }, { asl_params });
 	simulation->addElement(asl);
 
-	element::LateralInteractionsParameters asl_asl_k_params = { 1, 2, 0.5, 1.5, -0.1, circularity, normalization };
+	element::LateralInteractionsParameters asl_asl_k_params = { 3.3, 5.626, 3.375, 5.03, -0.515, circularity, normalization };
 	const auto asl_asl_k = factory.createElement(element::LATERAL_INTERACTIONS, { "asl -> asl", dim_params }, { asl_asl_k_params });
 	simulation->addElement(asl_asl_k);
 

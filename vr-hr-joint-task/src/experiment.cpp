@@ -79,14 +79,45 @@ void Experiment::keepAliveWhileTaskIsRunning() const
 	{
 		Sleep(commsFrequency);
 	}
-	// For now let's keep alive
-	// for a few seconds after the task is done.
+	// For now let's keep alive for a few seconds after the task is done.
 	Sleep(10000);
 }
 
 void Experiment::updateHandPosition() const
 {
-	dnfcomposerHandler.setHandStimulus(coppeliasimSignals.hand_y, coppeliasimSignals.hand_proximity);
+	static Position handPrevious = handPosition;
+	static const Position objPosition1 = { 0.60023, -0.02697, 0.70607 };
+	static const Position objPosition2 = { 0.60042, -0.15003, 0.70607 };
+	static const Position objPosition3 = { 0.60344, -0.27474, 0.70607 };
+	static constexpr double tau = 0.1;
+	static constexpr double sigma = 0.1;
+
+	using Clock = std::chrono::high_resolution_clock;
+	auto lastTime = Clock::now();
+
+	const auto currentTime = Clock::now();
+	const std::chrono::duration<double> elapsed = currentTime - lastTime;
+	const double deltaTime = elapsed.count();
+
+	// Check if elapsed time is too small
+	if (deltaTime < std::numeric_limits<double>::epsilon())
+		return;
+
+	double likelihood_1 = calculateLikelihoodOfHumanAction(handPosition, handPrevious, objPosition1, deltaTime, tau, sigma);
+	double likelihood_2 = calculateLikelihoodOfHumanAction(handPosition, handPrevious, objPosition2, deltaTime, tau, sigma);
+	double likelihood_3 = calculateLikelihoodOfHumanAction(handPosition, handPrevious, objPosition3, deltaTime, tau, sigma);
+
+	if(!coppeliasimSignals.object1)
+		likelihood_1 = 0.0;
+	if (!coppeliasimSignals.object2)
+		likelihood_2 = 0.0;
+	if (!coppeliasimSignals.object3)
+		likelihood_3 = 0.0;
+
+	dnfcomposerHandler.setHandStimulus(likelihood_1, likelihood_2, likelihood_3);
+
+	handPrevious = handPosition;
+	lastTime = currentTime;
 }
 
 void Experiment::updateAvailableObjects() const
@@ -120,6 +151,7 @@ void Experiment::updateSignals()
 	do
 	{
 		coppeliasimSignals = coppeliasimHandler.getSignals();
+		handPosition = coppeliasimHandler.getHandPose().position;
 		updateHandPosition();
 		updateAvailableObjects();
 		updateTargetObject();

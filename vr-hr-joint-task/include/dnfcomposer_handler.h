@@ -34,11 +34,10 @@ public:
 	void init();
 	void run() const;
 	void close();
-	void setHandStimulus(const double& hand_y, const double& hand_proximity) const;
+	void setHandStimulus(const double& likelihood_1, const double& likelihood_2, const double& likelihood_3) const;
 	int getTargetObject() const;
 	void addTargetObject(int objectIndex) const;
 	void removeTargetObject(int objectIndex) const;
 private:
 	void setupUserInterface() const;
-	static double transformXToCircular(const double& x);
 };

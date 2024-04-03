@@ -1,7 +1,9 @@
 #include "coppeliasim_handler.h"
 #include "dnfcomposer_handler.h"
 #include "misc.h"
-#include <algorithm> 
+#include <algorithm>
+#include <chrono>
+
 
 class Experiment
 {
@@ -12,6 +14,7 @@ private:
 	std::thread signalsThread;
 	IncomingSignals coppeliasimSignals;
 	OutgoingSignals dnfcomposerSignals;
+	Position handPosition;
 public:
 	Experiment(std::string name, int commsFreq, double deltaT);
 	~Experiment();

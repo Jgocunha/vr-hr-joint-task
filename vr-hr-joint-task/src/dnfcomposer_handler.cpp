@@ -56,12 +56,21 @@ void DNFComposerHandler::close()
 	log(dnf_composer::tools::logger::LogLevel::INFO, "DNFComposer Handler: Thread has finished its execution.\n");
 }
 
-void DNFComposerHandler::setHandStimulus(const double& hand_y, const double& hand_proximity) const
+void DNFComposerHandler::setHandStimulus(const double& likelihood_1, const double& likelihood_2, const double& likelihood_3) const
 {
-	const auto aol_stimulus = 
-		std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
-	const dnf_composer::element::GaussStimulusParameters new_params{aol_stimulus->getParameters().sigma, hand_proximity, hand_y, false, false };
-	aol_stimulus->setParameters(new_params);
+	constexpr double scalar = 10;
+
+	const auto aol_stimulus_1 = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus 1"));
+	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus_1->getParameters().sigma, scalar*likelihood_1, aol_stimulus_1->getParameters().position, false, false };
+	aol_stimulus_1->setParameters(new_params);
+
+	const auto aol_stimulus_2 = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus 2"));
+	const dnf_composer::element::GaussStimulusParameters new_params_2{ aol_stimulus_2->getParameters().sigma, scalar*likelihood_2, aol_stimulus_2->getParameters().position, false, false };
+	aol_stimulus_2->setParameters(new_params_2);
+
+	const auto aol_stimulus_3 = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus 3"));
+	const dnf_composer::element::GaussStimulusParameters new_params_3{ aol_stimulus_3->getParameters().sigma, scalar*likelihood_3, aol_stimulus_3->getParameters().position, false, false };
+	aol_stimulus_3->setParameters(new_params_3);
 }
 
 int DNFComposerHandler::getTargetObject() const
@@ -88,7 +97,6 @@ int DNFComposerHandler::getTargetObject() const
 	// Determine the closest target and return the corresponding value
 	const double minDistance = std::min({ distanceToObject1, distanceToObject2, distanceToObject3 });
 
-	// 0 - 3 // 30 - 2 // 60 - 1
 	if (minDistance == distanceToObject1)
 		return 1;
 	if (minDistance == distanceToObject2)
@@ -150,7 +158,7 @@ void DNFComposerHandler::setupUserInterface() const
 	// Create User Interface windows
 	//application->activateUserInterfaceWindow(user_interface::SIMULATION_WINDOW);
 	application->activateUserInterfaceWindow(user_interface::LOG_WINDOW);
-	//application->activateUserInterfaceWindow(user_interface::ELEMENT_WINDOW);
+	application->activateUserInterfaceWindow(user_interface::ELEMENT_WINDOW);
 	//application->activateUserInterfaceWindow(user_interface::MONITORING_WINDOW);
 
 	constexpr int yMax = 10;
@@ -159,7 +167,7 @@ void DNFComposerHandler::setupUserInterface() const
 	// Create a plot for each neural field
 	user_interface::PlotParameters aolPlotParameters;
 	aolPlotParameters.annotations = { "Action observation layer", "Spatial dimension", "Amplitude" };
-	aolPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax+2, dim_params.d_x };
+	aolPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax+10, dim_params.d_x };
 	aolPlotParameters.renderDataSelector = false;
 	const auto aolPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, aolPlotParameters);
 	aolPlotWindow->addPlottingData("aol", "activation");
