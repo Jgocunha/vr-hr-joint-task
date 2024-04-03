@@ -5,6 +5,7 @@
 #include <chrono>
 
 
+
 class Experiment
 {
 private:
@@ -15,8 +16,9 @@ private:
 	IncomingSignals coppeliasimSignals;
 	OutgoingSignals dnfcomposerSignals;
 	Position handPosition;
+	RobotArchitecture architecture;
 public:
-	Experiment(std::string name, int commsFreq, double deltaT);
+	Experiment(std::string name, RobotArchitecture architecture, int commsFreq, double deltaT);
 	~Experiment();
 
 	void init();

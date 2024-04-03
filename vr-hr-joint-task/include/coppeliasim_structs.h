@@ -13,6 +13,8 @@ struct SignalSignatures
 	static constexpr const char* OBJECT3_EXISTS = "object3";
 	static constexpr const char* OBJECT_GRASPED = "objectGrasped";
 	static constexpr const char* OBJECT_PLACED = "objectPlaced";
+	static constexpr const char* HAND_Y = "hand_y";
+	static constexpr const char* HAND_PROXIMITY = "hand_proximity";
 };
 
 struct IncomingSignals
@@ -23,6 +25,8 @@ struct IncomingSignals
 	bool object3;
 	bool objectGrasped;
 	bool objectPlaced;
+	float hand_y;
+	float hand_proximity;
 
 	IncomingSignals()
 		: simStarted(false)
@@ -31,6 +35,8 @@ struct IncomingSignals
 		, object3(false)
 		,objectGrasped(false)
 		,objectPlaced(false)
+	,hand_y(0.0f)
+	,hand_proximity(0.0f)
 	{
 	}
 
@@ -43,6 +49,8 @@ struct IncomingSignals
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Object 3: " + std::to_string(object3));
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Object grasped: " + std::to_string(objectGrasped));
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Object placed: " + std::to_string(objectPlaced));
+		log(dnf_composer::tools::logger::LogLevel::INFO, "Hand y: " + std::to_string(hand_y));
+		log(dnf_composer::tools::logger::LogLevel::INFO, "Hand proximity: " + std::to_string(hand_proximity));
 	}
 };
 

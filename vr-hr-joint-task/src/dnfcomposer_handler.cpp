@@ -4,7 +4,15 @@
 DNFComposerHandler::DNFComposerHandler(const SimulationParameters& simParams)
 	: experimentWindow(std::make_shared<ExperimentWindow>())
 {
-	simulation = getDynamicNeuralFieldArchitecture(simParams.identifier, simParams.deltaT);
+	switch(simParams.archType)
+	{
+	case RobotArchitecture::HAND_MOTION:
+		simulation = getDynamicNeuralFieldArchitectureHandMotion(simParams.identifier, simParams.deltaT);
+		break;
+	case RobotArchitecture::ACTION_LIKELIHOOD:
+		simulation = getDynamicNeuralFieldArchitectureActionLikelihood(simParams.identifier, simParams.deltaT);
+		break;
+	}
 	application = std::make_shared<dnf_composer::Application>(simulation);
 	setupUserInterface();
 }
@@ -71,6 +79,14 @@ void DNFComposerHandler::setHandStimulus(const double& likelihood_1, const doubl
 	const auto aol_stimulus_3 = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus 3"));
 	const dnf_composer::element::GaussStimulusParameters new_params_3{ aol_stimulus_3->getParameters().sigma, scalar*likelihood_3, aol_stimulus_3->getParameters().position, false, false };
 	aol_stimulus_3->setParameters(new_params_3);
+}
+
+void DNFComposerHandler::setHandStimulus(const double& hand_y, const double& hand_proximity) const
+{
+	const auto aol_stimulus =
+		std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
+	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus->getParameters().sigma, hand_proximity, hand_y, false, false };
+	aol_stimulus->setParameters(new_params);
 }
 
 int DNFComposerHandler::getTargetObject() const
