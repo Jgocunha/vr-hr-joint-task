@@ -173,9 +173,9 @@ void DNFComposerHandler::setupUserInterface() const
 
 	// Create User Interface windows
 	//application->activateUserInterfaceWindow(user_interface::SIMULATION_WINDOW);
-	application->activateUserInterfaceWindow(user_interface::LOG_WINDOW);
-	application->activateUserInterfaceWindow(user_interface::ELEMENT_WINDOW);
-	//application->activateUserInterfaceWindow(user_interface::MONITORING_WINDOW);
+	//application->activateUserInterfaceWindow(user_interface::LOG_WINDOW);
+	//application->activateUserInterfaceWindow(user_interface::ELEMENT_WINDOW);
+	//application->activateUserInterfaceWindow(user_interface::MONITORING_WIsNDOW);
 
 	constexpr int yMax = 10;
 	constexpr int yMin = 8;

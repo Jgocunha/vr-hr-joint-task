@@ -91,13 +91,21 @@ void CoppeliasimHandler::readSignals()
 	signals.incoming.object1 = client.getIntegerSignal(SignalSignatures::OBJECT1_EXISTS);
 	signals.incoming.object2 = client.getIntegerSignal(SignalSignatures::OBJECT2_EXISTS);
 	signals.incoming.object3 = client.getIntegerSignal(SignalSignatures::OBJECT3_EXISTS);
-	signals.incoming.objectGrasped = client.getIntegerSignal(SignalSignatures::OBJECT_GRASPED);
-	signals.incoming.objectPlaced = client.getIntegerSignal(SignalSignatures::OBJECT_PLACED);
 	signals.incoming.hand_y = client.getFloatSignal(SignalSignatures::HAND_Y);
 	signals.incoming.hand_proximity = client.getFloatSignal(SignalSignatures::HAND_PROXIMITY);
+	signals.incoming.robotApproaching = client.getIntegerSignal(SignalSignatures::ROBOT_APPROACH);
+
+	signals.incoming.robotGraspObj1 = client.getIntegerSignal(SignalSignatures::ROBOT_GRASP_OBJ1);
+	signals.incoming.robotGraspObj2 = client.getIntegerSignal(SignalSignatures::ROBOT_GRASP_OBJ2);
+	signals.incoming.robotGraspObj3 = client.getIntegerSignal(SignalSignatures::ROBOT_GRASP_OBJ3);
+	signals.incoming.robotPlaceObj1 = client.getIntegerSignal(SignalSignatures::ROBOT_PLACE_OBJ1);
+	signals.incoming.robotPlaceObj2 = client.getIntegerSignal(SignalSignatures::ROBOT_PLACE_OBJ2);
+	signals.incoming.robotPlaceObj3 = client.getIntegerSignal(SignalSignatures::ROBOT_PLACE_OBJ3);
+
 	signals.incoming.humanGraspObj1 = client.getIntegerSignal(SignalSignatures::HUMAN_GRASP_OBJ1);
 	signals.incoming.humanGraspObj2 = client.getIntegerSignal(SignalSignatures::HUMAN_GRASP_OBJ2);
 	signals.incoming.humanGraspObj3 = client.getIntegerSignal(SignalSignatures::HUMAN_GRASP_OBJ3);
+
 	signals.incoming.humanPlaceObj1 = client.getIntegerSignal(SignalSignatures::HUMAN_PLACE_OBJ1);
 	signals.incoming.humanPlaceObj2 = client.getIntegerSignal(SignalSignatures::HUMAN_PLACE_OBJ2);
 	signals.incoming.humanPlaceObj3 = client.getIntegerSignal(SignalSignatures::HUMAN_PLACE_OBJ3);
@@ -107,6 +115,22 @@ void CoppeliasimHandler::writeSignals() const
 {
 	client.setIntegerSignal(SignalSignatures::START_SIM, signals.outgoing.startSim);
 	client.setIntegerSignal(SignalSignatures::TARGET_OBJECT, signals.outgoing.targetObject);
+
+	//client.setIntegerSignal(SignalSignatures::ROBOT_GRASP_OBJ1, signals.incoming.robotGraspObj1);
+	//client.setIntegerSignal(SignalSignatures::ROBOT_GRASP_OBJ2, signals.incoming.robotGraspObj2);
+	//client.setIntegerSignal(SignalSignatures::ROBOT_GRASP_OBJ3, signals.incoming.robotGraspObj3);
+
+	//client.setIntegerSignal(SignalSignatures::ROBOT_PLACE_OBJ1, signals.incoming.robotPlaceObj1);
+	//client.setIntegerSignal(SignalSignatures::ROBOT_PLACE_OBJ2, signals.incoming.robotPlaceObj2);
+	//client.setIntegerSignal(SignalSignatures::ROBOT_PLACE_OBJ3, signals.incoming.robotPlaceObj3);
+
+	//client.setIntegerSignal(SignalSignatures::HUMAN_GRASP_OBJ1, signals.incoming.humanGraspObj1);
+	//client.setIntegerSignal(SignalSignatures::HUMAN_GRASP_OBJ2, signals.incoming.humanGraspObj2);
+	//client.setIntegerSignal(SignalSignatures::HUMAN_GRASP_OBJ3, signals.incoming.humanGraspObj3);
+	//										  									 
+	//client.setIntegerSignal(SignalSignatures::HUMAN_PLACE_OBJ1, signals.incoming.humanPlaceObj1);
+	//client.setIntegerSignal(SignalSignatures::HUMAN_PLACE_OBJ2, signals.incoming.humanPlaceObj2);
+	//client.setIntegerSignal(SignalSignatures::HUMAN_PLACE_OBJ3, signals.incoming.humanPlaceObj3);
 }
 
 void CoppeliasimHandler::printSignals() const

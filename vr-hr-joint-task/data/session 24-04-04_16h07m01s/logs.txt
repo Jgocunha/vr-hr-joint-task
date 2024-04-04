@@ -1,0 +1,16 @@
+2024-04-04 16:07:01 INFO Session started at  24-04-04_16h07m01s
+2024-04-04 16:07:02 INFO Connection with CoppeliaSim established.
+2024-04-04 16:07:03 INFO Simulation started.
+2024-04-04 16:07:03 INFO Objects created.
+2024-04-04 16:07:07 INFO Robot has grasped object 1.
+2024-04-04 16:07:08 INFO Robot has grasped object 2.
+2024-04-04 16:07:08 INFO Robot has grasped object 3.
+2024-04-04 16:07:08 INFO Robot has placed object 1.
+2024-04-04 16:07:08 INFO Robot has placed object 2.
+2024-04-04 16:07:08 INFO Robot has placed object 3.
+2024-04-04 16:07:08 INFO Human has grasped object 1.
+2024-04-04 16:07:08 INFO Human has grasped object 2.
+2024-04-04 16:07:08 INFO Human has grasped object 3.
+2024-04-04 16:07:08 INFO Human has placed object 1.
+2024-04-04 16:07:09 INFO Human has placed object 2.
+2024-04-04 16:07:09 INFO Human has placed object 3.

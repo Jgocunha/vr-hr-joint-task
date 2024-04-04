@@ -33,11 +33,10 @@ private:
 	void waitForObjectsToBeCreated() const;
 	void keepAliveWhileTaskIsRunning();
 
-	void updateHandPosition() const;
-	void updateAvailableObjects() const;
-	void updateTargetObject();
-	void checkRobotState() const;
-	void checkHumanState() const;
+	void updateHumanHandPosition() const;
+	void updateAvailableObjectsInWorkspace() const;
+	void updateRobotTargetObject();
+	void updateExperimentMonitoringLogs();
 	void updateSignals();
 
 	bool areObjectsPresent() const;
