@@ -120,6 +120,16 @@ void Experiment::updateHumanHandPosition() const
 				double likelihood_2 = calculateLikelihoodOfHumanAction(handPosition, handPrevious, objPosition2, deltaTime, tau, sigma);
 				double likelihood_3 = calculateLikelihoodOfHumanAction(handPosition, handPrevious, objPosition3, deltaTime, tau, sigma);
 
+
+				/*if (likelihood_1 == 0)
+				{
+					std::cout << "Likelihood 1: " << likelihood_1 << std::endl;
+					return;
+				}*/
+				std::cout << "Likelihood 1: " << likelihood_1 << std::endl;
+				std::cout << "Likelihood 2: " << likelihood_2 << std::endl;
+				std::cout << "Likelihood 3: " << likelihood_3 << std::endl;
+
 				if (!coppeliasimSignals.object1)
 					likelihood_1 = 0.0;
 				if (!coppeliasimSignals.object2)
@@ -127,7 +137,11 @@ void Experiment::updateHumanHandPosition() const
 				if (!coppeliasimSignals.object3)
 					likelihood_3 = 0.0;
 
+				//if (likelihood_1 == 0 && likelihood_2 == 0 && likelihood_3 == 0)
+					//return;
 				dnfcomposerHandler.setHandStimulus(likelihood_1, likelihood_2, likelihood_3);
+
+
 
 				handPrevious = handPosition;
 				lastTime = currentTime;
@@ -321,8 +335,8 @@ void Experiment::updateSignals()
 		ExperimentMonitoring::log_human_pose(msg);
 		if (experimentRunning)
 		{
-			updateHumanHandPosition();
 			updateAvailableObjectsInWorkspace();
+			updateHumanHandPosition();
 			updateRobotTargetObject();
 			updateExperimentMonitoringLogs();
 		}

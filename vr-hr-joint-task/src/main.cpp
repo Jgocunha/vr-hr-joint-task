@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 	constexpr int commsFrequency = 500;
 	constexpr double deltaT = 10;
 	const std::string experimentName = "experiment";
-	constexpr RobotArchitecture architecture = RobotArchitecture::HAND_MOTION;
+	constexpr RobotArchitecture architecture = RobotArchitecture::ACTION_LIKELIHOOD;
 
 	Experiment experiment(experimentName, architecture, commsFrequency, deltaT);
 	experiment.init();
