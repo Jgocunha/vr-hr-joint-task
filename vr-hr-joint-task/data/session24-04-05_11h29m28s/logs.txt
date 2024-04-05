@@ -1,0 +1,13 @@
+2024-04-05 11:29:28 CONTROL Session started at 24-04-05_11h29m28s
+2024-04-05 11:29:29 CONTROL Connection with CoppeliaSim established.
+2024-04-05 11:29:31 CONTROL Simulation started.
+2024-04-05 11:29:31 CONTROL Objects created.
+2024-04-05 11:29:33 ROBOT Robot is targeting object 1.
+2024-04-05 11:29:35 ROBOT Robot has grasped object 1.
+2024-04-05 11:29:37 ROBOT Robot has placed object 1.
+2024-04-05 11:29:39 ROBOT Robot is targeting object 2.
+2024-04-05 11:29:41 ROBOT Robot has grasped object 2.
+2024-04-05 11:29:43 ROBOT Robot has placed object 2.
+2024-04-05 11:29:45 ROBOT Robot is targeting object 3.
+2024-04-05 11:29:48 ROBOT Robot has grasped object 3.
+2024-04-05 11:29:50 ROBOT Robot has placed object 3.
