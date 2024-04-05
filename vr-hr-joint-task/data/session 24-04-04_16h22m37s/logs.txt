@@ -1,4 +1,0 @@
-2024-04-04 16:22:37 INFO Session started at  24-04-04_16h22m37s
-2024-04-04 16:22:38 INFO Connection with CoppeliaSim established.
-2024-04-04 16:22:40 INFO Simulation started.
-2024-04-04 16:22:40 INFO Objects created.
