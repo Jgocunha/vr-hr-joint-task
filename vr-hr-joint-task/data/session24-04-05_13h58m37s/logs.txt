@@ -1,0 +1,51 @@
+2024-04-05 13:58:37 CONTROL Session started at 24-04-05_13h58m37s
+2024-04-05 13:58:37 CONTROL Connection with CoppeliaSim established.
+2024-04-05 13:58:39 CONTROL Simulation started.
+2024-04-05 13:58:39 CONTROL Objects created.
+2024-04-05 13:59:40 ROBOT Robot is targeting object 3.
+2024-04-05 13:59:41 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:41 ROBOT Robot is targeting object 1.
+2024-04-05 13:59:41 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:41 ROBOT Robot is targeting object 1.
+2024-04-05 13:59:41 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:41 ROBOT Robot is targeting object 1.
+2024-04-05 13:59:41 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:41 ROBOT Robot is targeting object 1.
+2024-04-05 13:59:41 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:41 ROBOT Robot is targeting object 1.
+2024-04-05 13:59:42 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:42 ROBOT Robot is targeting object 1.
+2024-04-05 13:59:42 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:42 ROBOT Robot is targeting object 2.
+2024-04-05 13:59:44 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:44 ROBOT Robot is targeting object 2.
+2024-04-05 13:59:44 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:45 ROBOT Robot is targeting object 2.
+2024-04-05 13:59:45 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:45 ROBOT Robot is targeting object 2.
+2024-04-05 13:59:45 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:45 ROBOT Robot is targeting object 2.
+2024-04-05 13:59:45 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:45 ROBOT Robot is targeting object 2.
+2024-04-05 13:59:45 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:45 ROBOT Robot is targeting object 2.
+2024-04-05 13:59:45 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:45 ROBOT Robot is targeting object 2.
+2024-04-05 13:59:45 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:45 ROBOT Robot is targeting object 1.
+2024-04-05 13:59:45 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:45 ROBOT Robot is targeting object 1.
+2024-04-05 13:59:48 ROBOT Robot is not targeting any object.
+2024-04-05 13:59:48 ROBOT Robot is targeting object 3.
+2024-04-05 13:59:53 HUMAN Human has grasped object 1.
+2024-04-05 13:59:54 HUMAN Human has placed object 1.
+2024-04-05 13:59:55 ROBOT Robot has grasped object 3.
+2024-04-05 14:00:00 ROBOT Robot has placed object 3.
+2024-04-05 14:00:01 ROBOT Robot is targeting object 2.
+2024-04-05 14:00:02 ROBOT Robot is not targeting any object.
+2024-04-05 14:00:08 ROBOT Robot is targeting object 2.
+2024-04-05 14:00:09 ROBOT Robot is not targeting any object.
+2024-04-05 14:00:12 ROBOT Robot is targeting object 2.
+2024-04-05 14:00:18 ROBOT Robot has grasped object 2.
+2024-04-05 14:00:24 ROBOT Robot has placed object 2.
+2024-04-05 14:00:33 CONTROL All objects have been placed in the container.

@@ -123,7 +123,6 @@ void Experiment::updateHumanHandPosition() const
 
 				if (likelihood_1 == 0)
 				{
-					std::cout << "Likelihoods were zero: " << likelihood_1 << std::endl;
 					handPrevious = handPosition;
 					lastTime = currentTime;
 					return;

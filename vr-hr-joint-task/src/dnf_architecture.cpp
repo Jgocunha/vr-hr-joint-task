@@ -256,7 +256,7 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureActio
 
 	// Action execution layer
 	element::SigmoidFunction ael_af = { x_shift, steepness };
-	element::NeuralFieldParameters ael_params = { tau, resting_level, ael_af };
+	element::NeuralFieldParameters ael_params = { tau+20, resting_level, ael_af };
 	const auto ael = factory.createElement(element::NEURAL_FIELD, { "ael", dim_params }, { ael_params });
 	simulation->addElement(ael);
 
