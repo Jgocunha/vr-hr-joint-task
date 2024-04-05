@@ -11,7 +11,7 @@ void ExperimentMonitoring::initialize()
     const auto now = std::chrono::system_clock::now();
     const std::time_t now_time = std::chrono::system_clock::to_time_t(now);
     std::stringstream ss;
-    ss << std::put_time(std::localtime(&now_time), " %y-%m-%d_%Hh%Mm%Ss");
+    ss << std::put_time(std::localtime(&now_time), "%y-%m-%d_%Hh%Mm%Ss");
     sessionDir = std::string(OUTPUT_DIRECTORY) + "/session" + ss.str();
 
     std::filesystem::create_directories(sessionDir);
@@ -21,10 +21,10 @@ void ExperimentMonitoring::initialize()
 	logFileHuman.open(sessionDir + "/logs_human.txt", std::ofstream::out | std::ofstream::app);
 
 	// Log the start of the session
-	monitor_log(LogLevel::INFO, "Session started at " + ss.str());
+	experimentLog(LogLevel::CONTROL, "Session started at " + ss.str());
 }
 
-void ExperimentMonitoring::monitor_log(LogLevel level, const std::string& msg)
+void ExperimentMonitoring::experimentLog(LogLevel level, const std::string& msg)
 {
     if (!logFile.is_open()) return;
 
@@ -37,9 +37,9 @@ void ExperimentMonitoring::monitor_log(LogLevel level, const std::string& msg)
    timeSS << std::put_time(std::localtime(&now_time), "%Y-%m-%d %H:%M:%S");
    std::string levelStr;
    switch (level) {
-   case LogLevel::INFO: levelStr = "INFO"; break;
-   case LogLevel::WARNING: levelStr = "WARNING"; break;
-   //case LogLevel::ERROR: levelStr = "ERROR"; break;
+   case LogLevel::CONTROL: levelStr = "CONTROL"; break;
+   case LogLevel::ROBOT: levelStr = "ROBOT"; break;
+   case LogLevel::HUMAN: levelStr = "HUMAN"; break;
    }
 
    // Format the log message
@@ -50,7 +50,7 @@ void ExperimentMonitoring::monitor_log(LogLevel level, const std::string& msg)
    logFile.flush(); // Ensure that each message is immediately written to the file
 }
 
-void ExperimentMonitoring::log_human_pose(const std::string& msg)
+void ExperimentMonitoring::humanPoseLog(const std::string& msg)
 {
 	if (!logFileHuman.is_open()) return;
 
@@ -63,7 +63,7 @@ void ExperimentMonitoring::log_human_pose(const std::string& msg)
 	timeSS << std::put_time(std::localtime(&now_time), "%Y-%m-%d %H:%M:%S");
 
 	// Format the log message
-	std::string logMsg = timeSS.str() + " " + msg + "\n";
+	const std::string logMsg = timeSS.str() + " " + msg + "\n";
 
 	// Write to log file
 	logFileHuman << logMsg;

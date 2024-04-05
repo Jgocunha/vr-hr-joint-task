@@ -5,9 +5,9 @@
 
 enum class LogLevel
 {
-    INFO,
-    WARNING,
-   // ERROR
+    CONTROL,
+    ROBOT,
+    HUMAN,
 };
 
 
@@ -20,7 +20,7 @@ private:
 
 public:
     static void initialize();
-    static void monitor_log(LogLevel level, const std::string& msg);
-    static void log_human_pose(const std::string& msg);
+    static void experimentLog(LogLevel level, const std::string& msg);
+    static void humanPoseLog(const std::string& msg);
     static void finalize();
 };

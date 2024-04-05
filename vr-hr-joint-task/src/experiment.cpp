@@ -50,7 +50,7 @@ void Experiment::waitForConnection() const
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for connection with CoppeliaSim...\n");
 		Sleep(commsFrequency);
 	}
-	ExperimentMonitoring::monitor_log(LogLevel::INFO, "Connection with CoppeliaSim established.");
+	ExperimentMonitoring::experimentLog(LogLevel::CONTROL, "Connection with CoppeliaSim established.");
 }
 
 void Experiment::waitForSimulationStart()
@@ -63,7 +63,7 @@ void Experiment::waitForSimulationStart()
 		hasSimStarted = coppeliasimSignals.simStarted;
 		Sleep(commsFrequency);
 	}
-	ExperimentMonitoring::monitor_log(LogLevel::INFO, "Simulation started.");
+	ExperimentMonitoring::experimentLog(LogLevel::CONTROL, "Simulation started.");
 }
 
 void Experiment::waitForObjectsToBeCreated() const
@@ -75,7 +75,7 @@ void Experiment::waitForObjectsToBeCreated() const
 		areObjectsPresentInScene = areObjectsPresent();
 		Sleep(commsFrequency);
 	}
-	ExperimentMonitoring::monitor_log(LogLevel::INFO, "Objects created.");
+	ExperimentMonitoring::experimentLog(LogLevel::CONTROL, "Objects created.");
 	log(dnf_composer::tools::logger::LogLevel::INFO, "Pick and place will now start...\n");
 }
 
@@ -89,7 +89,7 @@ void Experiment::keepAliveWhileTaskIsRunning()
 	// For now let's keep alive for a few seconds after the task is done.
 	Sleep(10000);
 	experimentRunning = false;
-	ExperimentMonitoring::monitor_log(LogLevel::INFO, "All objects have been placed in the container.");
+	ExperimentMonitoring::experimentLog(LogLevel::CONTROL, "All objects have been placed in the container.");
 }
 
 void Experiment::updateHumanHandPosition() const
@@ -123,7 +123,7 @@ void Experiment::updateHumanHandPosition() const
 
 				if (likelihood_1 == 0)
 				{
-					std::cout << "Likelihood were zero: " << likelihood_1 << std::endl;
+					std::cout << "Likelihoods were zero: " << likelihood_1 << std::endl;
 					handPrevious = handPosition;
 					lastTime = currentTime;
 					return;
@@ -208,12 +208,10 @@ void Experiment::updateRobotTargetObject()
 	if((dnfcomposerSignals.targetObject != previousTargetObject) && coppeliasimSignals.robotApproaching)
 	{
 		if(dnfcomposerSignals.targetObject == 0)
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Robot is not targeting any object.");
+			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot is not targeting any object.");
 		else
-		{
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Robot is targeting object " + std::to_string(dnfcomposerSignals.targetObject) + ".");
-			previousTargetObject = dnfcomposerSignals.targetObject;
-		}
+			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot is targeting object " + std::to_string(dnfcomposerSignals.targetObject) + ".");
+		previousTargetObject = dnfcomposerSignals.targetObject;
 	}
 }
 
@@ -226,19 +224,19 @@ void Experiment::updateExperimentMonitoringLogs()
 		static bool robotGraspObj3Logged = false;
 		if (coppeliasimSignals.robotGraspObj1 && !robotGraspObj1Logged)
 		{
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Robot has grasped object 1.");
+			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot has grasped object 1.");
 			coppeliasimSignals.robotGraspObj1 = false;
 			robotGraspObj1Logged = true;
 		}
 		if (coppeliasimSignals.robotGraspObj2 && !robotGraspObj2Logged)
 		{
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Robot has grasped object 2.");
+			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot has grasped object 2.");
 			coppeliasimSignals.robotGraspObj2 = false;
 			robotGraspObj2Logged = true;
 		}
 		if (coppeliasimSignals.robotGraspObj3 && !robotGraspObj3Logged)
 		{
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Robot has grasped object 3.");
+			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot has grasped object 3.");
 			coppeliasimSignals.robotGraspObj3 = false;
 			robotGraspObj3Logged = true;
 		}
@@ -251,19 +249,19 @@ void Experiment::updateExperimentMonitoringLogs()
 		static bool robotPlaceObj3Logged = false;
 		if (coppeliasimSignals.robotPlaceObj1 && !robotPlaceObj1Logged)
 		{
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Robot has placed object 1.");
+			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot has placed object 1.");
 			coppeliasimSignals.robotPlaceObj1 = false;
 			robotPlaceObj1Logged = true;
 		}
 		if (coppeliasimSignals.robotPlaceObj2 && !robotPlaceObj2Logged)
 		{
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Robot has placed object 2.");
+			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot has placed object 2.");
 			coppeliasimSignals.robotPlaceObj2 = false;
 			robotPlaceObj2Logged = true;
 		}
 		if (coppeliasimSignals.robotPlaceObj3 && !robotPlaceObj3Logged)
 		{
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Robot has placed object 3.");
+			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot has placed object 3.");
 			coppeliasimSignals.robotPlaceObj3 = false;
 			robotPlaceObj3Logged = true;
 		}
@@ -276,19 +274,19 @@ void Experiment::updateExperimentMonitoringLogs()
 		static bool humanGraspObj3Logged = false;
 		if (coppeliasimSignals.humanGraspObj1 && !humanGraspObj1Logged)
 		{
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Human has grasped object 1.");
+			ExperimentMonitoring::experimentLog(LogLevel::HUMAN, "Human has grasped object 1.");
 			coppeliasimSignals.humanGraspObj1 = false;
 			humanGraspObj1Logged = true;
 		}
 		if (coppeliasimSignals.humanGraspObj2 && !humanGraspObj2Logged)
 		{
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Human has grasped object 2.");
+			ExperimentMonitoring::experimentLog(LogLevel::HUMAN, "Human has grasped object 2.");
 			coppeliasimSignals.humanGraspObj2 = false;
 			humanGraspObj2Logged = true;
 		}
 		if (coppeliasimSignals.humanGraspObj3 && !humanGraspObj3Logged)
 		{
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Human has grasped object 3.");
+			ExperimentMonitoring::experimentLog(LogLevel::HUMAN, "Human has grasped object 3.");
 			coppeliasimSignals.humanGraspObj3 = false;
 			humanGraspObj3Logged = true;
 		}
@@ -301,19 +299,19 @@ void Experiment::updateExperimentMonitoringLogs()
 		static bool humanPlaceObj3Logged = false;
 		if (coppeliasimSignals.humanPlaceObj1 && !humanPlaceObj1Logged)
 		{
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Human has placed object 1.");
+			ExperimentMonitoring::experimentLog(LogLevel::HUMAN, "Human has placed object 1.");
 			coppeliasimSignals.humanPlaceObj1 = false;
 			humanPlaceObj1Logged = true;
 		}
 		if (coppeliasimSignals.humanPlaceObj2 && !humanPlaceObj2Logged)
 		{
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Human has placed object 2.");
+			ExperimentMonitoring::experimentLog(LogLevel::HUMAN, "Human has placed object 2.");
 			coppeliasimSignals.humanPlaceObj2 = false;
 			humanPlaceObj2Logged = true;
 		}
 		if (coppeliasimSignals.humanPlaceObj3 && !humanPlaceObj3Logged)
 		{
-			ExperimentMonitoring::monitor_log(LogLevel::INFO, "Human has placed object 3.");
+			ExperimentMonitoring::experimentLog(LogLevel::HUMAN, "Human has placed object 3.");
 			coppeliasimSignals.humanPlaceObj3 = false;
 			humanPlaceObj3Logged = true;
 		}
@@ -330,13 +328,13 @@ void Experiment::updateSignals()
 		handPosition = pose.position;
 		std::string msg = std::to_string(handPosition.x) + ", " + std::to_string(handPosition.y) + ", " + std::to_string(handPosition.z) +
 			", " + std::to_string(pose.orientation.alpha) + ", " + std::to_string(pose.orientation.beta) + ", " + std::to_string(pose.orientation.gamma);
-		ExperimentMonitoring::log_human_pose(msg);
+		ExperimentMonitoring::humanPoseLog(msg);
 		if (experimentRunning)
 		{
+			updateExperimentMonitoringLogs();
 			updateAvailableObjectsInWorkspace();
 			updateHumanHandPosition();
 			updateRobotTargetObject();
-			updateExperimentMonitoringLogs();
 		}
 		coppeliasimHandler.setSignals(dnfcomposerSignals);
 		Sleep(10);
