@@ -10,10 +10,11 @@
 struct HumanHand
 {
 	int objectHandle;
-	Position position;
+	Pose pose;
 
-	HumanHand(int objectHandle = 0, const Position& position = {0,0,0})
-	: objectHandle(objectHandle), position(position)
+	HumanHand(int objectHandle = 0, const Pose& pose = { {0,0,0},
+		{0,0,0} })
+	: objectHandle(objectHandle), pose(pose)
 	{}
 };
 
@@ -66,7 +67,7 @@ public:
 	void init();
 	void setSignals(bool startSim, int targetObject);
 	Signals getSignals() const;
-	Position getHandPosition() const;
+	Pose getHandPose() const;
 	void end();
 
 	bool isConnected() const;

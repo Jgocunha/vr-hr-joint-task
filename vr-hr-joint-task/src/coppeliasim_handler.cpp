@@ -60,15 +60,21 @@ void CoppeliasimHandler::readHandPosition()
 
     while (handClient.isConnected())
     {
-        coppeliasim_cpp::Position pos = handClient.getObjectPosition(hand.objectHandle);
-        hand.position = { pos.x, pos.y, pos.z };
+        coppeliasim_cpp::Pose pos = handClient.getObjectPose(hand.objectHandle);
+		hand.pose = { {pos.position.x,
+			pos.position.y,
+			pos.position.z},
+			{pos.orientation.alpha,
+			pos.orientation.beta,
+			pos.orientation.gamma}
+		};
     }
 }
 
 
-Position CoppeliasimHandler::getHandPosition() const
+Pose CoppeliasimHandler::getHandPose() const
 {
-	return hand.position;
+	return hand.pose;
 }
 
 

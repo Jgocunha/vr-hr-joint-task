@@ -57,6 +57,7 @@ set(header
     "include/misc.h"
     "include/dnf_composer_handler.h"
     "include/coppeliasim_handler.h"
+    "include/event_logger.h"
 )
 
 # Set source files
@@ -66,6 +67,7 @@ set(src
     "src/misc.cpp"
     "src/dnf_composer_handler.cpp"
     "src/coppeliasim_handler.cpp"
+    "src/event_logger.cpp"
 )
 
 configure_file(./resources/resources.rc.in ./resources/resources.rc)

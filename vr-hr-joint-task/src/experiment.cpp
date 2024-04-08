@@ -16,6 +16,7 @@ void Experiment::init()
 {
 	dnfComposerHandler.init();
 	coppeliasimHandler.init();
+	EventLogger::initialize();
 }
 
 
@@ -31,6 +32,7 @@ void Experiment::end()
 	dnfComposerHandler.end();
 	coppeliasimHandler.end();
 	experimentThread.join();
+	EventLogger::finalize();
 }
 
 void Experiment::handleSignalsBetweenDnfAndCoppeliasim()
@@ -70,11 +72,21 @@ void Experiment::waitForSimulationToStart()
 
 void Experiment::sendHandPositionToDnf() const
 {
-	const Position hand = coppeliasimHandler.getHandPosition();
-	dnfComposerHandler.setHandStimulus(hand, 
+	const Pose hand = coppeliasimHandler.getHandPose();
+	dnfComposerHandler.setHandStimulus({hand.position.x, 
+		hand.position.y,
+		hand.position.z},
 		signals.object1, 
 		signals.object2, 
 		signals.object3);
+	const std::string log = "Hand pose: x = "
+	+ std::to_string(hand.position.x) +
+		", y = " + std::to_string(hand.position.y) +
+		", z = " + std::to_string(hand.position.z) +
+		", alpha = " + std::to_string(hand.orientation.alpha) +
+		", beta = " + std::to_string(hand.orientation.beta) +
+		", gamma = " + std::to_string(hand.orientation.gamma);
+	EventLogger::logHumanHandPose(log);
 }
 
 void Experiment::sendAvailableObjectsToDnf() const

@@ -3,6 +3,7 @@
 #include "dnf_architecture.h"
 #include "dnf_composer_handler.h"
 #include "coppeliasim_handler.h"
+#include "event_logger.h"
 
 struct ExperimentParameters
 {

@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 	try
 	{
 		constexpr double deltaT = 10;
-		constexpr DnfArchitectureType architecture = DnfArchitectureType::ACTION_LIKELIHOOD;
+		constexpr DnfArchitectureType architecture = DnfArchitectureType::HAND_MOTION;
 
 		ExperimentParameters params{architecture, deltaT};
 		Experiment experiment(params);
