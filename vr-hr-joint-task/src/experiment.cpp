@@ -1,347 +1,108 @@
 #include "experiment.h"
 
-
-Experiment::Experiment(std::string name, RobotArchitecture architecture, int commsFreq, double deltaT)
-		: coppeliasimHandler(), architecture(architecture), dnfcomposerHandler({ architecture,std::move(name), deltaT }), commsFrequency(commsFreq)
+Experiment::Experiment(const ExperimentParameters& parameters)
+	: dnfComposerHandler(parameters.dnf, parameters.deltaT)
+	, coppeliasimHandler()
 {
-	experimentRunning = false;
-	handPosition = {0.0, 0.0, 0.0};
+
 }
 
 Experiment::~Experiment()
 {
-	close();
+	end();
 }
 
 void Experiment::init()
 {
+	dnfComposerHandler.init();
 	coppeliasimHandler.init();
-	dnfcomposerHandler.init();
-	ExperimentMonitoring::initialize();
 }
+
 
 void Experiment::run()
 {
-	main();
+	waitForConnectionWithCoppeliasim();
+	experimentThread = std::thread(&Experiment::handleSignalsBetweenDnfAndCoppeliasim, this);
+	waitForSimulationToStart();
 }
 
-void Experiment::close()
+void Experiment::end()
 {
-	coppeliasimHandler.close();
-	dnfcomposerHandler.close();
-	signalsThread.join();
-	ExperimentMonitoring::finalize();
+	dnfComposerHandler.end();
+	coppeliasimHandler.end();
+	experimentThread.join();
 }
 
-void Experiment::main()
+void Experiment::handleSignalsBetweenDnfAndCoppeliasim()
 {
-	waitForConnection();
-	Sleep(commsFrequency);
-	signalsThread = std::thread(&Experiment::updateSignals, this);
-	waitForSimulationStart();
-	waitForObjectsToBeCreated();
-	keepAliveWhileTaskIsRunning();
+	while (coppeliasimHandler.isConnected())
+	{
+		signals = coppeliasimHandler.getSignals();
+		sendHandPositionToDnf();
+		sendAvailableObjectsToDnf();
+		sendTargetObjectToRobot();
+		coppeliasimHandler.setSignals(signals.startSim, signals.targetObject);
+	}
 }
 
-void Experiment::waitForConnection() const
+void Experiment::waitForConnectionWithCoppeliasim()
 {
 	while (!coppeliasimHandler.isConnected())
 	{
 		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for connection with CoppeliaSim...\n");
-		Sleep(commsFrequency);
+		Sleep(500);
 	}
-	ExperimentMonitoring::experimentLog(LogLevel::CONTROL, "Connection with CoppeliaSim established.");
+	log(dnf_composer::tools::logger::LogLevel::INFO, "Connected with CoppeliaSim\n");
 }
 
-void Experiment::waitForSimulationStart()
+void Experiment::waitForSimulationToStart()
 {
-	dnfcomposerSignals.startSim = true;
-	bool hasSimStarted = coppeliasimSignals.simStarted;
+	bool hasSimStarted = signals.simStarted;
 	while (!hasSimStarted)
 	{
-		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for CoppeliaSim to start...\n");
-		hasSimStarted = coppeliasimSignals.simStarted;
-		Sleep(commsFrequency);
+		signals.startSim = true;
+		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for Simulation to start...\n");
+		hasSimStarted = signals.simStarted;
+		Sleep(500);
 	}
-	ExperimentMonitoring::experimentLog(LogLevel::CONTROL, "Simulation started.");
+	log(dnf_composer::tools::logger::LogLevel::INFO, "Simulation has started\n");
 }
 
-void Experiment::waitForObjectsToBeCreated() const
+void Experiment::sendHandPositionToDnf() const
 {
-	bool areObjectsPresentInScene = areObjectsPresent();
-	while (!areObjectsPresentInScene)
-	{
-		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for objects to be created...\n");
-		areObjectsPresentInScene = areObjectsPresent();
-		Sleep(commsFrequency);
-	}
-	ExperimentMonitoring::experimentLog(LogLevel::CONTROL, "Objects created.");
-	log(dnf_composer::tools::logger::LogLevel::INFO, "Pick and place will now start...\n");
+	const Position hand = coppeliasimHandler.getHandPosition();
+	dnfComposerHandler.setHandStimulus(hand);
 }
 
-void Experiment::keepAliveWhileTaskIsRunning()
+void Experiment::sendAvailableObjectsToDnf()
 {
-	experimentRunning = true;
-	while(areObjectsPresent())
+	static bool previousObject1 = signals.object1;
+	static bool previousObject2 = signals.object2;
+	static bool previousObject3 = signals.object3;
+
+	dnfComposerHandler.setAvailableObjectsInTheWorkspace(signals.object1, signals.object2, signals.object3);
+}
+
+void Experiment::sendTargetObjectToRobot()
+{
+	//static int previousTargetObject = 0;
+	signals.targetObject = dnfComposerHandler.getTargetObject();
+	//if((signals.targetObject != previousTargetObject))
+		//previousTargetObject = signals.targetObject;
+}
+
+void Experiment::keepAliveWhileTaskIsRunning() const
+{
+	while (areObjectsPresent())
 	{
-		Sleep(commsFrequency);
+		Sleep(1000);
 	}
 	// For now let's keep alive for a few seconds after the task is done.
 	Sleep(10000);
-	experimentRunning = false;
-	ExperimentMonitoring::experimentLog(LogLevel::CONTROL, "All objects have been placed in the container.");
-}
-
-void Experiment::updateHumanHandPosition() const
-{
-	switch (architecture)
-	{
-		case RobotArchitecture::ACTION_LIKELIHOOD:
-			{
-				static Position handPrevious = handPosition;
-				static const Position objPosition1 = { 0.60023, -0.02697, 0.70607 };
-				static const Position objPosition2 = { 0.60042, -0.15003, 0.70607 };
-				static const Position objPosition3 = { 0.60344, -0.27474, 0.70607 };
-				static constexpr double tau = 0.1;
-				static constexpr double sigma = 0.1;
-
-				using Clock = std::chrono::high_resolution_clock;
-				auto lastTime = Clock::now();
-
-				const auto currentTime = Clock::now();
-				const std::chrono::duration<double> elapsed = currentTime - lastTime;
-				const double deltaTime = elapsed.count();
-
-				// Check if elapsed time is too small
-				if (deltaTime < std::numeric_limits<double>::epsilon())
-					return;
-
-				double likelihood_1 = calculateLikelihoodOfHumanAction(handPosition, handPrevious, objPosition1, deltaTime, tau, sigma);
-				double likelihood_2 = calculateLikelihoodOfHumanAction(handPosition, handPrevious, objPosition2, deltaTime, tau, sigma);
-				double likelihood_3 = calculateLikelihoodOfHumanAction(handPosition, handPrevious, objPosition3, deltaTime, tau, sigma);
-
-
-				if (likelihood_1 == 0)
-				{
-					handPrevious = handPosition;
-					lastTime = currentTime;
-					return;
-				}
-				/*std::cout << "Likelihood 1: " << likelihood_1 << std::endl;
-				std::cout << "Likelihood 2: " << likelihood_2 << std::endl;
-				std::cout << "Likelihood 3: " << likelihood_3 << std::endl;*/
-
-				if (!coppeliasimSignals.object1)
-					likelihood_1 = 0.0;
-				if (!coppeliasimSignals.object2)
-					likelihood_2 = 0.0;
-				if (!coppeliasimSignals.object3)
-					likelihood_3 = 0.0;
-
-				dnfcomposerHandler.setHandStimulus(likelihood_1, likelihood_2, likelihood_3);
-
-				handPrevious = handPosition;
-				lastTime = currentTime;
-			}
-			break;
-		case RobotArchitecture::HAND_MOTION:
-			dnfcomposerHandler.setHandStimulus(coppeliasimSignals.hand_y, coppeliasimSignals.hand_proximity);
-			break;
-	}
-	
-}
-
-void Experiment::updateAvailableObjectsInWorkspace() const
-{
-	static bool previousObject1 = coppeliasimSignals.object1;
-	static bool previousObject2 = coppeliasimSignals.object2;
-	static bool previousObject3 = coppeliasimSignals.object3;
-
-	// Object 1
-	if(previousObject1 != coppeliasimSignals.object1)
-	{
-		if (coppeliasimSignals.object1)
-		{
-			dnfcomposerHandler.addTargetObject(1);
-		}
-		else
-		{
-			dnfcomposerHandler.removeTargetObject(1);
-		}
-		previousObject1 = coppeliasimSignals.object1;
-	}
-
-	// Object 2
-	if(previousObject2 != coppeliasimSignals.object2)
-	{
-		if (coppeliasimSignals.object2)
-		{
-			dnfcomposerHandler.addTargetObject(2);
-		}
-		else
-		{
-			dnfcomposerHandler.removeTargetObject(2);
-		}
-		previousObject2 = coppeliasimSignals.object2;
-	}
-
-	// Object 3
-	if (previousObject3 != coppeliasimSignals.object3)
-	{
-		if (coppeliasimSignals.object3)
-		{
-			dnfcomposerHandler.addTargetObject(3);
-		}
-		else
-		{
-			dnfcomposerHandler.removeTargetObject(3);
-		}
-		previousObject3 = coppeliasimSignals.object3;
-	}
-}
-
-void Experiment::updateRobotTargetObject()
-{
-	static int previousTargetObject = 0;
-	dnfcomposerSignals.targetObject = dnfcomposerHandler.getTargetObject();
-	if((dnfcomposerSignals.targetObject != previousTargetObject) && coppeliasimSignals.robotApproaching)
-	{
-		if(dnfcomposerSignals.targetObject == 0)
-			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot is not targeting any object.");
-		else
-			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot is targeting object " + std::to_string(dnfcomposerSignals.targetObject) + ".");
-		previousTargetObject = dnfcomposerSignals.targetObject;
-	}
-}
-
-void Experiment::updateExperimentMonitoringLogs()
-{
-	// Robot grasps
-	{
-		static bool robotGraspObj1Logged = false;
-		static bool robotGraspObj2Logged = false;
-		static bool robotGraspObj3Logged = false;
-		if (coppeliasimSignals.robotGraspObj1 && !robotGraspObj1Logged)
-		{
-			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot has grasped object 1.");
-			coppeliasimSignals.robotGraspObj1 = false;
-			robotGraspObj1Logged = true;
-		}
-		if (coppeliasimSignals.robotGraspObj2 && !robotGraspObj2Logged)
-		{
-			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot has grasped object 2.");
-			coppeliasimSignals.robotGraspObj2 = false;
-			robotGraspObj2Logged = true;
-		}
-		if (coppeliasimSignals.robotGraspObj3 && !robotGraspObj3Logged)
-		{
-			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot has grasped object 3.");
-			coppeliasimSignals.robotGraspObj3 = false;
-			robotGraspObj3Logged = true;
-		}
-	}
-	
-	// Robot places
-	{
-		static bool robotPlaceObj1Logged = false;
-		static bool robotPlaceObj2Logged = false;
-		static bool robotPlaceObj3Logged = false;
-		if (coppeliasimSignals.robotPlaceObj1 && !robotPlaceObj1Logged)
-		{
-			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot has placed object 1.");
-			coppeliasimSignals.robotPlaceObj1 = false;
-			robotPlaceObj1Logged = true;
-		}
-		if (coppeliasimSignals.robotPlaceObj2 && !robotPlaceObj2Logged)
-		{
-			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot has placed object 2.");
-			coppeliasimSignals.robotPlaceObj2 = false;
-			robotPlaceObj2Logged = true;
-		}
-		if (coppeliasimSignals.robotPlaceObj3 && !robotPlaceObj3Logged)
-		{
-			ExperimentMonitoring::experimentLog(LogLevel::ROBOT, "Robot has placed object 3.");
-			coppeliasimSignals.robotPlaceObj3 = false;
-			robotPlaceObj3Logged = true;
-		}
-	}
-
-	// Human grasps
-	{
-		static bool humanGraspObj1Logged = false;
-		static bool humanGraspObj2Logged = false;
-		static bool humanGraspObj3Logged = false;
-		if (coppeliasimSignals.humanGraspObj1 && !humanGraspObj1Logged)
-		{
-			ExperimentMonitoring::experimentLog(LogLevel::HUMAN, "Human has grasped object 1.");
-			coppeliasimSignals.humanGraspObj1 = false;
-			humanGraspObj1Logged = true;
-		}
-		if (coppeliasimSignals.humanGraspObj2 && !humanGraspObj2Logged)
-		{
-			ExperimentMonitoring::experimentLog(LogLevel::HUMAN, "Human has grasped object 2.");
-			coppeliasimSignals.humanGraspObj2 = false;
-			humanGraspObj2Logged = true;
-		}
-		if (coppeliasimSignals.humanGraspObj3 && !humanGraspObj3Logged)
-		{
-			ExperimentMonitoring::experimentLog(LogLevel::HUMAN, "Human has grasped object 3.");
-			coppeliasimSignals.humanGraspObj3 = false;
-			humanGraspObj3Logged = true;
-		}
-	}
-
-	// Human places
-	{
-		static bool humanPlaceObj1Logged = false;
-		static bool humanPlaceObj2Logged = false;
-		static bool humanPlaceObj3Logged = false;
-		if (coppeliasimSignals.humanPlaceObj1 && !humanPlaceObj1Logged)
-		{
-			ExperimentMonitoring::experimentLog(LogLevel::HUMAN, "Human has placed object 1.");
-			coppeliasimSignals.humanPlaceObj1 = false;
-			humanPlaceObj1Logged = true;
-		}
-		if (coppeliasimSignals.humanPlaceObj2 && !humanPlaceObj2Logged)
-		{
-			ExperimentMonitoring::experimentLog(LogLevel::HUMAN, "Human has placed object 2.");
-			coppeliasimSignals.humanPlaceObj2 = false;
-			humanPlaceObj2Logged = true;
-		}
-		if (coppeliasimSignals.humanPlaceObj3 && !humanPlaceObj3Logged)
-		{
-			ExperimentMonitoring::experimentLog(LogLevel::HUMAN, "Human has placed object 3.");
-			coppeliasimSignals.humanPlaceObj3 = false;
-			humanPlaceObj3Logged = true;
-		}
-	}
-	
-}
-
-void Experiment::updateSignals()
-{
-	do
-	{
-		coppeliasimSignals = coppeliasimHandler.getSignals();
-		const Pose pose = coppeliasimHandler.getHandPose();
-		handPosition = pose.position;
-		std::string msg = std::to_string(handPosition.x) + ", " + std::to_string(handPosition.y) + ", " + std::to_string(handPosition.z) +
-			", " + std::to_string(pose.orientation.alpha) + ", " + std::to_string(pose.orientation.beta) + ", " + std::to_string(pose.orientation.gamma);
-		ExperimentMonitoring::humanPoseLog(msg);
-		if (experimentRunning)
-		{
-			updateExperimentMonitoringLogs();
-			updateAvailableObjectsInWorkspace();
-			updateHumanHandPosition();
-			updateRobotTargetObject();
-		}
-		coppeliasimHandler.setSignals(dnfcomposerSignals);
-		Sleep(10);
-	} while (true);
 }
 
 bool Experiment::areObjectsPresent() const
 {
-	const bool isPresent = coppeliasimSignals.object1 != 0 || coppeliasimSignals.object2 != 0 || coppeliasimSignals.object3 != 0;
+	const bool isPresent = signals.object1 != 0 || signals.object2 != 0 || signals.object3 != 0;
 	return isPresent;
 }

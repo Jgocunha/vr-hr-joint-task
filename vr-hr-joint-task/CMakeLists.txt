@@ -52,26 +52,20 @@ add_compile_definitions(OUTPUT_DIRECTORY="${OUTPUT_DIRECTORY}")
 
 # Set header files
 set(header
-    "include/coppeliasim_handler.h"
-    "include/coppeliasim_structs.h"
-    "include/dnfcomposer_handler.h"
     "include/experiment.h"
-    "include/experiment_monitoring.h"
-    "include/experiment_window.h"
     "include/dnf_architecture.h"
     "include/misc.h"
+    "include/dnf_composer_handler.h"
+    "include/coppeliasim_handler.h"
 )
 
 # Set source files
 set(src 
-    "src/coppeliasim_handler.cpp"
-    "src/coppeliasim_structs.cpp"
-    "src/dnfcomposer_handler.cpp"
     "src/experiment.cpp"
-    "src/experiment_monitoring.cpp"
-    "src/experiment_window.cpp"
     "src/dnf_architecture.cpp"
     "src/misc.cpp"
+    "src/dnf_composer_handler.cpp"
+    "src/coppeliasim_handler.cpp"
 )
 
 configure_file(./resources/resources.rc.in ./resources/resources.rc)

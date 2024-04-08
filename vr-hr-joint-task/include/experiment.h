@@ -1,43 +1,43 @@
+#pragma once
+
+#include "dnf_architecture.h"
+#include "dnf_composer_handler.h"
 #include "coppeliasim_handler.h"
-#include "dnfcomposer_handler.h"
-#include "experiment_monitoring.h"
-#include "misc.h"
-#include <algorithm>
-#include <chrono>
 
+struct ExperimentParameters
+{
+	DnfArchitectureType dnf;
+	double deltaT;
 
+	ExperimentParameters(DnfArchitectureType dnf, double deltaT)
+	: dnf(dnf), deltaT(deltaT)
+	{}
+};
 
 class Experiment
 {
 private:
+	DnfComposerHandler dnfComposerHandler;
 	CoppeliasimHandler coppeliasimHandler;
-	DNFComposerHandler dnfcomposerHandler;
-	int commsFrequency;
-	std::thread signalsThread;
-	IncomingSignals coppeliasimSignals;
-	OutgoingSignals dnfcomposerSignals;
-	Position handPosition;
-	RobotArchitecture architecture;
-	bool experimentRunning;
+	std::thread experimentThread;
+	Signals signals;
 public:
-	Experiment(std::string name, RobotArchitecture architecture, int commsFreq, double deltaT);
+	Experiment(const ExperimentParameters& parameters);
 	~Experiment();
 
 	void init();
 	void run();
-	void close();
+	void end();
 private:
-	void main();
-	void waitForConnection() const;
-	void waitForSimulationStart();
-	void waitForObjectsToBeCreated() const;
-	void keepAliveWhileTaskIsRunning();
+	void handleSignalsBetweenDnfAndCoppeliasim();
 
-	void updateHumanHandPosition() const;
-	void updateAvailableObjectsInWorkspace() const;
-	void updateRobotTargetObject();
-	void updateExperimentMonitoringLogs();
-	void updateSignals();
+	void waitForConnectionWithCoppeliasim();
+	void waitForSimulationToStart();
 
+	void sendHandPositionToDnf() const;
+	void sendAvailableObjectsToDnf();
+	void sendTargetObjectToRobot();
+
+	void keepAliveWhileTaskIsRunning() const;
 	bool areObjectsPresent() const;
 };

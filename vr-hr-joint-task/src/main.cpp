@@ -3,21 +3,31 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
 
 
-// This .cpp file is an example of how you can use the library to create your own DNF simulation.
-
 #include "experiment.h"
 
 int main(int argc, char* argv[])
 {
-	constexpr int commsFrequency = 500;
-	constexpr double deltaT = 10;
-	const std::string experimentName = "experiment";
-	constexpr RobotArchitecture architecture = RobotArchitecture::ACTION_LIKELIHOOD;
 
-	Experiment experiment(experimentName, architecture, commsFrequency, deltaT);
-	experiment.init();
-	experiment.run();
-	experiment.close();
+	try
+	{
+		constexpr double deltaT = 10;
+		constexpr DnfArchitectureType architecture = DnfArchitectureType::HAND_MOTION;
+
+		ExperimentParameters params{architecture, deltaT};
+		Experiment experiment(params);
+
+		experiment.init();
+		experiment.run();
+		experiment.end();
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
+	catch (...)
+	{
+		std::cerr << "Unknown exception" << std::endl;
+	}
 
 	return 0;
 }

@@ -1,0 +1,4 @@
+2024-04-08 09:42:22 CONTROL Session started at 24-04-08_09h42m22s
+2024-04-08 09:42:23 CONTROL Connection with CoppeliaSim established.
+2024-04-08 09:42:24 CONTROL Simulation started.
+2024-04-08 09:42:24 CONTROL Objects created.

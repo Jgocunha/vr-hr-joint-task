@@ -1,144 +1,122 @@
-
 #include "coppeliasim_handler.h"
 
-
-
 CoppeliasimHandler::CoppeliasimHandler()
+	: signalClient("127.0.0.1", 19999),
+		handClient("127.0.0.1", 19998)
 {
-	client.setLogMode(coppeliasim_cpp::LogMode::NO_LOGS);
+	signalClient.setLogMode(coppeliasim_cpp::LogMode::NO_LOGS);
+	handClient.setLogMode(coppeliasim_cpp::LogMode::NO_LOGS);
 }
 
 CoppeliasimHandler::~CoppeliasimHandler()
 {
-	close();
+	end();
 }
 
 void CoppeliasimHandler::init()
 {
-	log(dnf_composer::tools::logger::LogLevel::INFO, "Coppeliasim Handler: Thread will start.\n");
-	coppeliasimThread = std::thread(&CoppeliasimHandler::run, this);
+	signalThread = std::thread(&CoppeliasimHandler::readAndWriteSignals, this);
 }
 
-void CoppeliasimHandler::run()
+
+void CoppeliasimHandler::readAndWriteSignals()
 {
-	try
-	{
-		while (!client.initialize());
+	
+	while (!signalClient.initialize());
 
-		resetSignals();
-		hand.handle = client.getObjectHandle("RightController");
-		client.startSimulation();
+	signalClient.startSimulation();
 
-		while (isConnected())
-		{
-			readSignals();
-			readObjectData();
-			writeSignals();
-			Sleep(10);
-		}
+	handThread = std::thread(&CoppeliasimHandler::readHandPosition, this);
 
-		resetSignals();
-		close();
-	}
-	catch (const std::exception& e)
+	resetSignals();
+
+	while (isConnected())
 	{
-		log(dnf_composer::tools::logger::LogLevel::FATAL, "Coppeliasim Handler: " + std::string(e.what()) + '\n', dnf_composer::tools::logger::LogOutputMode::CONSOLE);
+		readSignals();
+		writeSignals();
+		printSignals();
 	}
-	catch (...)
-	{
-		log(dnf_composer::tools::logger::LogLevel::FATAL, "Coppeliasim Handler: An unexpected error occurred.\n", dnf_composer::tools::logger::LogOutputMode::CONSOLE);
-	}
+
+	handThread.join();
 }
 
-void CoppeliasimHandler::close()
+void CoppeliasimHandler::setSignals(bool startSim, int targetObject)
 {
-	if(isConnected())
-		client.stopSimulation();
-	coppeliasimThread.join();
-	log(dnf_composer::tools::logger::LogLevel::INFO, "Coppeliasim Handler: Thread has finished its execution.\n");
+	signals.startSim = startSim;
+	signals.targetObject = targetObject;
+}
+
+
+Signals CoppeliasimHandler::getSignals() const
+{
+	return signals;
+}
+
+void CoppeliasimHandler::readHandPosition()
+{
+	while (!handClient.initialize());
+
+	hand.objectHandle = handClient.getObjectHandle("RightController");
+
+    while (handClient.isConnected())
+    {
+        coppeliasim_cpp::Position pos = handClient.getObjectPosition(hand.objectHandle);
+        hand.position = { pos.x, pos.y, pos.z };
+    }
+}
+
+
+Position CoppeliasimHandler::getHandPosition() const
+{
+	return hand.position;
+}
+
+
+void CoppeliasimHandler::end()
+{
+	if (isConnected())
+		signalClient.stopSimulation();
+	signalThread.join();
 }
 
 bool CoppeliasimHandler::isConnected() const
 {
-	return client.isConnected();
-}
-
-Pose CoppeliasimHandler::getHandPose() const
-{
-	return Pose{ {hand.pose.position.x, hand.pose.position.y, hand.pose.position.z},
-				 {hand.pose.orientation.alpha, hand.pose.orientation.beta, hand.pose.orientation.gamma} };
-}
-
-void CoppeliasimHandler::setSignals(const OutgoingSignals& signals_out)
-{
-	signals.outgoing = signals_out;
-}
-
-IncomingSignals CoppeliasimHandler::getSignals() const
-{
-	return signals.incoming;
-}
-
-
-void CoppeliasimHandler::resetSignals()
-{
-	signals.clear();
+	return signalClient.isConnected();
 }
 
 void CoppeliasimHandler::readSignals()
 {
-	signals.incoming.simStarted = client.getIntegerSignal(SignalSignatures::SIM_STARTED);
-	signals.incoming.object1 = client.getIntegerSignal(SignalSignatures::OBJECT1_EXISTS);
-	signals.incoming.object2 = client.getIntegerSignal(SignalSignatures::OBJECT2_EXISTS);
-	signals.incoming.object3 = client.getIntegerSignal(SignalSignatures::OBJECT3_EXISTS);
-	signals.incoming.hand_y = client.getFloatSignal(SignalSignatures::HAND_Y);
-	signals.incoming.hand_proximity = client.getFloatSignal(SignalSignatures::HAND_PROXIMITY);
-	signals.incoming.robotApproaching = client.getIntegerSignal(SignalSignatures::ROBOT_APPROACH);
-
-	signals.incoming.robotGraspObj1 = client.getIntegerSignal(SignalSignatures::ROBOT_GRASP_OBJ1);
-	signals.incoming.robotGraspObj2 = client.getIntegerSignal(SignalSignatures::ROBOT_GRASP_OBJ2);
-	signals.incoming.robotGraspObj3 = client.getIntegerSignal(SignalSignatures::ROBOT_GRASP_OBJ3);
-	signals.incoming.robotPlaceObj1 = client.getIntegerSignal(SignalSignatures::ROBOT_PLACE_OBJ1);
-	signals.incoming.robotPlaceObj2 = client.getIntegerSignal(SignalSignatures::ROBOT_PLACE_OBJ2);
-	signals.incoming.robotPlaceObj3 = client.getIntegerSignal(SignalSignatures::ROBOT_PLACE_OBJ3);
-
-	signals.incoming.humanGraspObj1 = client.getIntegerSignal(SignalSignatures::HUMAN_GRASP_OBJ1);
-	signals.incoming.humanGraspObj2 = client.getIntegerSignal(SignalSignatures::HUMAN_GRASP_OBJ2);
-	signals.incoming.humanGraspObj3 = client.getIntegerSignal(SignalSignatures::HUMAN_GRASP_OBJ3);
-
-	signals.incoming.humanPlaceObj1 = client.getIntegerSignal(SignalSignatures::HUMAN_PLACE_OBJ1);
-	signals.incoming.humanPlaceObj2 = client.getIntegerSignal(SignalSignatures::HUMAN_PLACE_OBJ2);
-	signals.incoming.humanPlaceObj3 = client.getIntegerSignal(SignalSignatures::HUMAN_PLACE_OBJ3);
+	signals.simStarted = signalClient.getIntegerSignal(SignalSignatures::SIM_STARTED);
+	signals.object1 = signalClient.getIntegerSignal(SignalSignatures::OBJECT1_EXISTS);
+	signals.object2 = signalClient.getIntegerSignal(SignalSignatures::OBJECT2_EXISTS);
+	signals.object3 = signalClient.getIntegerSignal(SignalSignatures::OBJECT3_EXISTS);
 }
 
 void CoppeliasimHandler::writeSignals() const
 {
-	client.setIntegerSignal(SignalSignatures::START_SIM, signals.outgoing.startSim);
-	client.setIntegerSignal(SignalSignatures::TARGET_OBJECT, signals.outgoing.targetObject);
+	signalClient.setIntegerSignal(SignalSignatures::START_SIM, signals.startSim);
+	signalClient.setIntegerSignal(SignalSignatures::TARGET_OBJECT, signals.targetObject);
+}
 
-	//client.setIntegerSignal(SignalSignatures::ROBOT_GRASP_OBJ1, signals.incoming.robotGraspObj1);
-	//client.setIntegerSignal(SignalSignatures::ROBOT_GRASP_OBJ2, signals.incoming.robotGraspObj2);
-	//client.setIntegerSignal(SignalSignatures::ROBOT_GRASP_OBJ3, signals.incoming.robotGraspObj3);
-
-	//client.setIntegerSignal(SignalSignatures::ROBOT_PLACE_OBJ1, signals.incoming.robotPlaceObj1);
-	//client.setIntegerSignal(SignalSignatures::ROBOT_PLACE_OBJ2, signals.incoming.robotPlaceObj2);
-	//client.setIntegerSignal(SignalSignatures::ROBOT_PLACE_OBJ3, signals.incoming.robotPlaceObj3);
-
-	//client.setIntegerSignal(SignalSignatures::HUMAN_GRASP_OBJ1, signals.incoming.humanGraspObj1);
-	//client.setIntegerSignal(SignalSignatures::HUMAN_GRASP_OBJ2, signals.incoming.humanGraspObj2);
-	//client.setIntegerSignal(SignalSignatures::HUMAN_GRASP_OBJ3, signals.incoming.humanGraspObj3);
-	//										  									 
-	//client.setIntegerSignal(SignalSignatures::HUMAN_PLACE_OBJ1, signals.incoming.humanPlaceObj1);
-	//client.setIntegerSignal(SignalSignatures::HUMAN_PLACE_OBJ2, signals.incoming.humanPlaceObj2);
-	//client.setIntegerSignal(SignalSignatures::HUMAN_PLACE_OBJ3, signals.incoming.humanPlaceObj3);
+void CoppeliasimHandler::resetSignals() const
+{
+	signalClient.setIntegerSignal(SignalSignatures::START_SIM, 0);
+	signalClient.setIntegerSignal(SignalSignatures::SIM_STARTED, 0);
+	signalClient.setIntegerSignal(SignalSignatures::TARGET_OBJECT, 0);
+	signalClient.setIntegerSignal(SignalSignatures::OBJECT1_EXISTS, 0);
+	signalClient.setIntegerSignal(SignalSignatures::OBJECT2_EXISTS, 0);
+	signalClient.setIntegerSignal(SignalSignatures::OBJECT3_EXISTS, 0);
 }
 
 void CoppeliasimHandler::printSignals() const
 {
-	signals.print();
-}
-
-void CoppeliasimHandler::readObjectData()
-{
-	hand.pose = client.getObjectPose(hand.handle);
+	std::cout << "Signals:" << std::endl;
+	std::cout << "----------------" << std::endl;
+	std::cout << "Sim Started: " << signals.simStarted << std::endl;
+	std::cout << "Object 1: " << signals.object1 << std::endl;
+	std::cout << "Object 2: " << signals.object2 << std::endl;
+	std::cout << "Object 3: " << signals.object3 << std::endl;
+	std::cout << "Start Sim: " << signals.startSim << std::endl;
+	std::cout << "Target Object: " << signals.targetObject << std::endl;
+	std::endl(std::cout);
 }

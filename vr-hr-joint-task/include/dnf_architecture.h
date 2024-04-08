@@ -2,7 +2,7 @@
 
 #include <elements/element_factory.h>
 
-enum class RobotArchitecture
+enum class DnfArchitectureType
 {
 	HAND_MOTION,
 	ACTION_LIKELIHOOD,
