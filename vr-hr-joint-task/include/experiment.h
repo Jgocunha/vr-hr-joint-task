@@ -35,7 +35,7 @@ private:
 	void waitForSimulationToStart();
 
 	void sendHandPositionToDnf() const;
-	void sendAvailableObjectsToDnf();
+	void sendAvailableObjectsToDnf() const;
 	void sendTargetObjectToRobot();
 
 	void keepAliveWhileTaskIsRunning() const;

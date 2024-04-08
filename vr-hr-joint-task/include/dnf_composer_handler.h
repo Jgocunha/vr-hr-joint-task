@@ -25,10 +25,18 @@ public:
 	void run() const;
 	void end();
 
-	void setHandStimulus(const Position& position) const;
+	void setHandStimulus(const Position& position, 
+		bool object1,
+		bool object2,
+		bool object3) const;
 	int getTargetObject() const;
 	void setAvailableObjectsInTheWorkspace(bool object1, bool object2, bool object3) const;
 private:
+	void setHandStimulusDependingOnHumanActionLikelihood(const Position& position, 
+		bool object1, 
+		bool object2, 
+		bool object3) const;
+	void setHandStimulusDependingOnHumanHandPosition(const Position& position) const;
 	static double calculateHandDistanceToObjects(double handPositionX, double handPositionZ);
 	static double calculateHandProximityToObjects(double distance);
 	static double normalizeHandPosition(double handPositionY);

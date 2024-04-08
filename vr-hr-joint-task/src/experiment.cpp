@@ -71,24 +71,20 @@ void Experiment::waitForSimulationToStart()
 void Experiment::sendHandPositionToDnf() const
 {
 	const Position hand = coppeliasimHandler.getHandPosition();
-	dnfComposerHandler.setHandStimulus(hand);
+	dnfComposerHandler.setHandStimulus(hand, 
+		signals.object1, 
+		signals.object2, 
+		signals.object3);
 }
 
-void Experiment::sendAvailableObjectsToDnf()
+void Experiment::sendAvailableObjectsToDnf() const
 {
-	static bool previousObject1 = signals.object1;
-	static bool previousObject2 = signals.object2;
-	static bool previousObject3 = signals.object3;
-
 	dnfComposerHandler.setAvailableObjectsInTheWorkspace(signals.object1, signals.object2, signals.object3);
 }
 
 void Experiment::sendTargetObjectToRobot()
 {
-	//static int previousTargetObject = 0;
 	signals.targetObject = dnfComposerHandler.getTargetObject();
-	//if((signals.targetObject != previousTargetObject))
-		//previousTargetObject = signals.targetObject;
 }
 
 void Experiment::keepAliveWhileTaskIsRunning() const
