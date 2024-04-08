@@ -1,7 +1,11 @@
 #include "coppeliasim_handler.h"
 #include "dnfcomposer_handler.h"
+#include "experiment_monitoring.h"
 #include "misc.h"
-#include <algorithm> 
+#include <algorithm>
+#include <chrono>
+
+
 
 class Experiment
 {
@@ -12,8 +16,11 @@ private:
 	std::thread signalsThread;
 	IncomingSignals coppeliasimSignals;
 	OutgoingSignals dnfcomposerSignals;
+	Position handPosition;
+	RobotArchitecture architecture;
+	bool experimentRunning;
 public:
-	Experiment(std::string name, int commsFreq, double deltaT);
+	Experiment(std::string name, RobotArchitecture architecture, int commsFreq, double deltaT);
 	~Experiment();
 
 	void init();
@@ -24,11 +31,12 @@ private:
 	void waitForConnection() const;
 	void waitForSimulationStart();
 	void waitForObjectsToBeCreated() const;
-	void keepAliveWhileTaskIsRunning() const;
+	void keepAliveWhileTaskIsRunning();
 
-	void updateHandPosition() const;
-	void updateAvailableObjects() const;
-	void updateTargetObject();
+	void updateHumanHandPosition() const;
+	void updateAvailableObjectsInWorkspace() const;
+	void updateRobotTargetObject();
+	void updateExperimentMonitoringLogs();
 	void updateSignals();
 
 	bool areObjectsPresent() const;

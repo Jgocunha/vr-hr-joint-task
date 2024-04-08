@@ -11,12 +11,13 @@
 
 struct SimulationParameters
 {
+	RobotArchitecture archType;
 	std::string identifier;
 	double deltaT;
 	bool uiActive;
 
-	SimulationParameters(std::string identifier = "simulation", double deltaT = 10, bool uiActive = true)
-		: identifier(std::move(identifier)), deltaT(deltaT), uiActive(uiActive)
+	SimulationParameters(RobotArchitecture arch, std::string identifier = "simulation", double deltaT = 10, bool uiActive = true)
+		: archType(arch), identifier(std::move(identifier)), deltaT(deltaT), uiActive(uiActive)
 	{}
 };
 
@@ -34,11 +35,11 @@ public:
 	void init();
 	void run() const;
 	void close();
+	void setHandStimulus(const double& likelihood_1, const double& likelihood_2, const double& likelihood_3) const;
 	void setHandStimulus(const double& hand_y, const double& hand_proximity) const;
 	int getTargetObject() const;
 	void addTargetObject(int objectIndex) const;
 	void removeTargetObject(int objectIndex) const;
 private:
 	void setupUserInterface() const;
-	static double transformXToCircular(const double& x);
 };
