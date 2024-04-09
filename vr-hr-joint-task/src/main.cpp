@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 		constexpr double deltaT = 10;
 		constexpr DnfArchitectureType architecture = DnfArchitectureType::HAND_MOTION;
 
-		ExperimentParameters params{architecture, deltaT};
+		const ExperimentParameters params{architecture, deltaT};
 		Experiment experiment(params);
 
 		experiment.init();

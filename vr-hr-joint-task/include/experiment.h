@@ -15,6 +15,42 @@ struct ExperimentParameters
 	{}
 };
 
+struct LogMsgs
+{
+    int lastTargetObject = -1;
+	bool prevSimStarted = false;
+    bool prevRobotGraspObj1 = false;
+    bool prevRobotGraspObj2 = false;
+    bool prevRobotGraspObj3 = false;
+    bool prevHumanGraspObj1 = false;
+    bool prevHumanGraspObj2 = false;
+    bool prevHumanGraspObj3 = false;
+    bool prevRobotPlaceObj1 = false;
+    bool prevRobotPlaceObj2 = false;
+    bool prevRobotPlaceObj3 = false;
+    bool prevHumanPlaceObj1 = false;
+    bool prevHumanPlaceObj2 = false;
+    bool prevHumanPlaceObj3 = false;
+
+    void clear()
+	{
+        lastTargetObject = -1;
+		prevSimStarted = false;
+        prevRobotGraspObj1 = false;
+        prevRobotGraspObj2 = false;
+        prevRobotGraspObj3 = false;
+        prevHumanGraspObj1 = false;
+        prevHumanGraspObj2 = false;
+        prevHumanGraspObj3 = false;
+        prevRobotPlaceObj1 = false;
+        prevRobotPlaceObj2 = false;
+        prevRobotPlaceObj3 = false;
+        prevHumanPlaceObj1 = false;
+        prevHumanPlaceObj2 = false;
+        prevHumanPlaceObj3 = false;
+    }
+};
+
 class Experiment
 {
 private:
@@ -22,6 +58,8 @@ private:
 	CoppeliasimHandler coppeliasimHandler;
 	std::thread experimentThread;
 	Signals signals;
+	Pose handPose;
+	LogMsgs logMsgs;
 public:
 	Experiment(const ExperimentParameters& parameters);
 	~Experiment();
@@ -35,10 +73,12 @@ private:
 	void waitForConnectionWithCoppeliasim();
 	void waitForSimulationToStart();
 
-	void sendHandPositionToDnf() const;
+	void sendHandPositionToDnf();
 	void sendAvailableObjectsToDnf() const;
 	void sendTargetObjectToRobot();
+	void interpretAndLogSystemState();
 
 	void keepAliveWhileTaskIsRunning() const;
 	bool areObjectsPresent() const;
+	bool areAllObjectsPresent() const;
 };
