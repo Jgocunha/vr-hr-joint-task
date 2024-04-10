@@ -57,7 +57,8 @@ private:
 	DnfComposerHandler dnfComposerHandler;
 	CoppeliasimHandler coppeliasimHandler;
 	std::thread experimentThread;
-	Signals signals;
+	IncomingSignals inSignals;
+	OutgoingSignals outSignals;
 	Pose handPose;
 	LogMsgs logMsgs;
 public:
