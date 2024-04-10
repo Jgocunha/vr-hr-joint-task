@@ -117,7 +117,8 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureHandM
 	const auto asl_ael_k = factory.createElement(element::GAUSS_KERNEL, { "asl -> ael", dim_params }, { asl_ael_k_params });
 	simulation->addElement(asl_ael_k);
 
-	element::LateralInteractionsParameters ael_ael_k_params = { 4.75, 8.37, 3.375, 5.677, -2.5, circularity, normalization };
+	// deltaT = 10 Aexc=8.37, Ainh=5.677, Sinh=3.375, Sexc=4.75, Sself=-2.5
+	element::LateralInteractionsParameters ael_ael_k_params = { 4.75, 8.143, 3.375, 5.677, -2.5, circularity, normalization };
 	const auto ael_ael_k = factory.createElement(element::LATERAL_INTERACTIONS, { "ael -> ael", dim_params }, { ael_ael_k_params });
 	simulation->addElement(ael_ael_k);
 

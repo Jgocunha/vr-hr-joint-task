@@ -60,7 +60,7 @@ void EventLogger::logHumanHandPose(const std::string& msg)
 
 void EventLogger::finalize()
 {
-	if (EventLogger::logFile.is_open())
+	if (logFile.is_open())
 		logFile.close();
 	if (humanHandPoseFile.is_open())
 		humanHandPoseFile.close();

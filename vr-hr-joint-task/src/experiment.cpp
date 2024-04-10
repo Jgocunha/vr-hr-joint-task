@@ -111,13 +111,6 @@ void Experiment::interpretAndLogSystemState()
 	}
 	logMsgs.prevSimStarted = inSignals.simStarted;
 
-	// Check if the robot is approaching a new object.
-	if (inSignals.robotApproaching && outSignals.targetObject != logMsgs.lastTargetObject) {
-		if (outSignals.targetObject != 0)
-			EventLogger::log(LogLevel::ROBOT, "Robot is approaching object " + std::to_string(outSignals.targetObject) + ".");
-		logMsgs.lastTargetObject = outSignals.targetObject;
-	}
-
 	// Grasping events for robot, logged every time it passes from 0 to 1.
 	if (inSignals.robotGraspObj1 && logMsgs.prevRobotGraspObj1 == 0) {
 		EventLogger::log(LogLevel::ROBOT, "Robot is grasping object 1.");
@@ -181,6 +174,13 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 3.");
 	}
 	logMsgs.prevHumanPlaceObj3 = inSignals.humanPlaceObj3;
+
+	// Check if the robot is approaching a new object.
+	if (inSignals.robotApproaching && outSignals.targetObject != logMsgs.lastTargetObject) {
+		if (outSignals.targetObject != 0)
+			EventLogger::log(LogLevel::ROBOT, "Robot is approaching object " + std::to_string(outSignals.targetObject) + ".");
+		logMsgs.lastTargetObject = outSignals.targetObject;
+	}
 }
 
 void Experiment::keepAliveWhileTaskIsRunning() const
