@@ -176,9 +176,9 @@ void Experiment::interpretAndLogSystemState()
 	logMsgs.prevHumanPlaceObj3 = inSignals.humanPlaceObj3;
 
 	// Check if the robot is approaching a new object.
-	if (inSignals.robotApproaching && outSignals.targetObject != logMsgs.lastTargetObject) {
+	if (inSignals.robotApproaching && /*!inSignals.robotGrasping && */outSignals.targetObject != logMsgs.lastTargetObject) {
 		if (outSignals.targetObject != 0)
-			EventLogger::log(LogLevel::ROBOT, "Robot is approaching object " + std::to_string(outSignals.targetObject) + ".");
+			EventLogger::log(LogLevel::ROBOT, "Robot will target object " + std::to_string(outSignals.targetObject) + ".");
 		logMsgs.lastTargetObject = outSignals.targetObject;
 	}
 }

@@ -24,6 +24,7 @@ struct IncomingSignals
 	static constexpr const char* OBJECT2_EXISTS = "object2";
 	static constexpr const char* OBJECT3_EXISTS = "object3";
 	static constexpr const char* ROBOT_APPROACH = "robotApproaching";
+	static constexpr const char* ROBOT_GRASP = "robotGrasping";
 	static constexpr const char* ROBOT_GRASP_OBJ1 = "robotGraspObj1";
 	static constexpr const char* ROBOT_GRASP_OBJ2 = "robotGraspObj2";
 	static constexpr const char* ROBOT_GRASP_OBJ3 = "robotGraspObj3";
@@ -44,6 +45,7 @@ struct IncomingSignals
 	bool object2;
 	bool object3;
 	bool robotApproaching;
+	bool robotGrasping;
 	bool robotGraspObj1;
 	bool robotGraspObj2;
 	bool robotGraspObj3;
@@ -65,6 +67,7 @@ struct IncomingSignals
 		, object2(false)
 		, object3(false)
 		, robotApproaching(false)
+		, robotGrasping(false)
 		, robotGraspObj1(false)
 		, robotGraspObj2(false)
 		, robotGraspObj3(false)

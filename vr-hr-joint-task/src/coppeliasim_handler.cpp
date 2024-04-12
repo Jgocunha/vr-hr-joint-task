@@ -108,6 +108,8 @@ void CoppeliasimHandler::readSignals()
 	incomingSignals.object2 = incomingSignalsClient.getIntegerSignal(IncomingSignals::OBJECT2_EXISTS);
 	incomingSignals.object3 = incomingSignalsClient.getIntegerSignal(IncomingSignals::OBJECT3_EXISTS);
 	incomingSignals.robotApproaching = incomingSignalsClient.getIntegerSignal(IncomingSignals::ROBOT_APPROACH);
+	incomingSignals.robotGrasping = incomingSignalsClient.getIntegerSignal(IncomingSignals::ROBOT_GRASP);
+
 	incomingSignals.robotGraspObj1 = incomingSignalsClient.getIntegerSignal(IncomingSignals::ROBOT_GRASP_OBJ1);
 	incomingSignals.robotGraspObj2 = incomingSignalsClient.getIntegerSignal(IncomingSignals::ROBOT_GRASP_OBJ2);
 	incomingSignals.robotGraspObj3 = incomingSignalsClient.getIntegerSignal(IncomingSignals::ROBOT_GRASP_OBJ3);
@@ -140,6 +142,8 @@ void CoppeliasimHandler::resetSignals() const
 	incomingSignalsClient.setIntegerSignal(IncomingSignals::OBJECT2_EXISTS, 0);
 	incomingSignalsClient.setIntegerSignal(IncomingSignals::OBJECT3_EXISTS, 0);
 	incomingSignalsClient.setIntegerSignal(IncomingSignals::ROBOT_APPROACH, 0);
+	incomingSignalsClient.setIntegerSignal(IncomingSignals::ROBOT_GRASP, 0);
+
 	incomingSignalsClient.setIntegerSignal(IncomingSignals::ROBOT_GRASP_OBJ1, 0);
 	incomingSignalsClient.setIntegerSignal(IncomingSignals::ROBOT_GRASP_OBJ2, 0);
 	incomingSignalsClient.setIntegerSignal(IncomingSignals::ROBOT_GRASP_OBJ3, 0);
