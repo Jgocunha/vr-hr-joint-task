@@ -1,0 +1,44 @@
+2024-04-12 16:24:33 CONTROL Session started at 24-04-12_16h24m33s
+2024-04-12 16:24:33 CONTROL Connected with CoppeliaSim.
+2024-04-12 16:24:47 CONTROL Simulation has started.
+2024-04-12 16:24:51 ROBOT Robot will target object 1.
+2024-04-12 16:24:52 ROBOT Robot is grasping object 1.
+2024-04-12 16:24:53 ROBOT Robot is placing object 1.
+2024-04-12 16:24:54 ROBOT Robot will target object 2.
+2024-04-12 16:24:55 ROBOT Robot is grasping object 2.
+2024-04-12 16:24:56 ROBOT Robot will target object 3.
+2024-04-12 16:24:56 ROBOT Robot is placing object 2.
+2024-04-12 16:24:58 ROBOT Robot is grasping object 3.
+2024-04-12 16:24:59 ROBOT Robot is placing object 3.
+2024-04-12 16:25:00 ROBOT Robot will target object 2.
+2024-04-12 16:25:04 CONTROL Simulation has started.
+2024-04-12 16:25:06 ROBOT Robot will target object 1.
+2024-04-12 16:25:07 ROBOT Robot is grasping object 1.
+2024-04-12 16:25:08 ROBOT Robot will target object 2.
+2024-04-12 16:25:08 ROBOT Robot is placing object 1.
+2024-04-12 16:25:09 ROBOT Robot is grasping object 2.
+2024-04-12 16:25:11 ROBOT Robot will target object 3.
+2024-04-12 16:25:11 ROBOT Robot is placing object 2.
+2024-04-12 16:25:13 ROBOT Robot is grasping object 3.
+2024-04-12 16:25:14 ROBOT Robot is placing object 3.
+2024-04-12 16:25:18 CONTROL Simulation has started.
+2024-04-12 16:25:20 ROBOT Robot will target object 1.
+2024-04-12 16:25:21 ROBOT Robot will target object 2.
+2024-04-12 16:25:21 ROBOT Robot is grasping object 1.
+2024-04-12 16:25:22 ROBOT Robot will target object 3.
+2024-04-12 16:25:22 ROBOT Robot is placing object 1.
+2024-04-12 16:25:24 ROBOT Robot is grasping object 3.
+2024-04-12 16:25:25 ROBOT Robot is placing object 3.
+2024-04-12 16:25:26 ROBOT Robot will target object 2.
+2024-04-12 16:25:27 ROBOT Robot is grasping object 2.
+2024-04-12 16:25:28 ROBOT Robot is placing object 2.
+2024-04-12 16:25:34 CONTROL Simulation has started.
+2024-04-12 16:25:36 ROBOT Robot will target object 1.
+2024-04-12 16:25:37 ROBOT Robot is grasping object 1.
+2024-04-12 16:25:38 ROBOT Robot will target object 2.
+2024-04-12 16:25:38 ROBOT Robot is placing object 1.
+2024-04-12 16:25:39 ROBOT Robot is grasping object 2.
+2024-04-12 16:25:41 ROBOT Robot will target object 3.
+2024-04-12 16:25:41 ROBOT Robot is placing object 2.
+2024-04-12 16:25:43 ROBOT Robot is grasping object 3.
+2024-04-12 16:25:45 ROBOT Robot is placing object 3.
