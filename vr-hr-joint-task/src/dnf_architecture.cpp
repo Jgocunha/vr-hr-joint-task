@@ -12,7 +12,7 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureHandM
 	element::ElementSpatialDimensionParameters dim_params{ 50, 0.5 };
 	constexpr bool circularity = false;
 	constexpr bool normalization = false;
-	constexpr double tau = 25;
+	constexpr double tau = 100;
 	constexpr double resting_level = -5;
 	constexpr double x_shift = 0;
 	constexpr double steepness = 4;
@@ -150,7 +150,7 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureActio
 	element::ElementSpatialDimensionParameters dim_params{ 50, 0.5 };
 	constexpr bool circularity = false;
 	constexpr bool normalization = false;
-	constexpr double tau = 25;
+	constexpr double tau = 100;
 	constexpr double resting_level = -5;
 	constexpr double x_shift = 0;
 	constexpr double steepness = 4;

@@ -113,9 +113,9 @@ void DnfComposerHandler::setAvailableObjectsInTheWorkspace(bool object1, bool ob
 void DnfComposerHandler::setHandStimulusDependingOnHumanActionLikelihood(const Position& position, bool object1, bool object2, bool object3) const
 {
 	static Position handPrevious = position;
-	static const Position objPosition1 = { 0.60023, -0.02697, 0.70607 };
-	static const Position objPosition2 = { 0.60042, -0.15003, 0.70607 };
-	static const Position objPosition3 = { 0.60344, -0.27474, 0.70607 };
+	static const Position objPosition1 = { 0.000,  0.125, 0.716 };
+	static const Position objPosition2 = { 0.000,  0.000, 0.716 };
+	static const Position objPosition3 = { 0.000, -0.125, 0.716 };
 	static constexpr double tau = 0.1;
 	static constexpr double sigma = 0.05;
 	static constexpr double scalar = 5;
@@ -175,8 +175,8 @@ void DnfComposerHandler::setHandStimulusDependingOnHumanHandPosition(const Posit
 double DnfComposerHandler::calculateHandDistanceToObjects(double handPositionX, double handPositionZ)
 {
 	// Table center and dimensions
-	static constexpr double tableCenterX = 0.6;
-	static constexpr double tableCenterZ = 0.631 + 0.1;
+	static constexpr double tableCenterX = 0.0;
+	static constexpr double tableCenterZ = 0.641 + 0.08;
 
 	const double distanceX = std::abs(handPositionX - tableCenterX);
 	const double distanceZ = std::abs(handPositionZ - tableCenterZ);
@@ -196,8 +196,8 @@ double DnfComposerHandler::calculateHandProximityToObjects(double distance)
 double DnfComposerHandler::normalizeHandPosition(double handPositionY)
 {
 	// Define the min and max of the table in Y dimension
-	static constexpr double yMin = -0.4;
-	static constexpr double yMax = 0.1;
+	static constexpr double yMin = -0.25;
+	static constexpr double yMax = 0.25;
 	// Define the min and max of the scale
 	static constexpr double scaleMin = 0;
 	static constexpr double scaleMax = 50;
