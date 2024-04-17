@@ -61,10 +61,23 @@ https://github.com/BorisBogaerts/CoppeliaSim-VR-Toolbox
     - Run ```copyToVrep.bat``` as admin.
 4. To test you can open CoppeliaSim, open the Hello_vr_world.ttt scene, run the CoppeliaSim VR interface, and then run the scene. You should see the scene load to your vr headset.
 
-**Notes:**
+## Troubleshooting
 - Both the HTC VIVE and HTC VIVE Pro Eye have been tested and work.
 - Dynamic loading option not working, so objects cannot be loaded programatically once the simulation is already loaded.
 - Vrep-vive mostly crashes in the first launch, but then works fine.
+- There is an issue when loading grouped models using the vr-toolbox. At initialization the models are ungrouped and loaded to the vr environment, and in cleanup they are grouped again. However, when this grouping happens the orientations and positions of objects to eachother aren't correct and this results in a broken model. There are two ways to solve this:
+  
+  1. 
+     - Open the ```HTC_VIVE.lua``` file in the Scripts folder.
+    - Comment line 40 and uncomment line 41
+    ```lua
+    40 --simpleShapeHandles=sim.ungroupShape(handles[i])
+    41 simpleShapeHandles = {handles[i]}
+    ```
+    - Run ```copyToVrep.bat``` as admin.
+    
+    Or 2.
+    - Dont change anything and run the simulation. Then stop it. You should see the broken models. Press undo ctrl-z and see the models getting 'unbroken', then save ctrl-s. From now on the models should stay correct.
 
 ## Up and running
 
