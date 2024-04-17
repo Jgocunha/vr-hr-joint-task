@@ -37,7 +37,7 @@ private:
 		bool object2, 
 		bool object3) const;
 	void setHandStimulusDependingOnHumanHandPosition(const Position& position) const;
-	static double calculateHandDistanceToObjects(double handPositionX, double handPositionZ);
+	static double calculateHandDistanceToObjects(const Position& position);
 	static double calculateHandProximityToObjects(double distance);
 	static double normalizeHandPosition(double handPositionY);
 	void setupUserInterface() const;

@@ -165,21 +165,21 @@ void DnfComposerHandler::setHandStimulusDependingOnHumanHandPosition(const Posit
 		std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus"));
 
 	const double proximity = calculateHandProximityToObjects(
-		calculateHandDistanceToObjects(position.x, position.z));
+		calculateHandDistanceToObjects(position));
 	const double y = normalizeHandPosition(position.y);
 
 	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus->getParameters().sigma, proximity, y, false, false };
 	aol_stimulus->setParameters(new_params);
 }
 
-double DnfComposerHandler::calculateHandDistanceToObjects(double handPositionX, double handPositionZ)
+double DnfComposerHandler::calculateHandDistanceToObjects(const Position& position)
 {
 	// Table center and dimensions
 	static constexpr double tableCenterX = 0.0;
 	static constexpr double tableCenterZ = 0.641 + 0.08;
 
-	const double distanceX = std::abs(handPositionX - tableCenterX);
-	const double distanceZ = std::abs(handPositionZ - tableCenterZ);
+	const double distanceX = std::abs(position.x - tableCenterX);
+	const double distanceZ = std::abs(position.z - tableCenterZ);
 	const double distance = std::sqrt(distanceX * distanceX + distanceZ * distanceZ);
 
 	return distance;
