@@ -33,7 +33,7 @@ void DnfComposerHandler::run() const
 	while (!userRequestedExit)
 	{
 		application->step();
-		userRequestedExit = application->getCloseUI();
+		userRequestedExit = application->hasUIBeenClosed();
 	}
 	application->close();
 }
@@ -214,10 +214,6 @@ void DnfComposerHandler::setupUserInterface() const
 	element::ElementSpatialDimensionParameters dim_params{ 50, 0.5 };
 
 	// Create User Interface windows
-	//application->activateUserInterfaceWindow(user_interface::SIMULATION_WINDOW);
-	//application->activateUserInterfaceWindow(user_interface::LOG_WINDOW);
-	//application->activateUserInterfaceWindow(user_interface::ELEMENT_WINDOW);
-	//application->activateUserInterfaceWindow(user_interface::MONITORING_WIsNDOW);
 
 	constexpr int yMax = 10;
 	constexpr int yMin = 8;
@@ -226,40 +222,36 @@ void DnfComposerHandler::setupUserInterface() const
 	user_interface::PlotParameters aolPlotParameters;
 	aolPlotParameters.annotations = { "Action observation layer", "Spatial dimension", "Amplitude" };
 	aolPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax + 10, dim_params.d_x };
-	aolPlotParameters.renderDataSelector = false;
-	const auto aolPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, aolPlotParameters);
-	aolPlotWindow->addPlottingData("aol", "activation");
-	aolPlotWindow->addPlottingData("aol", "input");
-	aolPlotWindow->addPlottingData("aol", "output");
-	application->activateUserInterfaceWindow(aolPlotWindow);
+	auto aolVisualization = createVisualization(simulation);
+	aolVisualization->addPlottingData("aol", "activation");
+	aolVisualization->addPlottingData("aol", "input");
+	aolVisualization->addPlottingData("aol", "output");
+	application->addWindow<user_interface::PlotWindow>(aolVisualization, aolPlotParameters);
 
 	user_interface::PlotParameters aslPlotParameters;
 	aslPlotParameters.annotations = { "Action simulation layer", "Spatial dimension", "Amplitude" };
 	aslPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
-	aslPlotParameters.renderDataSelector = false;
-	const auto aslPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, aslPlotParameters);
-	aslPlotWindow->addPlottingData("asl", "activation");
-	aslPlotWindow->addPlottingData("asl", "input");
-	aslPlotWindow->addPlottingData("asl", "output");
-	application->activateUserInterfaceWindow(aslPlotWindow);
+	auto aslVisualization = createVisualization(simulation);
+	aslVisualization->addPlottingData("asl", "activation");
+	aslVisualization->addPlottingData("asl", "input");
+	aslVisualization->addPlottingData("asl", "output");
+	application->addWindow<user_interface::PlotWindow>(aslVisualization, aslPlotParameters);
 
 	user_interface::PlotParameters orlPlotParameters;
 	orlPlotParameters.annotations = { "Object representation layer", "Spatial dimension", "Amplitude" };
 	orlPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
-	orlPlotParameters.renderDataSelector = false;
-	const auto orlPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, orlPlotParameters);
-	orlPlotWindow->addPlottingData("orl", "activation");
-	orlPlotWindow->addPlottingData("orl", "input");
-	orlPlotWindow->addPlottingData("orl", "output");
-	application->activateUserInterfaceWindow(orlPlotWindow);
+	auto orlVisualization = createVisualization(simulation);
+	orlVisualization->addPlottingData("orl", "activation");
+	orlVisualization->addPlottingData("orl", "input");
+	orlVisualization->addPlottingData("orl", "output");
+	application->addWindow<user_interface::PlotWindow>(orlVisualization, orlPlotParameters);
 
 	user_interface::PlotParameters aelPlotParameters;
 	aelPlotParameters.annotations = { "Action execution layer", "Spatial dimension", "Amplitude" };
 	aelPlotParameters.dimensions = { 0, dim_params.x_max, -yMin - 20, yMax, dim_params.d_x };
-	aelPlotParameters.renderDataSelector = false;
-	const auto aelPlotWindow = std::make_shared<user_interface::PlotWindow>(simulation, aelPlotParameters);
-	aelPlotWindow->addPlottingData("ael", "activation");
-	aelPlotWindow->addPlottingData("ael", "input");
-	aelPlotWindow->addPlottingData("ael", "output");
-	application->activateUserInterfaceWindow(aelPlotWindow);
+	auto aelVisualization = createVisualization(simulation);
+	aelVisualization->addPlottingData("ael", "activation");
+	aelVisualization->addPlottingData("ael", "input");
+	aelVisualization->addPlottingData("ael", "output");
+	application->addWindow<user_interface::PlotWindow>(aelVisualization, aelPlotParameters);
 }

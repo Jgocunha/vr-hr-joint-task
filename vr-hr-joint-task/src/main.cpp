@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 
 	try
 	{
-		constexpr double deltaT = 65;
+		constexpr double deltaT = 45;
 		constexpr DnfArchitectureType architecture = DnfArchitectureType::HAND_MOTION;
 
 		const ExperimentParameters params{architecture, deltaT};
