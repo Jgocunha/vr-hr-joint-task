@@ -95,6 +95,9 @@ void Experiment::sendTargetObjectToRobot()
 
 void Experiment::interpretAndLogSystemState()
 {
+	static bool afterGraspingForcePlacing = false;
+	static bool afterPlacingForceTargeting = false;
+
 	const std::string log = "Hand pose: x = "
 		+ std::to_string(handPose.position.x) +
 		", y = " + std::to_string(handPose.position.y) +
@@ -104,26 +107,42 @@ void Experiment::interpretAndLogSystemState()
 		", gamma = " + std::to_string(handPose.orientation.gamma);
 	EventLogger::logHumanHandPose(log);
 
+	if (inSignals.canRestart && !inSignals.restart && logMsgs.prevSimFinished == false)
+	{
+		EventLogger::log(LogLevel::CONTROL, "Task has finished.");
+		logMsgs.prevSimFinished = true;
+		afterGraspingForcePlacing = false;
+		afterPlacingForceTargeting = false;
+		logMsgs.lastTargetObject = -1;
+	}
+
 	if(inSignals.simStarted && logMsgs.prevSimStarted == false)
 	{
-		EventLogger::log(LogLevel::CONTROL, "Simulation has started.");
+		EventLogger::log(LogLevel::CONTROL, "Task has started.");
 		logMsgs.prevSimStarted = true;
+		logMsgs.prevSimFinished = false;
+		afterGraspingForcePlacing = false;
+		afterPlacingForceTargeting = false;
+		logMsgs.lastTargetObject = -1;
 	}
 	logMsgs.prevSimStarted = inSignals.simStarted;
 
 	// Grasping events for robot, logged every time it passes from 0 to 1.
-	if (inSignals.robotGraspObj1 && logMsgs.prevRobotGraspObj1 == 0) {
+	if (inSignals.robotGraspObj1 && logMsgs.prevRobotGraspObj1 == 0 && !afterPlacingForceTargeting) {
 		EventLogger::log(LogLevel::ROBOT, "Robot is grasping object 1.");
+		afterGraspingForcePlacing = true;
 	}
 	logMsgs.prevRobotGraspObj1 = inSignals.robotGraspObj1;
 
-	if (inSignals.robotGraspObj2 && logMsgs.prevRobotGraspObj2 == 0) {
+	if (inSignals.robotGraspObj2 && logMsgs.prevRobotGraspObj2 == 0 && !afterPlacingForceTargeting) {
 		EventLogger::log(LogLevel::ROBOT, "Robot is grasping object 2.");
+		afterGraspingForcePlacing = true;
 	}
 	logMsgs.prevRobotGraspObj2 = inSignals.robotGraspObj2;
 
-	if (inSignals.robotGraspObj3 && logMsgs.prevRobotGraspObj3 == 0) {
+	if (inSignals.robotGraspObj3 && logMsgs.prevRobotGraspObj3 == 0 && !afterPlacingForceTargeting) {
 		EventLogger::log(LogLevel::ROBOT, "Robot is grasping object 3.");
+		afterGraspingForcePlacing = true;
 	}
 	logMsgs.prevRobotGraspObj3 = inSignals.robotGraspObj3;
 
@@ -146,16 +165,22 @@ void Experiment::interpretAndLogSystemState()
 	// Placement events for robot, logged every time it passes from 0 to 1.
 	if (inSignals.robotPlaceObj1 && logMsgs.prevRobotPlaceObj1 == 0) {
 		EventLogger::log(LogLevel::ROBOT, "Robot is placing object 1.");
+		afterGraspingForcePlacing = false;
+		afterPlacingForceTargeting = true;
 	}
 	logMsgs.prevRobotPlaceObj1 = inSignals.robotPlaceObj1;
 
 	if (inSignals.robotPlaceObj2 && logMsgs.prevRobotPlaceObj2 == 0) {
 		EventLogger::log(LogLevel::ROBOT, "Robot is placing object 2.");
+		afterGraspingForcePlacing = false;
+		afterPlacingForceTargeting = true;
 	}
 	logMsgs.prevRobotPlaceObj2 = inSignals.robotPlaceObj2;
 
 	if (inSignals.robotPlaceObj3 && logMsgs.prevRobotPlaceObj3 == 0) {
 		EventLogger::log(LogLevel::ROBOT, "Robot is placing object 3.");
+		afterGraspingForcePlacing = false;
+		afterPlacingForceTargeting = true;
 	}
 	logMsgs.prevRobotPlaceObj3 = inSignals.robotPlaceObj3;
 
@@ -176,10 +201,12 @@ void Experiment::interpretAndLogSystemState()
 	logMsgs.prevHumanPlaceObj3 = inSignals.humanPlaceObj3;
 
 	// Check if the robot is approaching a new object.
-	if (inSignals.robotApproaching && /*!inSignals.robotGrasping && */outSignals.targetObject != logMsgs.lastTargetObject) {
+	//if (inSignals.robotApproaching && /*!inSignals.robotGrasping && */outSignals.targetObject != logMsgs.lastTargetObject) {
+	if (inSignals.robotApproaching && !afterGraspingForcePlacing && outSignals.targetObject != logMsgs.lastTargetObject) {
 		if (outSignals.targetObject != 0)
 			EventLogger::log(LogLevel::ROBOT, "Robot will target object " + std::to_string(outSignals.targetObject) + ".");
 		logMsgs.lastTargetObject = outSignals.targetObject;
+		afterPlacingForceTargeting = false;
 	}
 }
 

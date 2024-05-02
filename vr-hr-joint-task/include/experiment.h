@@ -31,6 +31,7 @@ struct LogMsgs
     bool prevHumanPlaceObj1 = false;
     bool prevHumanPlaceObj2 = false;
     bool prevHumanPlaceObj3 = false;
+	bool prevSimFinished = false;
 
     void clear()
 	{
@@ -48,6 +49,7 @@ struct LogMsgs
         prevHumanPlaceObj1 = false;
         prevHumanPlaceObj2 = false;
         prevHumanPlaceObj3 = false;
+		prevSimFinished = false;
     }
 };
 
