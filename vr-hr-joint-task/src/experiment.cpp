@@ -97,6 +97,8 @@ void Experiment::interpretAndLogSystemState()
 {
 	static bool afterGraspingForcePlacing = false;
 	static bool afterPlacingForceTargeting = false;
+	static int placeCount = 0;
+	static int newTargetCount = 0;
 
 	const std::string log = "Hand pose: x = "
 		+ std::to_string(handPose.position.x) +
@@ -107,13 +109,19 @@ void Experiment::interpretAndLogSystemState()
 		", gamma = " + std::to_string(handPose.orientation.gamma);
 	EventLogger::logHumanHandPose(log);
 
-	if (inSignals.canRestart && !inSignals.restart && logMsgs.prevSimFinished == false)
+	if (inSignals.canRestart && logMsgs.prevSimFinished == false && placeCount >= 3)
 	{
 		EventLogger::log(LogLevel::CONTROL, "Task has finished.");
+		EventLogger::log(LogLevel::CONTROL, "Re-planning count: " + std::to_string(newTargetCount));
+		EventLogger::log(LogLevel::CONTROL, "Collision count: " + std::to_string(inSignals.collisionCounter));
+		EventLogger::log(LogLevel::CONTROL, "Human idle time: " + std::to_string(inSignals.humanIdleTime));
+		EventLogger::log(LogLevel::CONTROL, "Robot idle time: " + std::to_string(inSignals.robotIdleTime));
 		logMsgs.prevSimFinished = true;
 		afterGraspingForcePlacing = false;
 		afterPlacingForceTargeting = false;
 		logMsgs.lastTargetObject = -1;
+		placeCount = 0;
+		newTargetCount = 0;
 	}
 
 	if(inSignals.simStarted && logMsgs.prevSimStarted == false)
@@ -124,6 +132,8 @@ void Experiment::interpretAndLogSystemState()
 		afterGraspingForcePlacing = false;
 		afterPlacingForceTargeting = false;
 		logMsgs.lastTargetObject = -1;
+		placeCount = 0;
+		newTargetCount = 0;
 	}
 	logMsgs.prevSimStarted = inSignals.simStarted;
 
@@ -167,6 +177,7 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::log(LogLevel::ROBOT, "Robot is placing object 1.");
 		afterGraspingForcePlacing = false;
 		afterPlacingForceTargeting = true;
+		placeCount++;
 	}
 	logMsgs.prevRobotPlaceObj1 = inSignals.robotPlaceObj1;
 
@@ -174,6 +185,7 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::log(LogLevel::ROBOT, "Robot is placing object 2.");
 		afterGraspingForcePlacing = false;
 		afterPlacingForceTargeting = true;
+		placeCount++;
 	}
 	logMsgs.prevRobotPlaceObj2 = inSignals.robotPlaceObj2;
 
@@ -181,22 +193,26 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::log(LogLevel::ROBOT, "Robot is placing object 3.");
 		afterGraspingForcePlacing = false;
 		afterPlacingForceTargeting = true;
+		placeCount++;
 	}
 	logMsgs.prevRobotPlaceObj3 = inSignals.robotPlaceObj3;
 
 	// Placement events for human, logged every time it passes from 0 to 1.
 	if (inSignals.humanPlaceObj1 && logMsgs.prevHumanPlaceObj1 == 0) {
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 1.");
+		placeCount++;
 	}
 	logMsgs.prevHumanPlaceObj1 = inSignals.humanPlaceObj1;
 
 	if (inSignals.humanPlaceObj2 && logMsgs.prevHumanPlaceObj2 == 0) {
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 2.");
+		placeCount++;
 	}
 	logMsgs.prevHumanPlaceObj2 = inSignals.humanPlaceObj2;
 
 	if (inSignals.humanPlaceObj3 && logMsgs.prevHumanPlaceObj3 == 0) {
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 3.");
+		placeCount++;
 	}
 	logMsgs.prevHumanPlaceObj3 = inSignals.humanPlaceObj3;
 
@@ -204,7 +220,10 @@ void Experiment::interpretAndLogSystemState()
 	//if (inSignals.robotApproaching && /*!inSignals.robotGrasping && */outSignals.targetObject != logMsgs.lastTargetObject) {
 	if (inSignals.robotApproaching && !afterGraspingForcePlacing && outSignals.targetObject != logMsgs.lastTargetObject) {
 		if (outSignals.targetObject != 0)
+		{
 			EventLogger::log(LogLevel::ROBOT, "Robot will target object " + std::to_string(outSignals.targetObject) + ".");
+			newTargetCount++;
+		}
 		logMsgs.lastTargetObject = outSignals.targetObject;
 		afterPlacingForceTargeting = false;
 	}

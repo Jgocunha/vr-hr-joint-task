@@ -39,6 +39,9 @@ struct IncomingSignals
 	static constexpr const char* HUMAN_PLACE_OBJ3 = "humanPlaceObj3";
 	static constexpr const char* CAN_RESTART = "canBeRestarted";
 	static constexpr const char* RESTART = "restart";
+	static constexpr const char* COLLISION = "collisionCounter";
+	static constexpr const char* HUMAN_IDLE_TIME = "humanIdleTime";
+	static constexpr const char* ROBOT_IDLE_TIME = "robotIdleTime";
 
 	bool simStarted;
 	bool object1;
@@ -60,6 +63,9 @@ struct IncomingSignals
 	bool humanPlaceObj3;
 	bool canRestart;
 	bool restart;
+	int collisionCounter;
+	int humanIdleTime;
+	int robotIdleTime;
 
 	IncomingSignals()
 		: simStarted(false)
@@ -82,6 +88,8 @@ struct IncomingSignals
 		, humanPlaceObj3(false)
 		, canRestart(false)
 		, restart(false)
+		, collisionCounter(0)
+		, humanIdleTime(0)
 	{}
 };
 

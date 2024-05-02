@@ -124,6 +124,11 @@ void CoppeliasimHandler::readSignals()
 	incomingSignals.humanPlaceObj3 = incomingSignalsClient.getIntegerSignal(IncomingSignals::HUMAN_PLACE_OBJ3);
 	incomingSignals.canRestart = incomingSignalsClient.getIntegerSignal(IncomingSignals::CAN_RESTART);
 	incomingSignals.restart = incomingSignalsClient.getIntegerSignal(IncomingSignals::RESTART);
+
+	incomingSignals.collisionCounter = incomingSignalsClient.getIntegerSignal(IncomingSignals::COLLISION);
+
+	incomingSignals.humanIdleTime = incomingSignalsClient.getIntegerSignal(IncomingSignals::HUMAN_IDLE_TIME);
+	incomingSignals.robotIdleTime = incomingSignalsClient.getIntegerSignal(IncomingSignals::ROBOT_IDLE_TIME);
 }
 
 void CoppeliasimHandler::writeSignals() const
