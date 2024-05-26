@@ -110,14 +110,17 @@ void Experiment::interpretAndLogSystemState()
 	static int placeCount = 0;
 	static int newTargetCount = 0;
 
-	const std::string log = "Hand pose: x = "
-		+ std::to_string(handPose.position.x) +
-		", y = " + std::to_string(handPose.position.y) +
-		", z = " + std::to_string(handPose.position.z) +
-		", alpha = " + std::to_string(handPose.orientation.alpha) +
-		", beta = " + std::to_string(handPose.orientation.beta) +
-		", gamma = " + std::to_string(handPose.orientation.gamma);
-	EventLogger::logHumanHandPose(log);
+	if (!(handPose.position.x == 0.0 && handPose.position.y == 0.0 && handPose.position.z == 0.0))
+	{
+		const std::string log = "Hand pose: x = "
+			+ std::to_string(handPose.position.x) +
+			", y = " + std::to_string(handPose.position.y) +
+			", z = " + std::to_string(handPose.position.z) +
+			", alpha = " + std::to_string(handPose.orientation.alpha) +
+			", beta = " + std::to_string(handPose.orientation.beta) +
+			", gamma = " + std::to_string(handPose.orientation.gamma);
+		EventLogger::logHumanHandPose(log);
+	}
 
 	if (/*inSignals.canRestart && logMsgs.prevSimFinished == false &&*/ placeCount >= 3)
 	{
@@ -172,16 +175,19 @@ void Experiment::interpretAndLogSystemState()
 	// Grasping events for human, logged every time it passes from 0 to 1.
 	if (inSignals.humanGraspObj1 && logMsgs.prevHumanGraspObj1 == 0) {
 		EventLogger::log(LogLevel::HUMAN, "Human is grasping object 1.");
+		EventLogger::logHumanHandPose("Human is grasping object 1.");
 	}
 	logMsgs.prevHumanGraspObj1 = inSignals.humanGraspObj1;
 
 	if (inSignals.humanGraspObj2 && logMsgs.prevHumanGraspObj2 == 0) {
 		EventLogger::log(LogLevel::HUMAN, "Human is grasping object 2.");
+		EventLogger::logHumanHandPose("Human is grasping object 2.");
 	}
 	logMsgs.prevHumanGraspObj2 = inSignals.humanGraspObj2;
 
 	if (inSignals.humanGraspObj3 && logMsgs.prevHumanGraspObj3 == 0) {
 		EventLogger::log(LogLevel::HUMAN, "Human is grasping object 3.");
+		EventLogger::logHumanHandPose("Human is grasping object 3.");
 	}
 	logMsgs.prevHumanGraspObj3 = inSignals.humanGraspObj3;
 
@@ -219,6 +225,7 @@ void Experiment::interpretAndLogSystemState()
 	// Placement events for human, logged every time it passes from 0 to 1.
 	if (inSignals.humanPlaceObj1 && logMsgs.prevHumanPlaceObj1 == 0) {
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 1.");
+		EventLogger::logHumanHandPose("Human is placing object 1.");
 		placeCount++;
 		using namespace dnf_composer::tools;
 		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
@@ -227,6 +234,7 @@ void Experiment::interpretAndLogSystemState()
 
 	if (inSignals.humanPlaceObj2 && logMsgs.prevHumanPlaceObj2 == 0) {
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 2.");
+		EventLogger::logHumanHandPose("Human is placing object 2.");
 		placeCount++;
 		using namespace dnf_composer::tools;
 		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
@@ -235,6 +243,7 @@ void Experiment::interpretAndLogSystemState()
 
 	if (inSignals.humanPlaceObj3 && logMsgs.prevHumanPlaceObj3 == 0) {
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 3.");
+		EventLogger::logHumanHandPose("Human is placing object 3.");
 		placeCount++;
 		using namespace dnf_composer::tools;
 		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));

@@ -53,7 +53,8 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureHandM
 	const auto asl_asl_k = factory.createElement(element::LATERAL_INTERACTIONS, { "asl -> asl", dim_params }, { asl_asl_k_params });
 	simulation->addElement(asl_asl_k);
 
-	element::GaussKernelParameters aol_asl_k_params = { 2.4, 0.755, circularity, normalization };
+	//element::GaussKernelParameters aol_asl_k_params = { 2.4, 0.755, circularity, normalization };
+	element::GaussKernelParameters aol_asl_k_params = { 3.0, 0.755, circularity, normalization };
 	const auto aol_asl_k = factory.createElement(element::GAUSS_KERNEL, { "aol -> asl", dim_params }, { aol_asl_k_params });
 	simulation->addElement(aol_asl_k);
 
@@ -113,7 +114,8 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureHandM
 	const auto ael = factory.createElement(element::NEURAL_FIELD, { "ael", dim_params }, { ael_params });
 	simulation->addElement(ael);
 
-	element::GaussKernelParameters asl_ael_k_params = { 1, -1.5, circularity, normalization };
+	//element::GaussKernelParameters asl_ael_k_params = { 1, -1.5, circularity, normalization };
+	element::GaussKernelParameters asl_ael_k_params = { 4, -2.5, circularity, normalization };
 	const auto asl_ael_k = factory.createElement(element::GAUSS_KERNEL, { "asl -> ael", dim_params }, { asl_ael_k_params });
 	simulation->addElement(asl_ael_k);
 
@@ -122,7 +124,8 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureHandM
 	const auto ael_ael_k = factory.createElement(element::LATERAL_INTERACTIONS, { "ael -> ael", dim_params }, { ael_ael_k_params });
 	simulation->addElement(ael_ael_k);
 
-	element::GaussKernelParameters orl_ael_k_params = { 2, 1.5, circularity, normalization };
+	//element::GaussKernelParameters orl_ael_k_params = { 2, 1.5, circularity, normalization };
+	element::GaussKernelParameters orl_ael_k_params = { 3, 1.5, circularity, normalization };
 	const auto orl_ael_k = factory.createElement(element::GAUSS_KERNEL, { "orl -> ael", dim_params }, { orl_ael_k_params });
 	simulation->addElement(orl_ael_k);
 
