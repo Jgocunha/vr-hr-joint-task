@@ -90,6 +90,7 @@ struct IncomingSignals
 		, restart(false)
 		, collisionCounter(0)
 		, humanIdleTime(0)
+		, robotIdleTime(0)
 	{}
 };
 

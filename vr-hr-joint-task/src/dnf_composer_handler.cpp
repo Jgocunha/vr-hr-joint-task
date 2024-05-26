@@ -11,6 +11,9 @@ DnfComposerHandler::DnfComposerHandler(DnfArchitectureType dnf, double deltaT)
 	case DnfArchitectureType::ACTION_LIKELIHOOD:
 		simulation = getDynamicNeuralFieldArchitectureActionLikelihood("dnf arch", deltaT);
 		break;
+	case DnfArchitectureType::NO_ANTICIPATION:
+		simulation = getDynamicNeuralFieldArchitectureNoAnticipation("dnf arch", deltaT);
+		break;
 	}
 	application = std::make_shared<dnf_composer::Application>(simulation);
 	setupUserInterface();
@@ -26,21 +29,24 @@ void DnfComposerHandler::init()
 	simulationThread = std::thread(&DnfComposerHandler::run, this);
 }
 
-void DnfComposerHandler::run() const
+void DnfComposerHandler::run()
 {
 	application->init();
 	bool userRequestedExit = false;
-	while (!userRequestedExit)
+	while (!userRequestedExit || !killEverything)
 	{
 		application->step();
 		userRequestedExit = application->hasUIBeenClosed();
 	}
 	application->close();
+	if (simulationThread.joinable())
+		simulationThread.join();
 }
 
 void DnfComposerHandler::end()
 {
-	simulationThread.join();
+	if (simulationThread.joinable())
+		simulationThread.join();
 }
 
 void DnfComposerHandler::setHandStimulus(const Position& position, bool object1, bool object2, bool object3) const
@@ -52,6 +58,9 @@ void DnfComposerHandler::setHandStimulus(const Position& position, bool object1,
 		break;
 	case DnfArchitectureType::ACTION_LIKELIHOOD:
 		setHandStimulusDependingOnHumanActionLikelihood(position, object1, object2, object3);
+		break;
+	case DnfArchitectureType::NO_ANTICIPATION:
+		// Do nothing
 		break;
 	}
 }

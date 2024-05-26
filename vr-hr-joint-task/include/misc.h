@@ -4,6 +4,9 @@
 #include <numbers>
 #include <chrono>
 
+
+inline bool killEverything = false;
+
 struct Position
 {
 	double x, y, z;

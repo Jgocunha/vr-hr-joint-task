@@ -3,7 +3,12 @@
 Experiment::Experiment(const ExperimentParameters& parameters)
 	: dnfComposerHandler(parameters.dnf, parameters.deltaT)
 	, coppeliasimHandler()
+	, inSignals()
+	, outSignals()
 	, handPose({},{})
+	, logMsgs()
+	, numTrials(parameters.numTrials)
+	, trialCounter(0)
 {
 
 }
@@ -25,13 +30,17 @@ void Experiment::run()
 	waitForConnectionWithCoppeliasim();
 	experimentThread = std::thread(&Experiment::handleSignalsBetweenDnfAndCoppeliasim, this);
 	waitForSimulationToStart();
+	keepAliveWhileTaskIsRunning();
 }
 
 void Experiment::end()
 {
+	using namespace dnf_composer::tools;
+	logger::log(logger::LogLevel::INFO, "Ending experiment...");
 	dnfComposerHandler.end();
 	coppeliasimHandler.end();
-	experimentThread.join();
+	if (experimentThread.joinable())
+		experimentThread.join();
 	EventLogger::finalize();
 }
 
@@ -52,10 +61,10 @@ void Experiment::waitForConnectionWithCoppeliasim()
 {
 	while (!coppeliasimHandler.isConnected())
 	{
-		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for connection with CoppeliaSim...\n");
+		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for connection with CoppeliaSim...");
 		Sleep(500);
 	}
-	log(dnf_composer::tools::logger::LogLevel::INFO, "Connected with CoppeliaSim.\n");
+	log(dnf_composer::tools::logger::LogLevel::INFO, "Connected with CoppeliaSim.");
 	EventLogger::log(LogLevel::CONTROL, "Connected with CoppeliaSim.");
 }
 
@@ -65,17 +74,18 @@ void Experiment::waitForSimulationToStart()
 	while (!hasSimStarted)
 	{
 		outSignals.startSim = true;
-		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for Simulation to start...\n");
+		log(dnf_composer::tools::logger::LogLevel::INFO, "Waiting for Simulation to start...");
 		hasSimStarted = inSignals.simStarted;
 		Sleep(500);
 	}
-	log(dnf_composer::tools::logger::LogLevel::INFO, "Simulation has started.\n");
+	log(dnf_composer::tools::logger::LogLevel::INFO, "Simulation has started.");
 }
 
 void Experiment::sendHandPositionToDnf()
 {
 	handPose = coppeliasimHandler.getHandPose();
-	dnfComposerHandler.setHandStimulus({ handPose.position.x,
+	dnfComposerHandler.setHandStimulus({
+		handPose.position.x,
 		handPose.position.y,
 		handPose.position.z},
 		inSignals.object1,
@@ -109,7 +119,7 @@ void Experiment::interpretAndLogSystemState()
 		", gamma = " + std::to_string(handPose.orientation.gamma);
 	EventLogger::logHumanHandPose(log);
 
-	if (inSignals.canRestart && logMsgs.prevSimFinished == false && placeCount >= 3)
+	if (/*inSignals.canRestart && logMsgs.prevSimFinished == false &&*/ placeCount >= 3)
 	{
 		EventLogger::log(LogLevel::CONTROL, "Task has finished.");
 		EventLogger::log(LogLevel::CONTROL, "Re-planning count: " + std::to_string(newTargetCount));
@@ -122,6 +132,9 @@ void Experiment::interpretAndLogSystemState()
 		logMsgs.lastTargetObject = -1;
 		placeCount = 0;
 		newTargetCount = 0;
+		trialCounter++;
+		using namespace dnf_composer::tools;
+		logger::log(logger::LogLevel::INFO, "Trial " + std::to_string(trialCounter) + " out of " + std::to_string(numTrials));
 	}
 
 	if(inSignals.simStarted && logMsgs.prevSimStarted == false)
@@ -178,6 +191,8 @@ void Experiment::interpretAndLogSystemState()
 		afterGraspingForcePlacing = false;
 		afterPlacingForceTargeting = true;
 		placeCount++;
+		using namespace dnf_composer::tools;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevRobotPlaceObj1 = inSignals.robotPlaceObj1;
 
@@ -186,6 +201,8 @@ void Experiment::interpretAndLogSystemState()
 		afterGraspingForcePlacing = false;
 		afterPlacingForceTargeting = true;
 		placeCount++;
+		using namespace dnf_composer::tools;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevRobotPlaceObj2 = inSignals.robotPlaceObj2;
 
@@ -194,6 +211,8 @@ void Experiment::interpretAndLogSystemState()
 		afterGraspingForcePlacing = false;
 		afterPlacingForceTargeting = true;
 		placeCount++;
+		using namespace dnf_composer::tools;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevRobotPlaceObj3 = inSignals.robotPlaceObj3;
 
@@ -201,18 +220,24 @@ void Experiment::interpretAndLogSystemState()
 	if (inSignals.humanPlaceObj1 && logMsgs.prevHumanPlaceObj1 == 0) {
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 1.");
 		placeCount++;
+		using namespace dnf_composer::tools;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevHumanPlaceObj1 = inSignals.humanPlaceObj1;
 
 	if (inSignals.humanPlaceObj2 && logMsgs.prevHumanPlaceObj2 == 0) {
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 2.");
 		placeCount++;
+		using namespace dnf_composer::tools;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevHumanPlaceObj2 = inSignals.humanPlaceObj2;
 
 	if (inSignals.humanPlaceObj3 && logMsgs.prevHumanPlaceObj3 == 0) {
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 3.");
 		placeCount++;
+		using namespace dnf_composer::tools;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevHumanPlaceObj3 = inSignals.humanPlaceObj3;
 
@@ -229,14 +254,15 @@ void Experiment::interpretAndLogSystemState()
 	}
 }
 
-void Experiment::keepAliveWhileTaskIsRunning() const
+void Experiment::keepAliveWhileTaskIsRunning()
 {
-	while (true)
+	while (trialCounter < numTrials)
 	{
-		Sleep(1000);
+		Sleep(10);
 	}
 	// For now let's keep alive for a few seconds after the task is done.
-	Sleep(10000);
+	killEverything = true;
+	end();
 }
 
 bool Experiment::areObjectsPresent() const

@@ -22,7 +22,7 @@ public:
 	~DnfComposerHandler();
 
 	void init();
-	void run() const;
+	void run();
 	void end();
 
 	void setHandStimulus(const Position& position, 

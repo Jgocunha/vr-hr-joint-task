@@ -9,9 +9,10 @@ struct ExperimentParameters
 {
 	DnfArchitectureType dnf;
 	double deltaT;
+	uint8_t numTrials;
 
-	ExperimentParameters(DnfArchitectureType dnf, double deltaT)
-	: dnf(dnf), deltaT(deltaT)
+	ExperimentParameters(DnfArchitectureType dnf, double deltaT, int numTrials)
+	: dnf(dnf), deltaT(deltaT), numTrials(numTrials)
 	{}
 };
 
@@ -63,6 +64,8 @@ private:
 	OutgoingSignals outSignals;
 	Pose handPose;
 	LogMsgs logMsgs;
+	int numTrials;
+	int trialCounter;
 public:
 	Experiment(const ExperimentParameters& parameters);
 	~Experiment();
@@ -81,7 +84,7 @@ private:
 	void sendTargetObjectToRobot();
 	void interpretAndLogSystemState();
 
-	void keepAliveWhileTaskIsRunning() const;
+	void keepAliveWhileTaskIsRunning();
 	bool areObjectsPresent() const;
 	bool areAllObjectsPresent() const;
 };

@@ -22,7 +22,6 @@ void CoppeliasimHandler::init()
 	handThread = std::thread(&CoppeliasimHandler::readHandPosition, this);
 }
 
-
 void CoppeliasimHandler::incomingSignalsLoop()
 {
 	
@@ -32,29 +31,33 @@ void CoppeliasimHandler::incomingSignalsLoop()
 
 	resetSignals();
 
-	while (isConnected())
+	while (isConnected() && !killEverything)
 	{
 		readSignals();
 		//printSignals();
 	}
+
+	//if (incomingSignalsThread.joinable())
+		//incomingSignalsThread.join();
 }
 
 void CoppeliasimHandler::outgoingSignalsLoop()
 {
 	while (!outgoingSignalsClient.initialize());
 
-	while (outgoingSignalsClient.isConnected())
+	while (outgoingSignalsClient.isConnected() && !killEverything)
 	{
 		writeSignals();
 	}
-}
 
+	//if (outgoingSignalsThread.joinable())
+		//outgoingSignalsThread.join();
+}
 
 void CoppeliasimHandler::setSignals(const OutgoingSignals& signals)
 {
 	outgoingSignals = signals;
 }
-
 
 IncomingSignals CoppeliasimHandler::getSignals() const
 {
@@ -67,7 +70,7 @@ void CoppeliasimHandler::readHandPosition()
 
 	hand.objectHandle = handClient.getObjectHandle("RightController");
 
-    while (handClient.isConnected())
+    while (handClient.isConnected() && !killEverything)
     {
         coppeliasim_cpp::Pose pos = handClient.getObjectPose(hand.objectHandle);
 		hand.pose = { {pos.position.x,
@@ -78,22 +81,26 @@ void CoppeliasimHandler::readHandPosition()
 			pos.orientation.gamma}
 		};
     }
-}
 
+	//if (handThread.joinable())
+		//handThread.join();
+}
 
 Pose CoppeliasimHandler::getHandPose() const
 {
 	return hand.pose;
 }
 
-
 void CoppeliasimHandler::end()
 {
 	if (isConnected())
 		incomingSignalsClient.stopSimulation();
-	incomingSignalsThread.join();
-	outgoingSignalsThread.join();
-	handThread.join();
+	if (incomingSignalsThread.joinable())
+		incomingSignalsThread.join();
+	if (outgoingSignalsThread.joinable())
+		outgoingSignalsThread.join();
+	if (handThread.joinable())
+		handThread.join();
 }
 
 bool CoppeliasimHandler::isConnected() const
