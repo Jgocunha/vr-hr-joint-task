@@ -98,13 +98,16 @@ struct OutgoingSignals
 {
 	static constexpr const char* START_SIM = "startSim";
 	static constexpr const char* TARGET_OBJECT = "targetObject";
+	static constexpr const char* ARCHITECTURE_TYPE = "archType";
 
 	bool startSim;
 	int targetObject;
+	int archType;
 
 	OutgoingSignals()
 		: startSim(false)
 		, targetObject(0)
+		, archType(0)
 	{}
 };
 

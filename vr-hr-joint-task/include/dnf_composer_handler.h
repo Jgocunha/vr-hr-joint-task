@@ -6,6 +6,7 @@
 #include <application/application.h>
 #include <simulation/simulation.h>
 #include <user_interface/plot_window.h>
+#include <imgui-platform-kit/log_window.h>
 
 #include "dnf_architecture.h"
 #include "misc.h"

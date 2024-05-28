@@ -132,7 +132,7 @@ install(EXPORT ${CMAKE_PROJECT_NAME}Targets DESTINATION ${HR_VR_PROJ_CMAKE_CONFI
                                        FILE ${CMAKE_PROJECT_NAME}-config.cmake
 )
 
-# Add executable project
+# Add executable project modifiable
 set(EXE_PROJECT ${CMAKE_PROJECT_NAME}-exe)
 add_executable(${EXE_PROJECT} "src/main.cpp")
 target_include_directories(${EXE_PROJECT} PRIVATE include)
@@ -141,3 +141,23 @@ target_link_libraries(${EXE_PROJECT} PRIVATE imgui::imgui)
 target_link_libraries(${EXE_PROJECT} PRIVATE imgui-platform-kit)
 target_link_libraries(${EXE_PROJECT} PRIVATE dynamic-neural-field-composer)
 target_link_libraries(${EXE_PROJECT} PRIVATE coppeliasim-cpp-client)
+
+# Add executable project anticipation
+set(EXE_PROJECT_ANTICIPATION vr-hr-anticipation-exe)
+add_executable(${EXE_PROJECT_ANTICIPATION} "src/vr_hr_anticipation.cpp")
+target_include_directories(${EXE_PROJECT_ANTICIPATION} PRIVATE include)
+target_link_libraries(${EXE_PROJECT_ANTICIPATION} PRIVATE ${CMAKE_PROJECT_NAME})
+target_link_libraries(${EXE_PROJECT_ANTICIPATION} PRIVATE imgui::imgui)
+target_link_libraries(${EXE_PROJECT_ANTICIPATION} PRIVATE imgui-platform-kit)
+target_link_libraries(${EXE_PROJECT_ANTICIPATION} PRIVATE dynamic-neural-field-composer)
+target_link_libraries(${EXE_PROJECT_ANTICIPATION} PRIVATE coppeliasim-cpp-client)
+
+# Add executable project no anticipation
+set(EXE_PROJECT_NO_ANTICIPATION vr-hr-no-anticipation-exe)
+add_executable(${EXE_PROJECT_NO_ANTICIPATION} "src/vr_hr_no_anticipation.cpp")
+target_include_directories(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE include)
+target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE ${CMAKE_PROJECT_NAME})
+target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE imgui::imgui)
+target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE imgui-platform-kit)
+target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE dynamic-neural-field-composer)
+target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE coppeliasim-cpp-client)

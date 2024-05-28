@@ -10,7 +10,16 @@ Experiment::Experiment(const ExperimentParameters& parameters)
 	, numTrials(parameters.numTrials)
 	, trialCounter(0)
 {
-
+	switch (parameters.dnf)
+	{
+	case DnfArchitectureType::HAND_MOTION:
+	case DnfArchitectureType::ACTION_LIKELIHOOD:
+		outSignals.archType = 1;
+	break;
+	case DnfArchitectureType::NO_ANTICIPATION:
+		outSignals.archType = 0;
+	break;
+	}
 }
 
 Experiment::~Experiment()
@@ -125,6 +134,7 @@ void Experiment::interpretAndLogSystemState()
 	if (/*inSignals.canRestart && logMsgs.prevSimFinished == false &&*/ placeCount >= 3)
 	{
 		EventLogger::log(LogLevel::CONTROL, "Task has finished.");
+		EventLogger::logHumanHandPose("Task has finished.");
 		EventLogger::log(LogLevel::CONTROL, "Re-planning count: " + std::to_string(newTargetCount));
 		EventLogger::log(LogLevel::CONTROL, "Collision count: " + std::to_string(inSignals.collisionCounter));
 		EventLogger::log(LogLevel::CONTROL, "Human idle time: " + std::to_string(inSignals.humanIdleTime));
@@ -143,6 +153,7 @@ void Experiment::interpretAndLogSystemState()
 	if(inSignals.simStarted && logMsgs.prevSimStarted == false)
 	{
 		EventLogger::log(LogLevel::CONTROL, "Task has started.");
+		EventLogger::logHumanHandPose("Task has started.");
 		logMsgs.prevSimStarted = true;
 		logMsgs.prevSimFinished = false;
 		afterGraspingForcePlacing = false;

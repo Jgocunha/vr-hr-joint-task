@@ -37,6 +37,8 @@ void CoppeliasimHandler::incomingSignalsLoop()
 		//printSignals();
 	}
 
+	incomingSignalsClient.stopSimulation();
+
 	//if (incomingSignalsThread.joinable())
 		//incomingSignalsThread.join();
 }
@@ -142,6 +144,7 @@ void CoppeliasimHandler::writeSignals() const
 {
 	outgoingSignalsClient.setIntegerSignal(OutgoingSignals::START_SIM, outgoingSignals.startSim);
 	outgoingSignalsClient.setIntegerSignal(OutgoingSignals::TARGET_OBJECT, outgoingSignals.targetObject);
+	outgoingSignalsClient.setIntegerSignal(OutgoingSignals::ARCHITECTURE_TYPE, outgoingSignals.archType);
 }
 
 void CoppeliasimHandler::resetSignals() const
