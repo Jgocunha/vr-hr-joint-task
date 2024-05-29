@@ -12,6 +12,7 @@ DnfComposerHandler::DnfComposerHandler(DnfArchitectureType dnf, double deltaT)
 		simulation = getDynamicNeuralFieldArchitectureActionLikelihood("dnf arch", deltaT);
 		break;
 	case DnfArchitectureType::NO_ANTICIPATION:
+	case DnfArchitectureType::BASELINE:
 		simulation = getDynamicNeuralFieldArchitectureNoAnticipation("dnf arch", deltaT);
 		break;
 	}

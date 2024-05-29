@@ -32,6 +32,7 @@ public:
 		bool object3) const;
 	int getTargetObject() const;
 	void setAvailableObjectsInTheWorkspace(bool object1, bool object2, bool object3) const;
+	DnfArchitectureType getDnfType() const { return dnf; }
 private:
 	void setHandStimulusDependingOnHumanActionLikelihood(const Position& position, 
 		bool object1, 

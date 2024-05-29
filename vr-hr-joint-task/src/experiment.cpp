@@ -17,6 +17,7 @@ Experiment::Experiment(const ExperimentParameters& parameters)
 		outSignals.archType = 1;
 	break;
 	case DnfArchitectureType::NO_ANTICIPATION:
+		case DnfArchitectureType::BASELINE:
 		outSignals.archType = 0;
 	break;
 	}
@@ -60,7 +61,8 @@ void Experiment::handleSignalsBetweenDnfAndCoppeliasim()
 		inSignals = coppeliasimHandler.getSignals();
 		sendHandPositionToDnf();
 		sendAvailableObjectsToDnf();
-		sendTargetObjectToRobot();
+		if (dnfComposerHandler.getDnfType() != DnfArchitectureType::BASELINE)
+			sendTargetObjectToRobot();
 		interpretAndLogSystemState();
 		coppeliasimHandler.setSignals(outSignals);
 	}
