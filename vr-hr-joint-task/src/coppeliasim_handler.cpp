@@ -138,6 +138,8 @@ void CoppeliasimHandler::readSignals()
 
 	incomingSignals.humanIdleTime = incomingSignalsClient.getIntegerSignal(IncomingSignals::HUMAN_IDLE_TIME);
 	incomingSignals.robotIdleTime = incomingSignalsClient.getIntegerSignal(IncomingSignals::ROBOT_IDLE_TIME);
+	incomingSignals.replanningCount = incomingSignalsClient.getIntegerSignal(IncomingSignals::REPLANNING_COUNT);
+	incomingSignals.commonGrasp = incomingSignalsClient.getIntegerSignal(IncomingSignals::COMMON_GRASP);
 }
 
 void CoppeliasimHandler::writeSignals() const

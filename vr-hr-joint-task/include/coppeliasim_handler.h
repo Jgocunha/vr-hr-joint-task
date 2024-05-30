@@ -42,6 +42,8 @@ struct IncomingSignals
 	static constexpr const char* COLLISION = "collisionCounter";
 	static constexpr const char* HUMAN_IDLE_TIME = "humanIdleTime";
 	static constexpr const char* ROBOT_IDLE_TIME = "robotIdleTime";
+	static constexpr const char* REPLANNING_COUNT = "replanningCount";
+	static constexpr const char* COMMON_GRASP = "commonGrasp";
 
 	bool simStarted;
 	bool object1;
@@ -66,6 +68,8 @@ struct IncomingSignals
 	int collisionCounter;
 	int humanIdleTime;
 	int robotIdleTime;
+	int replanningCount;
+	int commonGrasp;
 
 	IncomingSignals()
 		: simStarted(false)
@@ -91,6 +95,8 @@ struct IncomingSignals
 		, collisionCounter(0)
 		, humanIdleTime(0)
 		, robotIdleTime(0)
+		, replanningCount(0)
+		, commonGrasp(0)
 	{}
 };
 
