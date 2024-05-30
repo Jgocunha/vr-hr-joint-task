@@ -58,6 +58,7 @@ set(header
     "include/dnf_composer_handler.h"
     "include/coppeliasim_handler.h"
     "include/event_logger.h"
+    "include/logger.h"
 )
 
 # Set source files
@@ -68,6 +69,7 @@ set(src
     "src/dnf_composer_handler.cpp"
     "src/coppeliasim_handler.cpp"
     "src/event_logger.cpp"
+    "src/logger.cpp"
 )
 
 # Define library target

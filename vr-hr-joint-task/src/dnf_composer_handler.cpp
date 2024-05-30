@@ -225,6 +225,7 @@ void DnfComposerHandler::setupUserInterface() const
 
 	// Create User Interface windows
 	application->addWindow<imgui_kit::LogWindow>();
+	application->addWindow<user_interface::FieldMetricsWindow>();
 
 	constexpr int yMax = 10;
 	constexpr int yMin = 8;
