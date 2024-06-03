@@ -163,3 +163,13 @@ target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE imgui::imgui)
 target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE imgui-platform-kit)
 target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE dynamic-neural-field-composer)
 target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE coppeliasim-cpp-client)
+
+# Add executable project baseline
+set(EXE_PROJECT_BASELINE vr-hr-baseline-exe)
+add_executable(${EXE_PROJECT_BASELINE} "src/vr_hr_baseline.cpp")
+target_include_directories(${EXE_PROJECT_BASELINE} PRIVATE include)
+target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE ${CMAKE_PROJECT_NAME})
+target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE imgui::imgui)
+target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE imgui-platform-kit)
+target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE dynamic-neural-field-composer)
+target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE coppeliasim-cpp-client)
