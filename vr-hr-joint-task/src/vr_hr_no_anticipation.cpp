@@ -11,8 +11,9 @@ int main(int argc, char* argv[])
 	try
 	{
 		constexpr double deltaT = 50;
-		constexpr DnfArchitectureType architecture = DnfArchitectureType::NO_ANTICIPATION;
-		constexpr uint8_t numTrials = 10;
+		constexpr DnfArchitectureType architecture =
+			DnfArchitectureType::NO_ANTICIPATION;
+		constexpr uint8_t numTrials = 20;
 
 		const ExperimentParameters params{ architecture, deltaT, numTrials };
 		Experiment experiment(params);
