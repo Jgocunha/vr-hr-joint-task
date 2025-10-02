@@ -5,10 +5,9 @@
 
 #include <application/application.h>
 #include <simulation/simulation.h>
-#include <user_interface/plot_window.h>
-#include <user_interface/field_metrics_window.h>
-#include <imgui-platform-kit/log_window.h>
-
+#include "dnf_composer/user_interface/plots_window.h"
+#include "dnf_composer/user_interface/node_graph_window.h"
+#include "dnf_composer/user_interface/element_window.h"
 #include "dnf_architecture.h"
 #include "misc.h"
 
@@ -18,6 +17,7 @@ private:
 	DnfArchitectureType dnf;
 	std::shared_ptr<dnf_composer::Simulation> simulation;
 	std::shared_ptr<dnf_composer::Application> application;
+	std::shared_ptr<dnf_composer::Visualization> visualization;
 	std::thread simulationThread;
 public:
 	DnfComposerHandler(DnfArchitectureType dnf, double deltaT);

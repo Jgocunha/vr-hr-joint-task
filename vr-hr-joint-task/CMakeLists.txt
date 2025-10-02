@@ -88,6 +88,9 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE imgui::imgui)
 # Setup implot
 find_package(implot CONFIG REQUIRED)
 
+# Setup imgui-node-editor
+find_package(unofficial-imgui-node-editor CONFIG REQUIRED)
+
 # Setup imgui-platform-kit
 find_package(imgui-platform-kit CONFIG REQUIRED)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE imgui-platform-kit)

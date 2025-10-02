@@ -1,5 +1,7 @@
 #include "dnf_composer_handler.h"
 
+#include "logger.h"
+
 DnfComposerHandler::DnfComposerHandler(DnfArchitectureType dnf, double deltaT)
 	: dnf(dnf)
 {
@@ -8,15 +10,13 @@ DnfComposerHandler::DnfComposerHandler(DnfArchitectureType dnf, double deltaT)
 	case DnfArchitectureType::HAND_MOTION:
 		simulation = getDynamicNeuralFieldArchitectureHandMotion("dnf arch", deltaT);
 		break;
-	case DnfArchitectureType::ACTION_LIKELIHOOD:
-		simulation = getDynamicNeuralFieldArchitectureActionLikelihood("dnf arch", deltaT);
-		break;
 	case DnfArchitectureType::NO_ANTICIPATION:
 	case DnfArchitectureType::BASELINE:
 		simulation = getDynamicNeuralFieldArchitectureNoAnticipation("dnf arch", deltaT);
 		break;
 	}
-	application = std::make_shared<dnf_composer::Application>(simulation);
+	visualization = std::make_shared<dnf_composer::Visualization>(simulation);
+	application = std::make_shared<dnf_composer::Application>(simulation, visualization);
 	setupUserInterface();
 }
 
@@ -37,7 +37,7 @@ void DnfComposerHandler::run()
 	while (!userRequestedExit || !killEverything)
 	{
 		application->step();
-		userRequestedExit = application->hasUIBeenClosed();
+		userRequestedExit = application->hasGUIBeenClosed();
 	}
 	application->close();
 	if (simulationThread.joinable())
@@ -57,9 +57,6 @@ void DnfComposerHandler::setHandStimulus(const Position& position, bool object1,
 	case DnfArchitectureType::HAND_MOTION:
 		setHandStimulusDependingOnHumanHandPosition(position);
 		break;
-	case DnfArchitectureType::ACTION_LIKELIHOOD:
-		setHandStimulusDependingOnHumanActionLikelihood(position, object1, object2, object3);
-		break;
 	case DnfArchitectureType::NO_ANTICIPATION:
 		// Do nothing
 		break;
@@ -69,7 +66,16 @@ void DnfComposerHandler::setHandStimulus(const Position& position, bool object1,
 int DnfComposerHandler::getTargetObject() const
 {
 	const auto ael = std::dynamic_pointer_cast<dnf_composer::element::NeuralField>(simulation->getElement("ael"));
-	const double centroid = ael->getCentroid();
+	const auto bumps = ael->getBumps();
+
+	if (bumps.empty())
+		return 0;
+	if (bumps.size() > 1) {
+		//vr_hr_joint_task::tools::logger::log(vr_hr_joint_task::tools::logger::WARNING, "Target object bump size is > 1.");
+		return 0;
+	}
+
+	const double centroid = bumps.at(0).centroid;
 	if (centroid < 0)
 		return 0;
 
@@ -104,19 +110,19 @@ void DnfComposerHandler::setAvailableObjectsInTheWorkspace(bool object1, bool ob
 	auto orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
 	auto orl_stimulus_parameters = orl_stimulus->getParameters();
 	double amplitude = object1 ? 1 : 0;
-	dnf_composer::element::GaussStimulusParameters new_params = { orl_stimulus_parameters.sigma, 5*amplitude, orl_stimulus_parameters.position, false, false };
+	dnf_composer::element::GaussStimulusParameters new_params = { orl_stimulus_parameters.width, 5*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 
 	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 2"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
 	amplitude = object2 ? 1 : 0;
-	new_params = { orl_stimulus_parameters.sigma, 5*amplitude, orl_stimulus_parameters.position, false, false };
+	new_params = { orl_stimulus_parameters.width, 5*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 
 	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
 	amplitude = object3 ? 1 : 0;
-	new_params = { orl_stimulus_parameters.sigma, 5*amplitude, orl_stimulus_parameters.position, false, false };
+	new_params = { orl_stimulus_parameters.width, 5*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 }
 
@@ -154,15 +160,15 @@ void DnfComposerHandler::setHandStimulusDependingOnHumanActionLikelihood(const P
 
 
 	const auto aol_stimulus_1 = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus 1"));
-	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus_1->getParameters().sigma, scalar * likelihood_1, aol_stimulus_1->getParameters().position, false, false };
+	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus_1->getParameters().width, scalar * likelihood_1, aol_stimulus_1->getParameters().position, false, false };
 	aol_stimulus_1->setParameters(new_params);
 
 	const auto aol_stimulus_2 = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus 2"));
-	const dnf_composer::element::GaussStimulusParameters new_params_2{ aol_stimulus_2->getParameters().sigma, scalar * likelihood_2, aol_stimulus_2->getParameters().position, false, false };
+	const dnf_composer::element::GaussStimulusParameters new_params_2{ aol_stimulus_2->getParameters().width, scalar * likelihood_2, aol_stimulus_2->getParameters().position, false, false };
 	aol_stimulus_2->setParameters(new_params_2);
 
 	const auto aol_stimulus_3 = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("hand position stimulus 3"));
-	const dnf_composer::element::GaussStimulusParameters new_params_3{ aol_stimulus_3->getParameters().sigma, scalar * likelihood_3, aol_stimulus_3->getParameters().position, false, false };
+	const dnf_composer::element::GaussStimulusParameters new_params_3{ aol_stimulus_3->getParameters().width, scalar * likelihood_3, aol_stimulus_3->getParameters().position, false, false };
 	aol_stimulus_3->setParameters(new_params_3);
 
 	handPrevious = position;
@@ -178,7 +184,7 @@ void DnfComposerHandler::setHandStimulusDependingOnHumanHandPosition(const Posit
 		calculateHandDistanceToObjects(position));
 	const double y = normalizeHandPosition(position.y);
 
-	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus->getParameters().sigma, proximity, y, false, false };
+	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus->getParameters().width, proximity, y, false, false };
 	aol_stimulus->setParameters(new_params);
 }
 
@@ -221,49 +227,64 @@ double DnfComposerHandler::normalizeHandPosition(double handPositionY)
 void DnfComposerHandler::setupUserInterface() const
 {
 	using namespace dnf_composer;
-	element::ElementSpatialDimensionParameters dim_params{ 50, 0.5 };
+	element::ElementDimensions dim_params{ 50, 0.5 };
 
 	// Create User Interface windows
-	//application->addWindow<imgui_kit::LogWindow>();
-	//application->addWindow<user_interface::FieldMetricsWindow>();
+	application->addWindow<user_interface::MainWindow>();
+	application->addWindow<user_interface::PlotsWindow>();
+	application->addWindow<imgui_kit::LogWindow>();
+	application->addWindow<user_interface::ElementWindow>();
+	application->addWindow<user_interface::NodeGraphWindow>();
 
-	constexpr int yMax = 10;
-	constexpr int yMin = 8;
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Action Observation Layer", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "aol", "activation" },
+		   { "aol", "input" },
+			{ "aol", "output" },
+	   }
+   );
 
-	// Create a plot for each neural field
-	user_interface::PlotParameters aolPlotParameters;
-	aolPlotParameters.annotations = { "Action observation layer", "Spatial dimension", "Amplitude" };
-	aolPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax + 10, dim_params.d_x };
-	auto aolVisualization = createVisualization(simulation);
-	aolVisualization->addPlottingData("aol", "activation");
-	aolVisualization->addPlottingData("aol", "input");
-	aolVisualization->addPlottingData("aol", "output");
-	application->addWindow<user_interface::PlotWindow>(aolVisualization, aolPlotParameters);
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Action Simulation Layer", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "asl", "activation" },
+		   { "asl", "input" },
+			{ "asl", "output" },
+	   }
+	);
 
-	user_interface::PlotParameters aslPlotParameters;
-	aslPlotParameters.annotations = { "Action simulation layer", "Spatial dimension", "Amplitude" };
-	aslPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
-	auto aslVisualization = createVisualization(simulation);
-	aslVisualization->addPlottingData("asl", "activation");
-	aslVisualization->addPlottingData("asl", "input");
-	aslVisualization->addPlottingData("asl", "output");
-	application->addWindow<user_interface::PlotWindow>(aslVisualization, aslPlotParameters);
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Action Representation Layer", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "orl", "activation" },
+		   { "orl", "input" },
+			{ "orl", "output" },
+	   }
+   );
 
-	user_interface::PlotParameters orlPlotParameters;
-	orlPlotParameters.annotations = { "Object representation layer", "Spatial dimension", "Amplitude" };
-	orlPlotParameters.dimensions = { 0, dim_params.x_max, -yMin, yMax, dim_params.d_x };
-	auto orlVisualization = createVisualization(simulation);
-	orlVisualization->addPlottingData("orl", "activation");
-	orlVisualization->addPlottingData("orl", "input");
-	orlVisualization->addPlottingData("orl", "output");
-	application->addWindow<user_interface::PlotWindow>(orlVisualization, orlPlotParameters);
-
-	user_interface::PlotParameters aelPlotParameters;
-	aelPlotParameters.annotations = { "Action execution layer", "Spatial dimension", "Amplitude" };
-	aelPlotParameters.dimensions = { 0, dim_params.x_max, -yMin - 20, yMax, dim_params.d_x };
-	auto aelVisualization = createVisualization(simulation);
-	aelVisualization->addPlottingData("ael", "activation");
-	aelVisualization->addPlottingData("ael", "input");
-	aelVisualization->addPlottingData("ael", "output");
-	application->addWindow<user_interface::PlotWindow>(aelVisualization, aelPlotParameters);
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Action Execution Layer", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "ael", "activation" },
+		   { "ael", "input" },
+			{ "ael", "output" },
+	   }
+   );
 }

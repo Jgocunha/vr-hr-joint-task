@@ -13,7 +13,6 @@ Experiment::Experiment(const ExperimentParameters& parameters)
 	switch (parameters.dnf)
 	{
 	case DnfArchitectureType::HAND_MOTION:
-	case DnfArchitectureType::ACTION_LIKELIHOOD:
 		outSignals.archType = 1;
 	break;
 	case DnfArchitectureType::NO_ANTICIPATION:
