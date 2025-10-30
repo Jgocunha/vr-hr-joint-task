@@ -206,3 +206,8 @@ All experimental data is automatically logged by the `event_logger` component, i
    - Verify VR Toolbox installation
    - Check that SteamVR or OpenVR is properly configured
    - Ensure VR headset drivers are up to date
+
+5. **HTC_VIVE.lua script functions not found**
+   - Verify VR Toolbox installation
+   - Verify you have run 'CopyToVrep.bat' and it successfully copied the necessary files
+   - Make sure you are running a compatible version of CoppeliaSim Version <= 4.7 [CoppeliaSim previous versions](https://coppeliarobotics.com/previousVersions)
