@@ -30,12 +30,7 @@ public:
 	void setHandStimulus(const Position& position, 
 		bool object1,
 		bool object2,
-		bool object3,
-		bool object4,
-		bool object5,
-		bool object6,
-		bool object7,
-		bool object8) const;
+		bool object3) const;
 	int getTargetObject() const;
 	void setAvailableObjectsInTheWorkspace(bool object1, bool object2, bool object3) const;
 	DnfArchitectureType getDnfType() const { return dnf; }

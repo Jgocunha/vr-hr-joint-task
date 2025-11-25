@@ -95,7 +95,6 @@ void Experiment::waitForSimulationToStart()
 
 void Experiment::sendHandPositionToDnf()
 {
-	
 	handPose = coppeliasimHandler.getHandPose();
 	dnfComposerHandler.setHandStimulus({
 		handPose.position.x,
@@ -103,8 +102,7 @@ void Experiment::sendHandPositionToDnf()
 		handPose.position.z},
 		inSignals.object1,
 		inSignals.object2,
-		inSignals.object3,inSignals.object4,inSignals.object5,inSignals.object6,inSignals.object7,inSignals.object8);
-			
+		inSignals.object3);
 }
 
 void Experiment::sendAvailableObjectsToDnf() const

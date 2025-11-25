@@ -1,4 +1,5 @@
 #include "dnf_composer_handler.h"
+
 #include "logger.h"
 
 DnfComposerHandler::DnfComposerHandler(DnfArchitectureType dnf, double deltaT)
@@ -49,7 +50,7 @@ void DnfComposerHandler::end()
 		simulationThread.join();
 }
 
-void DnfComposerHandler::setHandStimulus(const Position& position, bool object1, bool object2, bool object3,bool object4,bool object5,bool object6,bool object7,bool object8) const
+void DnfComposerHandler::setHandStimulus(const Position& position, bool object1, bool object2, bool object3) const
 {
 	switch (dnf)
 	{

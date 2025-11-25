@@ -1,15 +1,9 @@
 
 #include "dnf_architecture.h"
-#include "simulation_file_manager.h"
+
 
 std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureHandMotion(const std::string& id, const double& deltaT)
 {
-	using namespace dnf_composer;
-
-	const std::shared_ptr<Simulation> sim = std::make_shared<Simulation>("baseline", 5.0);
-	const SimulationFileManager sfm(sim, "C:/dev/dynamic-neural-field-composer/dynamic-neural-field-composer/data/baselinedefault sim [2025-11-24] [15-55-06].json");
-	sfm.loadElementsFromJson();
-	/*
 	using namespace dnf_composer;
 	auto simulation = std::make_shared<Simulation>(id, deltaT, 0, 0);
 
@@ -160,8 +154,8 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureHandM
 	simulation->createInteraction("asl -> ael", "output", "ael");
 	simulation->createInteraction("orl -> ael", "output", "ael");
 	simulation->createInteraction("orl", "output", "orl -> ael");
-	*/
-	return sim;
+
+	return simulation;
 }
 
 std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureNoAnticipation(const std::string& id, const double& deltaT)
@@ -316,6 +310,6 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureNoAnt
 	simulation->createInteraction("asl -> ael", "output", "ael");
 	simulation->createInteraction("orl -> ael", "output", "ael");
 	simulation->createInteraction("orl", "output", "orl -> ael");
-		
+
 	return simulation;
 }
