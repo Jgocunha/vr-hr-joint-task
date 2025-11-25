@@ -13,7 +13,7 @@ Experiment::Experiment(const ExperimentParameters& parameters)
 	switch (parameters.dnf)
 	{
 	case DnfArchitectureType::HAND_MOTION:
-		outSignals.archType = 1;
+		outSignals.archType = 2;
 	break;
 	case DnfArchitectureType::NO_ANTICIPATION:
 		case DnfArchitectureType::BASELINE:
@@ -103,7 +103,7 @@ void Experiment::sendHandPositionToDnf()
 		handPose.position.z},
 		inSignals.object1,
 		inSignals.object2,
-		inSignals.object3,inSignals.object4,inSignals.object5,inSignals.object6,inSignals.object7,inSignals.object8);
+		inSignals.object3);
 			
 }
 
