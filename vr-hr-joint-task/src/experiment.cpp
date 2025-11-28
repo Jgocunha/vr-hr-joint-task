@@ -15,6 +15,18 @@ Experiment::Experiment(const ExperimentParameters& parameters)
 	case DnfArchitectureType::NEUTRAL:
 		outSignals.archType = 1;
 	break;
+	case DnfArchitectureType::KNOWN_BLUE:
+		outSignals.archType = 1;
+	break;
+	case DnfArchitectureType::KNOWN_YELLOW:
+		outSignals.archType = 1;
+	break;
+	case DnfArchitectureType::KNOWN_SHORT:
+		outSignals.archType = 1;
+	break;
+	case DnfArchitectureType::KNOWN_LONG:
+		outSignals.archType = 1;
+	break;
 	
 	case DnfArchitectureType::NO_ANTICIPATION:
 		case DnfArchitectureType::BASELINE:

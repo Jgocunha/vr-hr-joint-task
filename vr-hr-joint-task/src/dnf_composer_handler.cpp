@@ -10,8 +10,17 @@ DnfComposerHandler::DnfComposerHandler(DnfArchitectureType dnf, double deltaT)
 	case DnfArchitectureType::NEUTRAL:
 		simulation = getDynamicNeuralFieldArchitectureNeutral("dnf arch", deltaT);
 		break;
-	case DnfArchitectureType::KNOWN:
-		simulation = getDynamicNeuralFieldArchitectureKnown("dnf arch", deltaT);
+	case DnfArchitectureType::KNOWN_BLUE:
+		simulation = getDynamicNeuralFieldArchitectureKnownBlue("dnf arch", deltaT);
+		break;
+	case DnfArchitectureType::KNOWN_YELLOW:
+		simulation = getDynamicNeuralFieldArchitectureKnownYellow("dnf arch", deltaT);
+		break;
+	case DnfArchitectureType::KNOWN_LONG:
+		simulation = getDynamicNeuralFieldArchitectureKnownLong("dnf arch", deltaT);
+		break;
+	case DnfArchitectureType::KNOWN_SHORT:
+		simulation = getDynamicNeuralFieldArchitectureKnownShort("dnf arch", deltaT);
 		break;
 	case DnfArchitectureType::NO_ANTICIPATION:
 	case DnfArchitectureType::BASELINE:
@@ -58,7 +67,16 @@ void DnfComposerHandler::setHandStimulus(const Position& position, bool object1,
 	switch (dnf)
 	{
 	case DnfArchitectureType::NEUTRAL:
-	case DnfArchitectureType::KNOWN:
+	case DnfArchitectureType::KNOWN_BLUE:
+		setHandStimulusDependingOnHumanHandPosition(position);
+		break;
+	case DnfArchitectureType::KNOWN_YELLOW:
+		setHandStimulusDependingOnHumanHandPosition(position);
+		break;
+	case DnfArchitectureType::KNOWN_LONG:
+		setHandStimulusDependingOnHumanHandPosition(position);
+		break;
+	case DnfArchitectureType::KNOWN_SHORT:
 		setHandStimulusDependingOnHumanHandPosition(position);
 		break;
 	case DnfArchitectureType::NO_ANTICIPATION:
@@ -305,9 +323,9 @@ void DnfComposerHandler::setupUserInterface() const
 	   PlotAnnotations{ "Action Simulation Layer", "Spatial location", "Amplitude" } },
 	   LinePlotParameters{},
 	   {
-		   { "loif", "activation" },
-		   { "loif", "input" },
-			{ "loif", "output" },
+		   { "sosf", "activation" },
+		   { "sosf", "input" },
+			{ "sosf", "output" },
 	   }
 	);
 
