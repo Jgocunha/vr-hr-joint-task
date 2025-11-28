@@ -147,9 +147,9 @@ target_link_libraries(${EXE_PROJECT} PRIVATE imgui-platform-kit)
 target_link_libraries(${EXE_PROJECT} PRIVATE dynamic-neural-field-composer)
 target_link_libraries(${EXE_PROJECT} PRIVATE coppeliasim-cpp-client)
 
-# Add executable project anticipation
+# Add executable project neutral
 set(EXE_PROJECT_NEUTRAL vr-hr-neutral-exe)
-add_executable(${EXE_PROJECT_NEUTRAL} "src/vr_hr_anticipation.cpp")
+add_executable(${EXE_PROJECT_NEUTRAL} "src/vr_hr_neutral.cpp")
 target_include_directories(${EXE_PROJECT_NEUTRAL} PRIVATE include)
 target_link_libraries(${EXE_PROJECT_NEUTRAL} PRIVATE ${CMAKE_PROJECT_NAME})
 target_link_libraries(${EXE_PROJECT_NEUTRAL} PRIVATE imgui::imgui)
@@ -167,12 +167,12 @@ target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE imgui-platform-kit)
 target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE dynamic-neural-field-composer)
 target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE coppeliasim-cpp-client)
 
-# Add executable project baseline
-set(EXE_PROJECT_BASELINE vr-hr-baseline-exe)
-add_executable(${EXE_PROJECT_BASELINE} "src/vr_hr_baseline.cpp")
-target_include_directories(${EXE_PROJECT_BASELINE} PRIVATE include)
-target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE ${CMAKE_PROJECT_NAME})
-target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE imgui::imgui)
-target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE imgui-platform-kit)
-target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE dynamic-neural-field-composer)
-target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE coppeliasim-cpp-client)
+# Add executable project known
+set(EXE_PROJECT_KNOWN vr-hr-known-exe)
+add_executable(${EXE_PROJECT_KNOWN} "src/vr_hr_known.cpp")
+target_include_directories(${EXE_PROJECT_KNOWN} PRIVATE include)
+target_link_libraries(${EXE_PROJECT_KNOWN} PRIVATE ${CMAKE_PROJECT_NAME})
+target_link_libraries(${EXE_PROJECT_KNOWN} PRIVATE imgui::imgui)
+target_link_libraries(${EXE_PROJECT_KNOWN} PRIVATE imgui-platform-kit)
+target_link_libraries(${EXE_PROJECT_KNOWN} PRIVATE dynamic-neural-field-composer)
+target_link_libraries(${EXE_PROJECT_KNOWN} PRIVATE coppeliasim-cpp-client)

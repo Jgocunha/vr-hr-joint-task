@@ -3,6 +3,7 @@
 
 
 std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureNeutral(const std::string& id, const double& deltaT)
+
 {
 	using namespace dnf_composer;
 	auto simulation = std::make_shared<Simulation>(id, deltaT, 0, 0);
@@ -232,6 +233,17 @@ simulation->createInteraction("normal noise sosf", "output", "sosf");
 
 
 return simulation;
+}
+std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureKnown(const std::string& id, const double& deltaT)
+
+{
+	using namespace dnf_composer;
+	auto simulation = std::make_shared<Simulation>(id, deltaT, 0, 0);
+
+	// Implementation of the neutral DNF architecture goes here.
+	// This is a placeholder implementation and should be replaced with actual elements and interactions.
+
+	return simulation;
 }
 
 std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureNoAnticipation(const std::string& id, const double& deltaT)

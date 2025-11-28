@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 	{
 		constexpr double deltaT = 50;
 		constexpr DnfArchitectureType architecture =
-			DnfArchitectureType::NEUTRAL;
+			DnfArchitectureType::KNOWN;
 		constexpr uint8_t numTrials = 20;
 
 		const ExperimentParameters params{ architecture, deltaT, numTrials };

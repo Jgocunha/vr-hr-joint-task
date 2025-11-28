@@ -10,6 +10,9 @@ DnfComposerHandler::DnfComposerHandler(DnfArchitectureType dnf, double deltaT)
 	case DnfArchitectureType::NEUTRAL:
 		simulation = getDynamicNeuralFieldArchitectureNeutral("dnf arch", deltaT);
 		break;
+	case DnfArchitectureType::KNOWN:
+		simulation = getDynamicNeuralFieldArchitectureKnown("dnf arch", deltaT);
+		break;
 	case DnfArchitectureType::NO_ANTICIPATION:
 	case DnfArchitectureType::BASELINE:
 		simulation = getDynamicNeuralFieldArchitectureNoAnticipation("dnf arch", deltaT);
@@ -55,6 +58,7 @@ void DnfComposerHandler::setHandStimulus(const Position& position, bool object1,
 	switch (dnf)
 	{
 	case DnfArchitectureType::NEUTRAL:
+	case DnfArchitectureType::KNOWN:
 		setHandStimulusDependingOnHumanHandPosition(position);
 		break;
 	case DnfArchitectureType::NO_ANTICIPATION:
