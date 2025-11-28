@@ -89,9 +89,9 @@ int DnfComposerHandler::getTargetObject() const
 		};
 
 	// Calculate distances to the three points
-	double distanceToObject1 = circularDistance(centroid, 37.5);
-	double distanceToObject2 = circularDistance(centroid, 25);
-	double distanceToObject3 = circularDistance(centroid, 12.5);
+	double distanceToObject1 = circularDistance(centroid, 225);
+	double distanceToObject2 = circularDistance(centroid, 195);
+	double distanceToObject3 = circularDistance(centroid, 165);
 
 	// Determine the closest target and return the corresponding value
 	const double minDistance = std::min({ distanceToObject1, distanceToObject2, distanceToObject3 });
@@ -107,22 +107,22 @@ int DnfComposerHandler::getTargetObject() const
 
 void DnfComposerHandler::setAvailableObjectsInTheWorkspace(bool object1, bool object2, bool object3) const
 {
-	auto orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 1"));
+	auto orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("long stimulus 1"));
 	auto orl_stimulus_parameters = orl_stimulus->getParameters();
 	double amplitude = object1 ? 1 : 0;
-	dnf_composer::element::GaussStimulusParameters new_params = { orl_stimulus_parameters.width, 5*amplitude, orl_stimulus_parameters.position, false, false };
+	dnf_composer::element::GaussStimulusParameters new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 
-	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 2"));
+	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("long stimulus 2"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
 	amplitude = object2 ? 1 : 0;
-	new_params = { orl_stimulus_parameters.width, 5*amplitude, orl_stimulus_parameters.position, false, false };
+	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 
-	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("object stimulus 3"));
+	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("short stimulus 1"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
 	amplitude = object3 ? 1 : 0;
-	new_params = { orl_stimulus_parameters.width, 5*amplitude, orl_stimulus_parameters.position, false, false };
+	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 }
 
@@ -212,11 +212,11 @@ double DnfComposerHandler::calculateHandProximityToObjects(double distance)
 double DnfComposerHandler::normalizeHandPosition(double handPositionY)
 {
 	// Define the min and max of the table in Y dimension
-	static constexpr double yMin = -0.25;
-	static constexpr double yMax = 0.25;
+	static constexpr double yMin = -0.44;
+	static constexpr double yMax = 0.42;
 	// Define the min and max of the scale
 	static constexpr double scaleMin = 0;
-	static constexpr double scaleMax = 50;
+	static constexpr double scaleMax = 240;
 
 	// Normalize posY to the 0-50 scale
 	const double normalizedScale = scaleMin + (scaleMax - scaleMin) * (handPositionY - yMin) / (yMax - yMin);
@@ -256,9 +256,9 @@ void DnfComposerHandler::setupUserInterface() const
 	   PlotAnnotations{ "Action Simulation Layer", "Spatial location", "Amplitude" } },
 	   LinePlotParameters{},
 	   {
-		   { "asl", "activation" },
-		   { "asl", "input" },
-			{ "asl", "output" },
+		   { "loif", "activation" },
+		   { "loif", "input" },
+			{ "loif", "output" },
 	   }
 	);
 
@@ -269,9 +269,9 @@ void DnfComposerHandler::setupUserInterface() const
 	   PlotAnnotations{ "Action Representation Layer", "Spatial location", "Amplitude" } },
 	   LinePlotParameters{},
 	   {
-		   { "orl", "activation" },
-		   { "orl", "input" },
-			{ "orl", "output" },
+		   { "lof", "activation" },
+		   { "lof", "input" },
+			{ "lof", "output" },
 	   }
    );
 
