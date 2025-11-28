@@ -22,6 +22,10 @@ DnfComposerHandler::DnfComposerHandler(DnfArchitectureType dnf, double deltaT)
 	case DnfArchitectureType::KNOWN_SHORT:
 		simulation = getDynamicNeuralFieldArchitectureKnownShort("dnf arch", deltaT);
 		break;
+
+	case DnfArchitectureType::INFERRED:
+		simulation = getDynamicNeuralFieldArchitectureInferred("dnf arch", deltaT);
+		break;
 	case DnfArchitectureType::NO_ANTICIPATION:
 	case DnfArchitectureType::BASELINE:
 		simulation = getDynamicNeuralFieldArchitectureNoAnticipation("dnf arch", deltaT);

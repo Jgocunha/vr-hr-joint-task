@@ -10,7 +10,8 @@ enum class DnfArchitectureType
 	KNOWN_BLUE,
 	KNOWN_YELLOW,
 	KNOWN_LONG,
-	KNOWN_SHORT
+	KNOWN_SHORT,
+	INFERRED
 };
 
 std::shared_ptr<dnf_composer::Simulation>
@@ -18,12 +19,15 @@ std::shared_ptr<dnf_composer::Simulation>
 
 std::shared_ptr<dnf_composer::Simulation>
 	getDynamicNeuralFieldArchitectureKnownBlue(const std::string& id, const double& deltaT);
-	std::shared_ptr<dnf_composer::Simulation>
+std::shared_ptr<dnf_composer::Simulation>
 	getDynamicNeuralFieldArchitectureKnownYellow(const std::string& id, const double& deltaT);
-	std::shared_ptr<dnf_composer::Simulation>
+std::shared_ptr<dnf_composer::Simulation>
 	getDynamicNeuralFieldArchitectureKnownLong(const std::string& id, const double& deltaT);
-	std::shared_ptr<dnf_composer::Simulation>
+std::shared_ptr<dnf_composer::Simulation>
 	getDynamicNeuralFieldArchitectureKnownShort(const std::string& id, const double& deltaT);
+
+std::shared_ptr<dnf_composer::Simulation>
+	getDynamicNeuralFieldArchitectureInferred(const std::string& id, const double& deltaT);
 
 std::shared_ptr<dnf_composer::Simulation>
 	getDynamicNeuralFieldArchitectureNoAnticipation(const std::string& id, const double& deltaT);

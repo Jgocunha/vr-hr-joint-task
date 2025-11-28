@@ -1817,6 +1817,14 @@ simulation->createInteraction("normal noise sosf", "output", "sosf");
 return simulation;
 }
 
+std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureInferred(const std::string& id, const double& deltaT)
+{
+	// To be implemented
+	using namespace dnf_composer;
+	auto simulation = std::make_shared<Simulation>(id, deltaT, 0, 0);
+	return simulation;
+}
+
 std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureNoAnticipation(const std::string& id, const double& deltaT)
 {
 	using namespace dnf_composer;
