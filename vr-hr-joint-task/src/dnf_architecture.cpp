@@ -238,12 +238,380 @@ std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureKnown
 
 {
 	using namespace dnf_composer;
-	auto simulation = std::make_shared<Simulation>(id, deltaT, 0, 0);
+auto simulation = std::make_shared<Simulation>(id, deltaT, 0, 0);
 
-	// Implementation of the neutral DNF architecture goes here.
-	// This is a placeholder implementation and should be replaced with actual elements and interactions.
+element::ElementFactory factory;
+element::ElementDimensions dim_params{ 240, 0.5 };
+constexpr bool circularity = true;
+constexpr bool normalization = false;
+constexpr double tau = 100;
+constexpr double resting_level = -10;
+constexpr double x_shift = 0;
+constexpr double steepness = 5;
+constexpr double stimulus_sigma = 4;
+constexpr double stimulus_amplitude = 15;
+constexpr double noise_amplitude = 0.05;
 
-	return simulation;
+//neural fields
+const element::SigmoidFunction aol_af = { x_shift, steepness };
+element::NeuralFieldParameters aol_params = { tau, resting_level, aol_af };
+const auto aol = factory.createElement(element::NEURAL_FIELD,
+	{ "aol", dim_params }, { aol_params });
+simulation->addElement(aol);
+
+const element::SigmoidFunction sosf_af = { x_shift, steepness };
+element::NeuralFieldParameters sosf_params = { tau, resting_level, sosf_af };
+const auto sosf = factory.createElement(element::NEURAL_FIELD,
+	{ "sosf", dim_params }, { sosf_params });
+simulation->addElement(sosf);
+
+const element::SigmoidFunction loif_af = { x_shift, steepness };
+element::NeuralFieldParameters loif_params = { tau, resting_level, loif_af };
+const auto loif = factory.createElement(element::NEURAL_FIELD,
+	{ "loif", dim_params }, { loif_params });
+simulation->addElement(loif);
+
+element::SigmoidFunction sof_af = { x_shift, steepness };
+element::NeuralFieldParameters sof_params = { tau, resting_level, sof_af };
+const auto sof = factory.createElement(element::NEURAL_FIELD,
+	{ "sof", dim_params }, { sof_params });
+simulation->addElement(sof);
+
+element::SigmoidFunction lof_af = { x_shift, steepness };
+element::NeuralFieldParameters lof_params = { tau, resting_level, lof_af };
+const auto lof = factory.createElement(element::NEURAL_FIELD,
+	{ "lof", dim_params }, { lof_params });
+simulation->addElement(lof);
+
+element::SigmoidFunction bof_af= { x_shift, steepness };
+element::NeuralFieldParameters bof_params = { tau, resting_level, bof_af };
+const auto bof = factory.createElement(element::NEURAL_FIELD,
+	{ "bof", dim_params }, { bof_params });
+simulation->addElement(bof);
+
+element::SigmoidFunction yof_af= { x_shift, steepness };
+element::NeuralFieldParameters yof_params = { tau, resting_level, yof_af };
+const auto yof = factory.createElement(element::NEURAL_FIELD,
+	{ "yof", dim_params }, { yof_params });
+simulation->addElement(yof);
+
+element::SigmoidFunction yhf_af= { x_shift, steepness };
+element::NeuralFieldParameters yhf_params = { tau, resting_level, yhf_af };
+const auto yhf = factory.createElement(element::NEURAL_FIELD,
+	{ "yhf", dim_params }, { yhf_params });
+simulation->addElement(yhf);
+
+element::SigmoidFunction bhf_af= { x_shift, steepness };
+element::NeuralFieldParameters bhf_params = { tau, resting_level, bhf_af };
+const auto bhf = factory.createElement(element::NEURAL_FIELD,
+	{ "bhf", dim_params }, { bhf_params });
+simulation->addElement(bhf);
+
+element::SigmoidFunction shf_af= { x_shift, steepness };
+element::NeuralFieldParameters shf_params = { tau, resting_level, shf_af };
+const auto shf = factory.createElement(element::NEURAL_FIELD,
+	{ "shf", dim_params }, { shf_params });
+simulation->addElement(shf);
+
+element::SigmoidFunction lhf_af= { x_shift, steepness };
+element::NeuralFieldParameters lhf_params = { tau, resting_level, lhf_af };
+const auto lhf = factory.createElement(element::NEURAL_FIELD,
+	{ "lhf", dim_params }, { lhf_params });
+simulation->addElement(lhf);
+
+element::SigmoidFunction ael_af = { x_shift, steepness };
+element::NeuralFieldParameters ael_params = { tau, resting_level, ael_af };
+const auto ael = factory.createElement(element::NEURAL_FIELD,
+	{ "ael", dim_params }, { ael_params });
+simulation->addElement(ael);
+
+//stimuli
+element::GaussStimulusParameters hand_position_gsp = { stimulus_sigma, 0, 0, circularity, true };
+const auto hand_position_stimulus = factory.createElement(element::GAUSS_STIMULUS,
+	{ "hand position stimulus", dim_params }, { hand_position_gsp });
+simulation->addElement(hand_position_stimulus);
+
+
+element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 15, circularity, true };
+const auto sof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
+	{ "short stimulus 4", dim_params }, { sof_gsp });
+simulation->addElement(sof_stimulus_1);
+sof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
+const auto sof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
+	{ "short stimulus 3", dim_params }, { sof_gsp });
+simulation->addElement(sof_stimulus_2);
+sof_gsp = { stimulus_sigma, stimulus_amplitude, 135, circularity, true };
+const auto sof_stimulus_3 = factory.createElement(element::GAUSS_STIMULUS,
+	{ "short stimulus 2", dim_params }, { sof_gsp });
+simulation->addElement(sof_stimulus_3);
+sof_gsp = { stimulus_sigma, stimulus_amplitude, 165, circularity, true };
+const auto sof_stimulus_4 = factory.createElement(element::GAUSS_STIMULUS,
+	{ "short stimulus 1", dim_params }, { sof_gsp });
+simulation->addElement(sof_stimulus_4);
+
+element::GaussStimulusParameters lof_gsp = { stimulus_sigma, stimulus_amplitude, 75, circularity, true };
+const auto lof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
+	{ "long stimulus 4", dim_params }, { lof_gsp });
+simulation->addElement(lof_stimulus_1);
+lof_gsp = { stimulus_sigma, stimulus_amplitude, 105, circularity, true };
+const auto lof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
+	{ "long stimulus 3", dim_params }, { lof_gsp });
+simulation->addElement(lof_stimulus_2);
+lof_gsp = { stimulus_sigma, stimulus_amplitude, 195, circularity, true };
+const auto lof_stimulus_3 = factory.createElement(element::GAUSS_STIMULUS,
+	{ "long stimulus 2", dim_params }, { lof_gsp });
+simulation->addElement(lof_stimulus_3);
+lof_gsp = { stimulus_sigma, stimulus_amplitude, 225, circularity, true };
+const auto lof_stimulus_4 = factory.createElement(element::GAUSS_STIMULUS,
+	{ "long stimulus 1", dim_params }, { lof_gsp });
+simulation->addElement(lof_stimulus_4);
+
+
+
+//self excitations kernels
+element::GaussKernelParameters aol_aol_k_params = { 20, 2, -0.01, circularity, true};
+const auto aol_aol_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "aol -> aol", dim_params }, { aol_aol_k_params });
+simulation->addElement(aol_aol_k);
+
+element::MexicanHatKernelParameters sosf_sosf_k_params = { 18.92, 22.22, 50, 20, -0.23, circularity, true };
+const auto sosf_sosf_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
+	{ "sosf -> sosf", dim_params }, { sosf_sosf_k_params });
+simulation->addElement(sosf_sosf_k);
+
+element::MexicanHatKernelParameters loif_loif_k_params = { 20, 22, 100, 10, -0.01, circularity, true };
+const auto loif_loif_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
+	{ "loif -> loif", dim_params }, { loif_loif_k_params });
+simulation->addElement(loif_loif_k);
+
+element::GaussKernelParameters sof_sof_k_params = { 20, 2, -0.01, circularity, true }; //width, amplitude, shift
+const auto sof_sof_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "sof -> sof", dim_params }, { sof_sof_k_params });
+simulation->addElement(sof_sof_k);
+element::GaussKernelParameters lof_lof_k_params = { 20, 2, -0.01, circularity, true }; //width, amplitude, shift
+const auto lof_lof_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "lof -> lof", dim_params }, { lof_lof_k_params });
+simulation->addElement(lof_lof_k);
+element::GaussKernelParameters bof_bof_k_params = { 20, 2, -0.01, circularity, true }; //width, amplitude, shift
+const auto bof_bof_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "bof -> bof", dim_params }, { bof_bof_k_params });
+simulation->addElement(bof_bof_k);
+element::GaussKernelParameters yof_yof_k_params = { 20, 2, -0.01, circularity, true }; //width, amplitude, shift
+const auto yof_yof_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "yof -> yof", dim_params }, { yof_yof_k_params });
+simulation->addElement(yof_yof_k);
+
+element::GaussKernelParameters yhf_yhf_k_params = { 20, 2, -0.01, circularity, true }; //width, amplitude, shift
+const auto yhf_yhf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "yhf -> yhf", dim_params }, { yhf_yhf_k_params });
+simulation->addElement(yhf_yhf_k);
+element::GaussKernelParameters bhf_bhf_k_params = { 20, 2, -0.01, circularity, true }; //width, amplitude, shift
+const auto bhf_bhf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "bhf -> bhf", dim_params }, { bhf_bhf_k_params });	
+simulation->addElement(bhf_bhf_k);
+element::GaussKernelParameters shf_shf_k_params = { 20, 2, -0.01, circularity, true }; //width, amplitude, shift
+const auto shf_shf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "shf -> shf", dim_params }, { shf_shf_k_params });	
+simulation->addElement(shf_shf_k);
+element::GaussKernelParameters lhf_lhf_k_params = { 20, 2, -0.01, circularity, true }; //width, amplitude, shift
+const auto lhf_lhf_k = factory.createElement(element::GAUSS_KERNEL,	
+	{ "lhf -> lhf", dim_params }, { lhf_lhf_k_params });	
+simulation->addElement(lhf_lhf_k);
+
+element::MexicanHatKernelParameters ael_ael_k_params = { 5.09, 7.85, 100, 30, -0.42, circularity, true };
+const auto ael_ael_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
+	{ "ael -> ael", dim_params }, { ael_ael_k_params });
+simulation->addElement(ael_ael_k);
+
+//interction kernels
+element::GaussKernelParameters aol_sosf_k_params = { 5, -6.65, 0.0, circularity, true };
+const auto aol_sosf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "aol -> sosf", dim_params }, { aol_sosf_k_params });
+simulation->addElement(aol_sosf_k);
+
+element::GaussKernelParameters aol_loif_k_params = { 5, 12, 0.0, circularity, true };
+const auto aol_loif_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "aol -> loif", dim_params }, { aol_loif_k_params });
+simulation->addElement(aol_loif_k);
+
+element::GaussKernelParameters sof_sosf_k_params = { 5, 10.17, 0.0, circularity, true };
+const auto sof_sosf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "sof -> sosf", dim_params }, { sof_sosf_k_params });
+simulation->addElement(sof_sosf_k);
+
+element::GaussKernelParameters lof_loif_k_params = { 5, 12, 0.0, circularity, true };
+const auto lof_loif_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "lof -> loif", dim_params }, { lof_loif_k_params });
+simulation->addElement(lof_loif_k);
+
+
+element::GaussKernelParameters sosf_ael_k_params = { 5, 42, 0.0, circularity, true };
+const auto sosf_ael_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "sosf -> ael", dim_params }, { sosf_ael_k_params });
+simulation->addElement(sosf_ael_k);
+
+element::GaussKernelParameters loif_ael_k_params = { 5, 26, 0.0, circularity, true };
+const auto loif_ael_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "loif -> ael", dim_params }, { loif_ael_k_params });
+simulation->addElement(loif_ael_k);
+
+
+element::GaussKernelParameters yof_yhf_k_params = { 4, 25, 0.0, circularity, true };
+const auto yof_yhf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "yof -> yhf", dim_params }, { yof_yhf_k_params });
+simulation->addElement(yof_yhf_k);
+element::GaussKernelParameters bof_bhf_k_params = { 4, 25, 0.0, circularity, true };	
+const auto bof_bhf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "bof -> bhf", dim_params }, { bof_bhf_k_params });
+simulation->addElement(bof_bhf_k);
+element::GaussKernelParameters sof_shf_k_params = { 4, 25, 0.0, circularity, true };	
+const auto sof_shf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "sof -> shf", dim_params }, { sof_shf_k_params });
+simulation->addElement(sof_shf_k);
+element::GaussKernelParameters lof_lhf_k_params = { 4, 25, 0.0, circularity, true };	
+const auto lof_lhf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "lof -> lhf", dim_params }, { lof_lhf_k_params });	
+simulation->addElement(lof_lhf_k);
+
+
+element::GaussKernelParameters yhf_sosf_k_params = { 5, 10, -0.01, circularity, true };
+const auto yhf_sosf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "yhf -> sosf", dim_params }, { yhf_sosf_k_params });
+simulation->addElement(yhf_sosf_k);
+
+element::GaussKernelParameters yhf_loif_k_params = { 5, 2, 0, circularity, true };
+const auto yhf_loif_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "yhf -> loif", dim_params }, { yhf_loif_k_params });
+simulation->addElement(yhf_loif_k);
+
+element::GaussKernelParameters bhf_sosf_k_params = { 5, 10, -0.01, circularity, true };
+const auto bhf_sosf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "bhf -> sosf", dim_params }, { bhf_sosf_k_params });
+simulation->addElement(bhf_sosf_k);
+
+element::GaussKernelParameters bhf_loif_k_params = { 5, 2, 0, circularity, true };
+const auto bhf_loif_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "bhf -> loif", dim_params }, { bhf_loif_k_params });
+simulation->addElement(bhf_loif_k);
+
+
+
+
+//noise
+
+element::NormalNoiseParameters ael_nn_params = { 0.45 };
+const auto ael_nn = factory.createElement(element::NORMAL_NOISE,
+	{ "normal noise ael", dim_params }, ael_nn_params);
+simulation->addElement(ael_nn);
+
+	element::NormalNoiseParameters sosf_nn_params = { 0.32 };
+const auto sosf_nn = factory.createElement(element::NORMAL_NOISE,
+	{ "normal noise sosf", dim_params }, sosf_nn_params);
+simulation->addElement(sosf_nn);
+
+//interactions
+//self-excitation
+simulation->createInteraction("aol", "output", "aol -> aol");
+simulation->createInteraction("aol -> aol", "output", "aol");
+
+simulation->createInteraction("sosf", "output", "sosf -> sosf");
+simulation->createInteraction("sosf -> sosf", "output", "sosf");
+
+simulation->createInteraction("loif", "output", "loif -> loif");
+simulation->createInteraction("loif -> loif", "output", "loif");
+
+simulation->createInteraction("sof", "output", "sof -> sof");
+simulation->createInteraction("sof -> sof", "output", "sof");
+simulation->createInteraction("lof", "output", "lof -> lof");
+simulation->createInteraction("lof -> lof", "output", "lof");
+simulation->createInteraction("bof", "output", "bof -> bof");
+simulation->createInteraction("bof -> bof", "output", "bof");
+simulation->createInteraction("yof", "output", "yof -> yof");
+simulation->createInteraction("yof -> yof", "output", "yof");
+
+simulation->createInteraction("yhf", "output", "yhf -> yhf");
+simulation->createInteraction("yhf -> yhf", "output", "yhf");
+simulation->createInteraction("bhf", "output", "bhf -> bhf");
+simulation->createInteraction("bhf -> bhf", "output", "bhf");
+simulation->createInteraction("shf", "output", "shf -> shf");
+simulation->createInteraction("shf -> shf", "output", "shf");
+simulation->createInteraction("lhf", "output", "lhf -> lhf");
+simulation->createInteraction("lhf -> lhf", "output", "lhf");
+
+
+simulation->createInteraction("ael", "output", "ael -> ael");
+simulation->createInteraction("ael -> ael", "output", "ael");
+
+//stimuli'
+simulation->createInteraction("hand position stimulus", "output", "aol");
+
+simulation->createInteraction("short stimulus 1", "output", "sof");
+simulation->createInteraction("short stimulus 2", "output", "sof");
+simulation->createInteraction("short stimulus 3", "output", "sof");
+simulation->createInteraction("short stimulus 4", "output", "sof");
+
+simulation->createInteraction("long stimulus 1", "output", "lof");
+simulation->createInteraction("long stimulus 2", "output", "lof");
+simulation->createInteraction("long stimulus 3", "output", "lof");
+simulation->createInteraction("long stimulus 4", "output", "lof");
+
+
+simulation->createInteraction("long stimulus 3", "output", "bof");
+simulation->createInteraction("long stimulus 4", "output", "bof");
+simulation->createInteraction("short stimulus 3", "output", "bof");
+simulation->createInteraction("short stimulus 4", "output", "bof");
+
+simulation->createInteraction("long stimulus 1", "output", "yof");
+simulation->createInteraction("long stimulus 2", "output", "yof");
+simulation->createInteraction("short stimulus 1", "output", "yof");
+simulation->createInteraction("short stimulus 2", "output", "yof");
+
+
+//interactions
+
+simulation->createInteraction("aol", "output", "aol -> sosf");
+simulation->createInteraction("aol -> sosf", "output", "sosf");
+
+simulation->createInteraction("aol", "output", "aol -> loif");
+simulation->createInteraction("aol -> loif", "output", "loif");
+
+simulation->createInteraction("sof", "output", "sof -> sosf");
+simulation->createInteraction("sof -> sosf", "output", "sosf");
+
+simulation->createInteraction("lof", "output", "lof -> loif");
+simulation->createInteraction("lof -> loif", "output", "loif");
+
+simulation->createInteraction("yof", "output", "yof -> yhf");
+simulation->createInteraction("yof -> yhf", "output", "yhf");
+simulation->createInteraction("bof", "output", "bof -> bhf");
+simulation->createInteraction("bof -> bhf", "output", "bhf");
+simulation->createInteraction("sof", "output", "sof -> shf");
+simulation->createInteraction("sof -> shf", "output", "shf");
+simulation->createInteraction("lof", "output", "lof -> lhf");
+simulation->createInteraction("lof -> lhf", "output", "lhf");
+
+//simulation->createInteraction("yhf", "output", "yhf -> sosf");
+//simulation->createInteraction("yhf -> sosf", "output", "sosf");
+//simulation->createInteraction("yhf", "output", "yhf -> loif");
+//simulation->createInteraction("yhf -> loif", "output", "loif");
+simulation->createInteraction("bhf", "output", "bhf -> sosf");
+simulation->createInteraction("bhf -> sosf", "output", "sosf");
+simulation->createInteraction("bhf", "output", "bhf -> loif");
+simulation->createInteraction("bhf -> loif", "output", "loif");
+
+
+simulation->createInteraction("sosf", "output", "sosf -> ael");
+simulation->createInteraction("sosf -> ael", "output", "ael");
+simulation->createInteraction("loif", "output", "loif -> ael");
+simulation->createInteraction("loif -> ael", "output", "ael");
+
+
+//noise
+simulation->createInteraction("normal noise ael", "output", "ael");
+simulation->createInteraction("normal noise sosf", "output", "sosf");
+
+
+return simulation;
 }
 
 std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureNoAnticipation(const std::string& id, const double& deltaT)
