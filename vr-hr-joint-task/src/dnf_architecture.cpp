@@ -2,7 +2,7 @@
 #include "dnf_architecture.h"
 
 
-std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureHandMotion(const std::string& id, const double& deltaT)
+std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureNeutral(const std::string& id, const double& deltaT)
 {
 	using namespace dnf_composer;
 	auto simulation = std::make_shared<Simulation>(id, deltaT, 0, 0);

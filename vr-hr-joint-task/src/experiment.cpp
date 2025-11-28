@@ -12,9 +12,10 @@ Experiment::Experiment(const ExperimentParameters& parameters)
 {
 	switch (parameters.dnf)
 	{
-	case DnfArchitectureType::HAND_MOTION:
+	case DnfArchitectureType::NEUTRAL:
 		outSignals.archType = 1;
 	break;
+	
 	case DnfArchitectureType::NO_ANTICIPATION:
 		case DnfArchitectureType::BASELINE:
 		outSignals.archType = 0;
