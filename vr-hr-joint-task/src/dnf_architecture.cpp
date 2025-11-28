@@ -136,7 +136,7 @@ const auto aol_sosf_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "aol -> sosf", dim_params }, { aol_sosf_k_params });
 simulation->addElement(aol_sosf_k);
 
-element::GaussKernelParameters aol_loif_k_params = { 5, 12, 0.0, circularity, true };
+element::GaussKernelParameters aol_loif_k_params = { 5, 14, 0.0, circularity, true };
 const auto aol_loif_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "aol -> loif", dim_params }, { aol_loif_k_params });
 simulation->addElement(aol_loif_k);

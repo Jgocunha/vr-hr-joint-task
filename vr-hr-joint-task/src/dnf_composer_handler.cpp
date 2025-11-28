@@ -92,9 +92,14 @@ int DnfComposerHandler::getTargetObject() const
 	double distanceToObject1 = circularDistance(centroid, 225);
 	double distanceToObject2 = circularDistance(centroid, 195);
 	double distanceToObject3 = circularDistance(centroid, 165);
+	double distanceToObject4 = circularDistance(centroid, 135);
+	double distanceToObject5 = circularDistance(centroid, 105);
+	double distanceToObject6 = circularDistance(centroid, 75);
+	double distanceToObject7 = circularDistance(centroid, 45);
+	double distanceToObject8 = circularDistance(centroid, 15);
 
 	// Determine the closest target and return the corresponding value
-	const double minDistance = std::min({ distanceToObject1, distanceToObject2, distanceToObject3 });
+	const double minDistance = std::min({ distanceToObject1, distanceToObject2, distanceToObject3, distanceToObject4, distanceToObject5, distanceToObject6, distanceToObject7, distanceToObject8 });
 
 	if (minDistance == distanceToObject1)
 		return 1;
@@ -102,10 +107,20 @@ int DnfComposerHandler::getTargetObject() const
 		return 2;
 	if (minDistance == distanceToObject3)
 		return 3;
+	if (minDistance == distanceToObject4)
+		return 4;
+	if (minDistance == distanceToObject5)
+		return 5;	
+	if (minDistance == distanceToObject6)
+		return 6;
+	if (minDistance == distanceToObject7)
+		return 7;
+	if (minDistance == distanceToObject8)
+		return 8;
 	return 0;
 }
 
-void DnfComposerHandler::setAvailableObjectsInTheWorkspace(bool object1, bool object2, bool object3) const
+void DnfComposerHandler::setAvailableObjectsInTheWorkspace(bool object1, bool object2, bool object3, bool object4, bool object5, bool object6, bool object7, bool object8) const
 {
 	auto orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("long stimulus 1"));
 	auto orl_stimulus_parameters = orl_stimulus->getParameters();
@@ -122,6 +137,36 @@ void DnfComposerHandler::setAvailableObjectsInTheWorkspace(bool object1, bool ob
 	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("short stimulus 1"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
 	amplitude = object3 ? 1 : 0;
+	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
+	orl_stimulus->setParameters(new_params);
+
+	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("short stimulus 2"));
+	orl_stimulus_parameters = orl_stimulus->getParameters();
+	amplitude = object4 ? 1 : 0;
+	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
+	orl_stimulus->setParameters(new_params);
+
+	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("long stimulus 3"));
+	orl_stimulus_parameters = orl_stimulus->getParameters();
+	amplitude = object5 ? 1 : 0;
+	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
+	orl_stimulus->setParameters(new_params);
+
+	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("long stimulus 4"));
+	orl_stimulus_parameters = orl_stimulus->getParameters();
+	amplitude = object6 ? 1 : 0;
+	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
+	orl_stimulus->setParameters(new_params);
+
+	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("short stimulus 3"));
+	orl_stimulus_parameters = orl_stimulus->getParameters();
+	amplitude = object7 ? 1 : 0;
+	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
+	orl_stimulus->setParameters(new_params);
+
+	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("short stimulus 4"));
+	orl_stimulus_parameters = orl_stimulus->getParameters();
+	amplitude = object8 ? 1 : 0;
 	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 }
@@ -212,7 +257,7 @@ double DnfComposerHandler::calculateHandProximityToObjects(double distance)
 double DnfComposerHandler::normalizeHandPosition(double handPositionY)
 {
 	// Define the min and max of the table in Y dimension
-	static constexpr double yMin = -0.44;
+	static constexpr double yMin = -0.45;
 	static constexpr double yMax = 0.42;
 	// Define the min and max of the scale
 	static constexpr double scaleMin = 0;

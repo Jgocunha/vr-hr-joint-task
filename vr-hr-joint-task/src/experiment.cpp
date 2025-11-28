@@ -107,7 +107,9 @@ void Experiment::sendHandPositionToDnf()
 
 void Experiment::sendAvailableObjectsToDnf() const
 {
-	dnfComposerHandler.setAvailableObjectsInTheWorkspace(inSignals.object1, inSignals.object2, inSignals.object3);
+	dnfComposerHandler.setAvailableObjectsInTheWorkspace(inSignals.object1, inSignals.object2, inSignals.object3,
+		inSignals.object4, inSignals.object5, inSignals.object6,
+		inSignals.object7, inSignals.object8);
 }
 
 void Experiment::sendTargetObjectToRobot()
@@ -326,11 +328,11 @@ void Experiment::keepAliveWhileTaskIsRunning()
 
 bool Experiment::areObjectsPresent() const
 {
-	const bool isPresent = inSignals.object1 != 0 || inSignals.object2 != 0 || inSignals.object3 != 0;
+	const bool isPresent = inSignals.object1 != 0 || inSignals.object2 != 0 || inSignals.object3 != 0 || inSignals.object4 != 0 || inSignals.object5 != 0 || inSignals.object6 != 0 || inSignals.object7 != 0 || inSignals.object8 != 0;
 	return isPresent;
 }
 
 bool Experiment::areAllObjectsPresent() const
 {
-	return inSignals.object1 != 0 && inSignals.object2 != 0 && inSignals.object3 != 0;
+	return inSignals.object1 != 0 && inSignals.object2 != 0 && inSignals.object3 != 0 && inSignals.object4 != 0 && inSignals.object5 != 0 && inSignals.object6 != 0 && inSignals.object7 != 0 && inSignals.object8 != 0;
 }
