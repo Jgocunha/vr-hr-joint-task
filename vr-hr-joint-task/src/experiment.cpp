@@ -150,7 +150,7 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::logHumanHandPose(log);
 	}
 
-	if (/*inSignals.canRestart && logMsgs.prevSimFinished == false &&*/ placeCount >= 3)
+	if (/*inSignals.canRestart && logMsgs.prevSimFinished == false &&*/ placeCount >= 4)
 	{
 		using namespace vr_hr_joint_task::tools;
 		EventLogger::log(LogLevel::CONTROL, "Task has finished.");

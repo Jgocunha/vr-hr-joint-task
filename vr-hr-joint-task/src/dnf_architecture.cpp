@@ -2183,7 +2183,7 @@ const auto lhf_loif_k = factory.createElement(element::GAUSS_KERNEL,
 simulation->addElement(lhf_loif_k);
 
 
-element::GaussKernelParameters ht_hf_k_params = { 5, 0, 0.2s, circularity, true };
+element::GaussKernelParameters ht_hf_k_params = { 5, 0, 0.2, circularity, true };
 const auto lht_lhf_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "lht -> lhf", dim_params }, { ht_hf_k_params });
 simulation->addElement(lht_lhf_k);
