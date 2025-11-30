@@ -83,6 +83,9 @@ void DnfComposerHandler::setHandStimulus(const Position& position, bool object1,
 	case DnfArchitectureType::KNOWN_SHORT:
 		setHandStimulusDependingOnHumanHandPosition(position);
 		break;
+	case DnfArchitectureType::INFERRED:
+		setHandStimulusDependingOnHumanHandPosition(position);
+		break;
 	case DnfArchitectureType::NO_ANTICIPATION:
 		// Do nothing
 		break;
@@ -255,7 +258,7 @@ void DnfComposerHandler::setHandStimulusDependingOnHumanHandPosition(const Posit
 		calculateHandDistanceToObjects(position));
 	const double y = normalizeHandPosition(position.y);
 
-	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus->getParameters().width, proximity, y, false, false };
+	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus->getParameters().width, 1.05*proximity, y, false, false };
 	aol_stimulus->setParameters(new_params);
 }
 
@@ -327,9 +330,9 @@ void DnfComposerHandler::setupUserInterface() const
 	   PlotAnnotations{ "Action Simulation Layer", "Spatial location", "Amplitude" } },
 	   LinePlotParameters{},
 	   {
-		   { "sosf", "activation" },
-		   { "sosf", "input" },
-			{ "sosf", "output" },
+		   { "loif", "activation" },
+		   { "loif", "input" },
+			{ "loif", "output" },
 	   }
 	);
 
@@ -340,9 +343,12 @@ void DnfComposerHandler::setupUserInterface() const
 	   PlotAnnotations{ "Action Representation Layer", "Spatial location", "Amplitude" } },
 	   LinePlotParameters{},
 	   {
-		   { "lof", "activation" },
-		   { "lof", "input" },
-			{ "lof", "output" },
+			 { "bht", "input" },
+		   { "bht", "activation" },
+			{ "bht", "output" },
+			 { "yht", "input" },
+		   { "yht", "activation" },
+			{ "yht", "output" },
 	   }
    );
 
