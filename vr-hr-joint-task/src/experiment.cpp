@@ -237,6 +237,51 @@ void Experiment::interpretAndLogSystemState()
 	}
 	logMsgs.prevRobotGraspObj3 = inSignals.robotGraspObj3;
 
+	if (inSignals.robotGraspObj4 && logMsgs.prevRobotGraspObj4 == 0 && afterTargetingForceGrasping/**/) {
+		EventLogger::log(LogLevel::ROBOT, "Robot is grasping object 4.");
+		using namespace vr_hr_joint_task::tools;
+		logger::log(logger::LogLevel::INFO, "Robot is grasping object 4.");
+		afterTargetingForceGrasping = false;
+		afterGraspingForcePlacing = true;
+	}
+	logMsgs.prevRobotGraspObj4 = inSignals.robotGraspObj4;
+
+	if (inSignals.robotGraspObj5 && logMsgs.prevRobotGraspObj5 == 0 && afterTargetingForceGrasping/**/) {
+		EventLogger::log(LogLevel::ROBOT, "Robot is grasping object 5.");
+		using namespace vr_hr_joint_task::tools;
+		logger::log(logger::LogLevel::INFO, "Robot is grasping object 5.");
+		afterTargetingForceGrasping = false;
+		afterGraspingForcePlacing = true;
+	}
+	logMsgs.prevRobotGraspObj5 = inSignals.robotGraspObj5;
+
+	if (inSignals.robotGraspObj6 && logMsgs.prevRobotGraspObj6 == 0 && afterTargetingForceGrasping/**/) {
+		EventLogger::log(LogLevel::ROBOT, "Robot is grasping object 6.");
+		using namespace vr_hr_joint_task::tools;
+		logger::log(logger::LogLevel::INFO, "Robot is grasping object 6.");
+		afterTargetingForceGrasping = false;
+		afterGraspingForcePlacing = true;
+	}
+	logMsgs.prevRobotGraspObj6 = inSignals.robotGraspObj6;
+
+	if (inSignals.robotGraspObj7 && logMsgs.prevRobotGraspObj7 == 0 && afterTargetingForceGrasping/**/) {
+		EventLogger::log(LogLevel::ROBOT, "Robot is grasping object 7.");
+		using namespace vr_hr_joint_task::tools;
+		logger::log(logger::LogLevel::INFO, "Robot is grasping object 7.");
+		afterTargetingForceGrasping = false;
+		afterGraspingForcePlacing = true;
+	}
+	logMsgs.prevRobotGraspObj7 = inSignals.robotGraspObj7;
+
+	if (inSignals.robotGraspObj8 && logMsgs.prevRobotGraspObj8 == 0 && afterTargetingForceGrasping/**/) {
+		EventLogger::log(LogLevel::ROBOT, "Robot is grasping object 8.");
+		using namespace vr_hr_joint_task::tools;
+		logger::log(logger::LogLevel::INFO, "Robot is grasping object 8.");
+		afterTargetingForceGrasping = false;
+		afterGraspingForcePlacing = true;
+	}
+	logMsgs.prevRobotGraspObj8 = inSignals.robotGraspObj8;
+
 	// Grasping events for human, logged every time it passes from 0 to 1.
 	if (inSignals.humanGraspObj1 && logMsgs.prevHumanGraspObj1 == 0) {
 		EventLogger::log(LogLevel::HUMAN, "Human is grasping object 1.");
@@ -261,6 +306,46 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::logHumanHandPose("Human is grasping object 3.");
 	}
 	logMsgs.prevHumanGraspObj3 = inSignals.humanGraspObj3;
+
+	if (inSignals.humanGraspObj4 && logMsgs.prevHumanGraspObj4 == 0) {
+		EventLogger::log(LogLevel::HUMAN, "Human is grasping object 4.");
+		using namespace vr_hr_joint_task::tools;
+		logger::log(logger::LogLevel::INFO, "Human is grasping object 4.");
+		EventLogger::logHumanHandPose("Human is grasping object 4.");
+	}
+	logMsgs.prevHumanGraspObj4 = inSignals.humanGraspObj4;
+
+	if (inSignals.humanGraspObj5 && logMsgs.prevHumanGraspObj5 == 0) {
+		EventLogger::log(LogLevel::HUMAN, "Human is grasping object 5.");
+		using namespace vr_hr_joint_task::tools;
+		logger::log(logger::LogLevel::INFO, "Human is grasping object 5.");
+		EventLogger::logHumanHandPose("Human is grasping object 5.");
+	}
+	logMsgs.prevHumanGraspObj5 = inSignals.humanGraspObj5;
+
+	if (inSignals.humanGraspObj6 && logMsgs.prevHumanGraspObj6 == 0) {
+		EventLogger::log(LogLevel::HUMAN, "Human is grasping object 6.");
+		using namespace vr_hr_joint_task::tools;
+		logger::log(logger::LogLevel::INFO, "Human is grasping object 6.");
+		EventLogger::logHumanHandPose("Human is grasping object 6.");
+	}
+	logMsgs.prevHumanGraspObj6 = inSignals.humanGraspObj6;
+
+	if (inSignals.humanGraspObj7 && logMsgs.prevHumanGraspObj7 == 0) {
+		EventLogger::log(LogLevel::HUMAN, "Human is grasping object 7.");
+		using namespace vr_hr_joint_task::tools;
+		logger::log(logger::LogLevel::INFO, "Human is grasping object 7.");
+		EventLogger::logHumanHandPose("Human is grasping object 7.");
+	}
+	logMsgs.prevHumanGraspObj7 = inSignals.humanGraspObj7;
+
+	if (inSignals.humanGraspObj8 && logMsgs.prevHumanGraspObj8 == 0) {
+		EventLogger::log(LogLevel::HUMAN, "Human is grasping object 8.");
+		using namespace vr_hr_joint_task::tools;	
+		logger::log(logger::LogLevel::INFO, "Human is grasping object 8.");
+		EventLogger::logHumanHandPose("Human is grasping object 8.");
+	}
+	logMsgs.prevHumanGraspObj8 = inSignals.humanGraspObj8;
 
 	// Placement events for robot, logged every time it passes from 0 to 1.
 	if (inSignals.robotPlaceObj1 && logMsgs.prevRobotPlaceObj1 == 0 /*&& afterGraspingForcePlacing*/) {
@@ -296,6 +381,63 @@ void Experiment::interpretAndLogSystemState()
 	}
 	logMsgs.prevRobotPlaceObj3 = inSignals.robotPlaceObj3;
 
+	if (inSignals.robotPlaceObj4 && logMsgs.prevRobotPlaceObj4 == 0 /*&& afterGraspingForcePlacing*/) {
+		using namespace vr_hr_joint_task::tools;
+		EventLogger::log(LogLevel::ROBOT, "Robot is placing object 4.");
+		logger::log(logger::LogLevel::INFO, "Robot is placing object 4.");
+		afterGraspingForcePlacing = false;
+		afterPlacingForceTargeting = true;
+		placeCount++;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
+	}
+	logMsgs.prevRobotPlaceObj4 = inSignals.robotPlaceObj4;
+
+	if (inSignals.robotPlaceObj5 && logMsgs.prevRobotPlaceObj5 == 0 /*&& afterGraspingForcePlacing*/) {
+		using namespace vr_hr_joint_task::tools;
+		EventLogger::log(LogLevel::ROBOT, "Robot is placing object 5.");
+		logger::log(logger::LogLevel::INFO, "Robot is placing object 5.");
+		afterGraspingForcePlacing = false;
+		afterPlacingForceTargeting = true;
+		placeCount++;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
+	}
+	logMsgs.prevRobotPlaceObj5 = inSignals.robotPlaceObj5;
+
+	if (inSignals.robotPlaceObj6 && logMsgs.prevRobotPlaceObj6 == 0 /*&& afterGraspingForcePlacing*/) {
+		using namespace vr_hr_joint_task::tools;
+		EventLogger::log(LogLevel::ROBOT, "Robot is placing object 6.");
+		logger::log(logger::LogLevel::INFO, "Robot is placing object 6.");
+		afterGraspingForcePlacing = false;
+		afterPlacingForceTargeting = true;
+		placeCount++;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
+	}
+	logMsgs.prevRobotPlaceObj6 = inSignals.robotPlaceObj6;
+	
+	if (inSignals.robotPlaceObj7 && logMsgs.prevRobotPlaceObj7 == 0 /*&& afterGraspingForcePlacing*/) {
+		using namespace vr_hr_joint_task::tools;
+		EventLogger::log(LogLevel::ROBOT, "Robot is placing object 7.");
+		logger::log(logger::LogLevel::INFO, "Robot is placing object 7.");
+		afterGraspingForcePlacing = false;
+		afterPlacingForceTargeting = true;
+		placeCount++;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
+	}
+	logMsgs.prevRobotPlaceObj7 = inSignals.robotPlaceObj7;
+
+	if (inSignals.robotPlaceObj8 && logMsgs.prevRobotPlaceObj8 == 0 /*&& afterGraspingForcePlacing*/) {
+		using namespace vr_hr_joint_task::tools;
+		EventLogger::log(LogLevel::ROBOT, "Robot is placing object 8.");
+		logger::log(logger::LogLevel::INFO, "Robot is placing object 8.");
+		afterGraspingForcePlacing = false;
+		afterPlacingForceTargeting = true;
+		placeCount++;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
+	}
+	logMsgs.prevRobotPlaceObj8 = inSignals.robotPlaceObj8;
+
+
+
 	// Placement events for human, logged every time it passes from 0 to 1.
 	if (inSignals.humanPlaceObj1 && logMsgs.prevHumanPlaceObj1 == 0) {
 		using namespace vr_hr_joint_task::tools;
@@ -326,6 +468,54 @@ void Experiment::interpretAndLogSystemState()
 		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevHumanPlaceObj3 = inSignals.humanPlaceObj3;
+
+	if (inSignals.humanPlaceObj4 && logMsgs.prevHumanPlaceObj4 == 0) {
+		using namespace vr_hr_joint_task::tools;
+		EventLogger::log(LogLevel::HUMAN, "Human is placing object 4.");
+		EventLogger::logHumanHandPose("Human is placing object 4.");
+		logger::log(logger::LogLevel::INFO, "Human is placing object 4.");
+		placeCount++;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
+	}
+	logMsgs.prevHumanPlaceObj4 = inSignals.humanPlaceObj4;
+
+	if (inSignals.humanPlaceObj5 && logMsgs.prevHumanPlaceObj5 == 0) {
+		using namespace vr_hr_joint_task::tools;
+		EventLogger::log(LogLevel::HUMAN, "Human is placing object 5.");
+		EventLogger::logHumanHandPose("Human is placing object 5.");
+		logger::log(logger::LogLevel::INFO, "Human is placing object 5.");
+		placeCount++;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
+	}
+	logMsgs.prevHumanPlaceObj5 = inSignals.humanPlaceObj5;
+
+	if (inSignals.humanPlaceObj6 && logMsgs.prevHumanPlaceObj6 == 0) {
+		using namespace vr_hr_joint_task::tools;
+		EventLogger::log(LogLevel::HUMAN, "Human is placing object 6.");
+		EventLogger::logHumanHandPose("Human is placing object 6.");
+		logger::log(logger::LogLevel::INFO, "Human is placing object 6.");
+		placeCount++;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
+	}
+	logMsgs.prevHumanPlaceObj6 = inSignals.humanPlaceObj6;
+	if (inSignals.humanPlaceObj7 && logMsgs.prevHumanPlaceObj7 == 0) {
+		using namespace vr_hr_joint_task::tools;
+		EventLogger::log(LogLevel::HUMAN, "Human is placing object 7.");
+		EventLogger::logHumanHandPose("Human is placing object 7.");
+		logger::log(logger::LogLevel::INFO, "Human is placing object 7.");
+		placeCount++;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
+	}
+	logMsgs.prevHumanPlaceObj7 = inSignals.humanPlaceObj7;
+	if (inSignals.humanPlaceObj8 && logMsgs.prevHumanPlaceObj8 == 0) {
+		using namespace vr_hr_joint_task::tools;
+		EventLogger::log(LogLevel::HUMAN, "Human is placing object 8.");
+		EventLogger::logHumanHandPose("Human is placing object 8.");
+		logger::log(logger::LogLevel::INFO, "Human is placing object 8.");
+		placeCount++;
+		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
+	}
+	logMsgs.prevHumanPlaceObj8 = inSignals.humanPlaceObj8;
 }
 
 void Experiment::keepAliveWhileTaskIsRunning()
