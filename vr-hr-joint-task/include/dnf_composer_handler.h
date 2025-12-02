@@ -19,6 +19,7 @@ private:
 	std::shared_ptr<dnf_composer::Application> application;
 	std::shared_ptr<dnf_composer::Visualization> visualization;
 	std::thread simulationThread;
+	std::atomic<bool> running = true;
 public:
 	DnfComposerHandler(DnfArchitectureType dnf, double deltaT);
 	~DnfComposerHandler();
@@ -26,6 +27,7 @@ public:
 	void init();
 	void run();
 	void end();
+	void stop();
 
 	void setHandStimulus(const Position& position, 
 		bool object1,

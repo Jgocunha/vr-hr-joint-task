@@ -12,8 +12,12 @@ struct ExperimentParameters
 	double deltaT;
 	uint8_t numTrials;
 
+	int  participantId = 0;
+	char condition     = 'N'; // N-neutral, K-known, I-inference
+	char feature       = 'B'; // B-blue, Y-yellow, L-long, S-short
+
 	ExperimentParameters(DnfArchitectureType dnf, double deltaT, int numTrials)
-	: dnf(dnf), deltaT(deltaT), numTrials(numTrials)
+		: dnf(dnf), deltaT(deltaT), numTrials(numTrials)
 	{}
 };
 
@@ -111,6 +115,9 @@ private:
 	LogMsgs logMsgs;
 	int numTrials;
 	int trialCounter;
+	int participantId;
+	char condition;
+	char feature;
 public:
 	Experiment(const ExperimentParameters& parameters);
 	~Experiment();
@@ -133,3 +140,59 @@ private:
 	bool areObjectsPresent() const;
 	bool areAllObjectsPresent() const;
 };
+
+// global helpers
+inline int askParticipantId()
+{
+	int id;
+	while (true)
+	{
+		std::cout << "What is the participant id? (enter only a valid integer): ";
+		if (std::cin >> id && id > 0)
+		{
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			return id;
+		}
+		std::cout << "Invalid participant id. Please enter a positive integer.\n";
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
+}
+
+inline char askCondition()
+{
+	while (true)
+	{
+		std::cout << "What is the condition? (Nn - neutral; Kk - known; Ii - inference): ";
+		char c;
+		if (std::cin >> c)
+		{
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			c = static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+			if (c == 'N' || c == 'K' || c == 'I')
+				return c;
+		}
+		std::cout << "Invalid condition. Please enter N, K, or I.\n";
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
+}
+
+inline char askFeature()
+{
+	while (true)
+	{
+		std::cout << "What is the feature? (Bb - blue, Yy - yellow, Ll - long, Ss - short): ";
+		char f;
+		if (std::cin >> f)
+		{
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			f = static_cast<char>(std::toupper(static_cast<unsigned char>(f)));
+			if (f == 'B' || f == 'Y' || f == 'L' || f == 'S')
+				return f;
+		}
+		std::cout << "Invalid feature. Please enter B, Y, L, or S.\n";
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
+}

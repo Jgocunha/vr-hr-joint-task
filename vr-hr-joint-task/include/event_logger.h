@@ -16,7 +16,7 @@ class EventLogger
     static std::ofstream humanHandPoseFile;
     static std::string sessionDirectory;
 public:
-    static void initialize();
+    static void initialize(int participantId, char condition, char feature);
     static void log(LogLevel level, const std::string& message);
     static void logHumanHandPose(const std::string& message);
     static void finalize();

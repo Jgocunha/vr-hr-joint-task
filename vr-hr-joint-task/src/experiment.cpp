@@ -9,6 +9,9 @@ Experiment::Experiment(const ExperimentParameters& parameters)
 	, logMsgs()
 	, numTrials(parameters.numTrials)
 	, trialCounter(0)
+	, participantId(parameters.participantId)
+	, condition(parameters.condition)
+	, feature(parameters.feature)
 {
 	switch (parameters.dnf)
 	{
@@ -46,7 +49,7 @@ void Experiment::init()
 {
 	dnfComposerHandler.init();
 	coppeliasimHandler.init();
-	EventLogger::initialize();
+    EventLogger::initialize(participantId, condition, feature);
 }
 
 void Experiment::run()
