@@ -11,8 +11,8 @@ struct HumanHand
 	int objectHandle;
 	Pose pose;
 
-	explicit HumanHand(int objectHandle = 0, const Pose& pose = { {0,0,0},
-		{0,0,0} })
+	explicit HumanHand(const int objectHandle = 0, const Pose& pose = { {0,0,0},
+		                   {0,0,0} })
 	: objectHandle(objectHandle), pose(pose)
 	{}
 };

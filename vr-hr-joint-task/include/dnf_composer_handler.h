@@ -25,7 +25,7 @@ public:
 	~DnfComposerHandler();
 
 	void init();
-	void run();
+	void run() const;
 	void end();
 	void stop();
 

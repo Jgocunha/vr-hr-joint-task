@@ -47,18 +47,8 @@ void DnfComposerHandler::init()
 	simulationThread = std::thread(&DnfComposerHandler::run, this);
 }
 
-void DnfComposerHandler::run()
+void DnfComposerHandler::run() const
 {
-	// application->init();
-	// bool userRequestedExit = false;
-	// while (!userRequestedExit || !killEverything)
-	// {
-	// 	application->step();
-	// 	userRequestedExit = application->hasGUIBeenClosed();
-	// }
-	// application->close();
-	// if (simulationThread.joinable())
-	// 	simulationThread.join();
 	application->init();
 
 	bool userRequestedExit = false;
@@ -84,7 +74,6 @@ void DnfComposerHandler::stop()
 {
 	running = false;
 }
-
 
 void DnfComposerHandler::setHandStimulus(const Position& position, bool object1, bool object2, bool object3) const
 {

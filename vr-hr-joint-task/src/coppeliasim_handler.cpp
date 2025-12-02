@@ -37,22 +37,17 @@ void CoppeliasimHandler::incomingSignalsLoop()
 	}
 
 	incomingSignalsClient.stopSimulation();
-
-	//if (incomingSignalsThread.joinable())
-		//incomingSignalsThread.join();
 }
 
 void CoppeliasimHandler::outgoingSignalsLoop()
 {
-	while (!outgoingSignalsClient.initialize());
+	while (!outgoingSignalsClient.initialize()) {}
 
 	while (outgoingSignalsClient.isConnected() && !killEverything)
 	{
 		writeSignals();
 	}
 
-	//if (outgoingSignalsThread.joinable())
-		//outgoingSignalsThread.join();
 }
 
 void CoppeliasimHandler::setSignals(const OutgoingSignals& signals)
@@ -67,7 +62,7 @@ IncomingSignals CoppeliasimHandler::getSignals() const
 
 void CoppeliasimHandler::readHandPosition()
 {
-	while (!handClient.initialize());
+	while (!handClient.initialize()) {}
 
 	hand.objectHandle = handClient.getObjectHandle("RightController");
 
@@ -82,9 +77,6 @@ void CoppeliasimHandler::readHandPosition()
 			pos.orientation.gamma}
 		};
     }
-
-	//if (handThread.joinable())
-		//handThread.join();
 }
 
 Pose CoppeliasimHandler::getHandPose() const
