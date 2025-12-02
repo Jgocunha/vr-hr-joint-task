@@ -235,7 +235,6 @@ simulation->createInteraction("normal noise sosf", "output", "sosf");
 return simulation;
 }
 
-
 std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureKnownBlue(const std::string& id, const double& deltaT)
 
 {
@@ -630,7 +629,6 @@ simulation->createInteraction("normal noise sosf", "output", "sosf");
 
 return simulation;
 }
-
 
 std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureKnownYellow(const std::string& id, const double& deltaT)
 
@@ -1030,7 +1028,7 @@ return simulation;
 std::shared_ptr<dnf_composer::Simulation> getDynamicNeuralFieldArchitectureKnownLong(const std::string& id, const double& deltaT)
 
 {
-	using namespace dnf_composer;
+using namespace dnf_composer;
 auto simulation = std::make_shared<Simulation>(id, deltaT, 0, 0);
 
 element::ElementFactory factory;
@@ -1562,7 +1560,7 @@ const auto aol_aol_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "aol -> aol", dim_params }, { aol_aol_k_params });
 simulation->addElement(aol_aol_k);
 
-element::MexicanHatKernelParameters sosf_sosf_k_params = { 18.92, 22.22, 50, 20, -0.23, circularity, true };
+element::MexicanHatKernelParameters sosf_sosf_k_params = { 18.92, 35, 150, 100, -0.23, circularity, true };
 const auto sosf_sosf_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "sosf -> sosf", dim_params }, { sosf_sosf_k_params });
 simulation->addElement(sosf_sosf_k);
@@ -1920,7 +1918,7 @@ const auto lhf = factory.createElement(element::NEURAL_FIELD,
 simulation->addElement(lhf);
 
 
-element::NeuralFieldParameters tf_params = { 1000, resting_level, lhf_af };
+element::NeuralFieldParameters tf_params = { 150, resting_level, lhf_af };
 const auto yht = factory.createElement(element::NEURAL_FIELD,
 	{ "yht", dim_params }, { tf_params });
 simulation->addElement(yht);
@@ -2046,19 +2044,19 @@ const auto lhf_lhf_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "lhf -> lhf", dim_params }, { lhf_lhf_k_params });	
 simulation->addElement(lhf_lhf_k);
 
-element::MexicanHatKernelParameters bht_bht_k_params = { 10,15 ,100,10, -0.01, circularity, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters bht_bht_k_params = { 3,15,30,40, -0.01, false, true }; //width, amplitude, shift
 const auto bht_bht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "bht -> bht", dim_params }, { bht_bht_k_params });
 simulation->addElement(bht_bht_k);
-element::MexicanHatKernelParameters yht_yht_k_params = { 10, 15,100,10, -0.01, circularity, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters yht_yht_k_params = { 3, 15,30,40, -0.01, false, true }; //width, amplitude, shift
 const auto yht_yht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "yht -> yht", dim_params }, { yht_yht_k_params });
 simulation->addElement(yht_yht_k);
-element::MexicanHatKernelParameters sht_sht_k_params = { 10, 15,100,10 -0.01, circularity, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters sht_sht_k_params = { 3, 15,30,40, -0.01, false, true }; //width, amplitude, shift
 const auto sht_sht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "sht -> sht", dim_params }, { sht_sht_k_params });
 simulation->addElement(sht_sht_k);
-element::MexicanHatKernelParameters lht_lht_k_params = { 10, 15,100,10 -0.01, circularity, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters lht_lht_k_params = { 3, 15,30,40, -0.01, false, true }; //width, amplitude, shift
 const auto lht_lht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "lht -> lht", dim_params }, { lht_lht_k_params });
 
@@ -2119,7 +2117,7 @@ const auto loif_ael_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "loif -> ael", dim_params }, { loif_ael_k_params });
 simulation->addElement(loif_ael_k);
 
-element::GaussKernelParameters loif_lht_k_params = { 5, 20, -0.01, circularity, true };
+element::GaussKernelParameters loif_lht_k_params = { 5, 20, -0.01, false, true };
 const auto loif_lht_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "loif -> lht", dim_params }, { loif_lht_k_params });
 simulation->addElement(loif_lht_k);
@@ -2183,7 +2181,7 @@ const auto lhf_loif_k = factory.createElement(element::GAUSS_KERNEL,
 simulation->addElement(lhf_loif_k);
 
 
-element::GaussKernelParameters ht_hf_k_params = { 5, 0, 0.2, circularity, true };
+element::GaussKernelParameters ht_hf_k_params = { 2, 0, 0.2, circularity, true };
 const auto lht_lhf_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "lht -> lhf", dim_params }, { ht_hf_k_params });
 simulation->addElement(lht_lhf_k);
@@ -2196,6 +2194,20 @@ simulation->addElement(yht_yhf_k);
 const auto sht_shf_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "sht -> shf", dim_params }, { ht_hf_k_params });
 simulation->addElement(sht_shf_k);
+
+element::GaussKernelParameters ht_hf_inh_k_params = { 2, 0, -0.2, circularity, true };
+const auto lht_shf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "lht -> shf", dim_params }, { ht_hf_inh_k_params });
+simulation->addElement(lht_shf_k);
+const auto bht_yhf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "bht -> yhf", dim_params }, { ht_hf_inh_k_params });
+simulation->addElement(bht_yhf_k);
+const auto yht_bhf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "yht -> bhf", dim_params }, { ht_hf_inh_k_params });
+simulation->addElement(yht_bhf_k);
+const auto sht_lhf_k = factory.createElement(element::GAUSS_KERNEL,
+	{ "sht -> lhf", dim_params }, { ht_hf_inh_k_params });
+simulation->addElement(sht_lhf_k);
 
 
 //noise
@@ -2357,6 +2369,16 @@ simulation->createInteraction("yht", "output", "yht -> yhf");
 simulation->createInteraction("yht -> yhf", "output", "yhf");
 simulation->createInteraction("sht", "output", "sht -> shf");
 simulation->createInteraction("sht -> shf", "output", "shf");
+simulation->createInteraction("lht", "output", "lht -> shf");
+simulation->createInteraction("lht -> shf", "output", "shf");
+simulation->createInteraction("bht", "output", "bht -> yhf");
+simulation->createInteraction("bht -> yhf", "output", "yhf");
+simulation->createInteraction("yht", "output", "yht -> bhf");
+simulation->createInteraction("yht -> bhf", "output", "bhf");
+simulation->createInteraction("sht", "output", "sht -> lhf");
+simulation->createInteraction("sht -> lhf", "output", "lhf");
+
+
 
 
 

@@ -286,7 +286,7 @@ double DnfComposerHandler::calculateHandProximityToObjects(double distance)
 double DnfComposerHandler::normalizeHandPosition(double handPositionY)
 {
 	// Define the min and max of the table in Y dimension
-	static constexpr double yMin = -0.45;
+	static constexpr double yMin = -0.48;
 	static constexpr double yMax = 0.42;
 	// Define the min and max of the scale
 	static constexpr double scaleMin = 0;

@@ -27,6 +27,8 @@ Experiment::Experiment(const ExperimentParameters& parameters)
 	case DnfArchitectureType::KNOWN_LONG:
 		outSignals.archType = 1;
 	break;
+	case DnfArchitectureType::INFERRED:
+		outSignals.archType = 1;
 	
 	case DnfArchitectureType::NO_ANTICIPATION:
 		case DnfArchitectureType::BASELINE:
