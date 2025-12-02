@@ -139,7 +139,7 @@ install(EXPORT ${CMAKE_PROJECT_NAME}Targets DESTINATION ${HR_VR_PROJ_CMAKE_CONFI
 
 # Add executable project modifiable
 set(EXE_PROJECT ${CMAKE_PROJECT_NAME}-exe)
-add_executable(${EXE_PROJECT} "src/main.cpp")
+add_executable(${EXE_PROJECT} "application/main.cpp")
 target_include_directories(${EXE_PROJECT} PRIVATE include)
 target_link_libraries(${EXE_PROJECT} PRIVATE ${CMAKE_PROJECT_NAME})
 target_link_libraries(${EXE_PROJECT} PRIVATE imgui::imgui)
@@ -149,7 +149,7 @@ target_link_libraries(${EXE_PROJECT} PRIVATE coppeliasim-cpp-client)
 
 # Add executable project neutral
 set(EXE_PROJECT_NEUTRAL vr-hr-neutral-exe)
-add_executable(${EXE_PROJECT_NEUTRAL} "src/vr_hr_neutral.cpp")
+add_executable(${EXE_PROJECT_NEUTRAL} "application/vr_hr_neutral.cpp")
 target_include_directories(${EXE_PROJECT_NEUTRAL} PRIVATE include)
 target_link_libraries(${EXE_PROJECT_NEUTRAL} PRIVATE ${CMAKE_PROJECT_NAME})
 target_link_libraries(${EXE_PROJECT_NEUTRAL} PRIVATE imgui::imgui)
@@ -159,7 +159,7 @@ target_link_libraries(${EXE_PROJECT_NEUTRAL} PRIVATE coppeliasim-cpp-client)
 
 # Add executable project no anticipation
 set(EXE_PROJECT_NO_ANTICIPATION vr-hr-no-anticipation-exe)
-add_executable(${EXE_PROJECT_NO_ANTICIPATION} "src/vr_hr_no_anticipation.cpp")
+add_executable(${EXE_PROJECT_NO_ANTICIPATION} "application/vr_hr_no_anticipation.cpp")
 target_include_directories(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE include)
 target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE ${CMAKE_PROJECT_NAME})
 target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE imgui::imgui)
@@ -169,7 +169,7 @@ target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE coppeliasim-cpp-cli
 
 # Add executable project known
 set(EXE_PROJECT_KNOWN_BLUE vr-hr-known-blue-exe)
-add_executable(${EXE_PROJECT_KNOWN_BLUE} "src/vr_hr_known_blue.cpp")
+add_executable(${EXE_PROJECT_KNOWN_BLUE} "application/vr_hr_known_blue.cpp")
 target_include_directories(${EXE_PROJECT_KNOWN_BLUE} PRIVATE include)
 target_link_libraries(${EXE_PROJECT_KNOWN_BLUE} PRIVATE ${CMAKE_PROJECT_NAME})
 target_link_libraries(${EXE_PROJECT_KNOWN_BLUE} PRIVATE imgui::imgui)
@@ -179,7 +179,7 @@ target_link_libraries(${EXE_PROJECT_KNOWN_BLUE} PRIVATE coppeliasim-cpp-client)
 
 # Add executable project known
 set(EXE_PROJECT_KNOWN_YELLOW vr-hr-known-yellow-exe)
-add_executable(${EXE_PROJECT_KNOWN_YELLOW} "src/vr_hr_known_yellow.cpp")
+add_executable(${EXE_PROJECT_KNOWN_YELLOW} "application/vr_hr_known_yellow.cpp")
 target_include_directories(${EXE_PROJECT_KNOWN_YELLOW} PRIVATE include)
 target_link_libraries(${EXE_PROJECT_KNOWN_YELLOW} PRIVATE ${CMAKE_PROJECT_NAME})
 target_link_libraries(${EXE_PROJECT_KNOWN_YELLOW} PRIVATE imgui::imgui)
@@ -189,7 +189,7 @@ target_link_libraries(${EXE_PROJECT_KNOWN_YELLOW} PRIVATE coppeliasim-cpp-client
 
 # Add executable project known
 set(EXE_PROJECT_KNOWN_LONG vr-hr-known-long-exe)
-add_executable(${EXE_PROJECT_KNOWN_LONG} "src/vr_hr_known_long.cpp")
+add_executable(${EXE_PROJECT_KNOWN_LONG} "application/vr_hr_known_long.cpp")
 target_include_directories(${EXE_PROJECT_KNOWN_LONG} PRIVATE include)
 target_link_libraries(${EXE_PROJECT_KNOWN_LONG} PRIVATE ${CMAKE_PROJECT_NAME})
 target_link_libraries(${EXE_PROJECT_KNOWN_LONG} PRIVATE imgui::imgui)
@@ -199,7 +199,7 @@ target_link_libraries(${EXE_PROJECT_KNOWN_LONG} PRIVATE coppeliasim-cpp-client)
 
 # Add executable project known
 set(EXE_PROJECT_KNOWN_SHORT vr-hr-known-short-exe)
-add_executable(${EXE_PROJECT_KNOWN_SHORT} "src/vr_hr_known_short.cpp")
+add_executable(${EXE_PROJECT_KNOWN_SHORT} "application/vr_hr_known_short.cpp")
 target_include_directories(${EXE_PROJECT_KNOWN_SHORT} PRIVATE include)
 target_link_libraries(${EXE_PROJECT_KNOWN_SHORT} PRIVATE ${CMAKE_PROJECT_NAME})
 target_link_libraries(${EXE_PROJECT_KNOWN_SHORT} PRIVATE imgui::imgui)

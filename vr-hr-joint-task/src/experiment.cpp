@@ -82,7 +82,7 @@ void Experiment::handleSignalsBetweenDnfAndCoppeliasim()
 	}
 }
 
-void Experiment::waitForConnectionWithCoppeliasim()
+void Experiment::waitForConnectionWithCoppeliasim() const
 {
 	using namespace vr_hr_joint_task::tools;
 	while (!coppeliasimHandler.isConnected())
@@ -533,11 +533,14 @@ void Experiment::keepAliveWhileTaskIsRunning()
 
 bool Experiment::areObjectsPresent() const
 {
-	const bool isPresent = inSignals.object1 != 0 || inSignals.object2 != 0 || inSignals.object3 != 0 || inSignals.object4 != 0 || inSignals.object5 != 0 || inSignals.object6 != 0 || inSignals.object7 != 0 || inSignals.object8 != 0;
+	const bool isPresent = inSignals.object1 != 0 || inSignals.object2 != 0 || inSignals.object3 != 0 ||
+		inSignals.object4 != 0 || inSignals.object5 != 0 || inSignals.object6 != 0 || inSignals.object7 != 0 ||
+			inSignals.object8 != 0;
 	return isPresent;
 }
 
 bool Experiment::areAllObjectsPresent() const
 {
-	return inSignals.object1 != 0 && inSignals.object2 != 0 && inSignals.object3 != 0 && inSignals.object4 != 0 && inSignals.object5 != 0 && inSignals.object6 != 0 && inSignals.object7 != 0 && inSignals.object8 != 0;
+	return inSignals.object1 != 0 && inSignals.object2 != 0 && inSignals.object3 != 0 && inSignals.object4 != 0 &&
+		inSignals.object5 != 0 && inSignals.object6 != 0 && inSignals.object7 != 0 && inSignals.object8 != 0;
 }

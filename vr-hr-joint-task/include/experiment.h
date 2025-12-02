@@ -121,7 +121,7 @@ public:
 private:
 	void handleSignalsBetweenDnfAndCoppeliasim();
 
-	void waitForConnectionWithCoppeliasim();
+	void waitForConnectionWithCoppeliasim() const;
 	void waitForSimulationToStart();
 
 	void sendHandPositionToDnf();

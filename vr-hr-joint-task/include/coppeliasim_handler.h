@@ -11,7 +11,7 @@ struct HumanHand
 	int objectHandle;
 	Pose pose;
 
-	HumanHand(int objectHandle = 0, const Pose& pose = { {0,0,0},
+	explicit HumanHand(int objectHandle = 0, const Pose& pose = { {0,0,0},
 		{0,0,0} })
 	: objectHandle(objectHandle), pose(pose)
 	{}
@@ -220,11 +220,11 @@ public:
 
 	void init();
 	void setSignals(const OutgoingSignals& signals);
-	IncomingSignals getSignals() const;
-	Pose getHandPose() const;
+	[[nodiscard]] IncomingSignals getSignals() const;
+	[[nodiscard]] Pose getHandPose() const;
 	void end();
 
-	bool isConnected() const;
+	[[nodiscard]] bool isConnected() const;
 	void resetSignals() const;
 private:
 	void incomingSignalsLoop();
@@ -232,5 +232,4 @@ private:
 	void readHandPosition();
 	void readSignals();
 	void writeSignals() const;
-	void printSignals() const;
 };
