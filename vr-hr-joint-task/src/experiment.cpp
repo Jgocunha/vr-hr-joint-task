@@ -176,7 +176,8 @@ void Experiment::interpretAndLogSystemState()
 		afterTargetingForceGrasping = false;
 		afterGraspingForcePlacing = false;
 		logMsgs.lastTargetObject = 0;
-		afterGraspingForcePlacing = false; placeCount = 0;
+		afterGraspingForcePlacing = false;
+		placeCount = 0;
 		newTargetCount = 0;
 		trialCounter++;
 		logger::log(logger::LogLevel::INFO, "Trial " + std::to_string(trialCounter) + " out of " + std::to_string(numTrials));
