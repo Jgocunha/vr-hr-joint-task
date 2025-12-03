@@ -272,7 +272,7 @@ void DnfComposerHandler::setHandStimulusDependingOnHumanHandPosition(const Posit
 	const double y = normalizeHandPosition(position.y);
 
 		//hardcode hand at certain position used to be 1.05*proximity, y
-	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus->getParameters().width, 15, 75, false, false };
+	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus->getParameters().width, 1.05*proximity, y, false, false };
 	aol_stimulus->setParameters(new_params);
 }
 
@@ -300,11 +300,11 @@ double DnfComposerHandler::calculateHandProximityToObjects(double distance)
 double DnfComposerHandler::normalizeHandPosition(double handPositionY)
 {
 	// Define the min and max of the table in Y dimension
-	static constexpr double yMin = -0.48;
-	static constexpr double yMax = 0.42;
+	static constexpr double yMin = -0.405;
+	static constexpr double yMax = 0.4;
 	// Define the min and max of the scale
-	static constexpr double scaleMin = 0;
-	static constexpr double scaleMax = 240;
+	static constexpr double scaleMin = 15;
+	static constexpr double scaleMax = 225;
 
 	// Normalize posY to the 0-50 scale
 	const double normalizedScale = scaleMin + (scaleMax - scaleMin) * (handPositionY - yMin) / (yMax - yMin);
@@ -376,6 +376,32 @@ void DnfComposerHandler::setupUserInterface() const
 			 { "yht", "input" },
 		   { "yht", "activation" },
 			{ "yht", "output" },
+	   }
+   );
+
+   	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Action Representation Layer", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		
+		   { "soif", "activation" },
+			{ "loif", "activation" },
+			 
+	   }
+   );
+
+    visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Action Representation Layer", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+			 { "yoif", "activation" },
+			 { "boif", "activation" },
 	   }
    );
 

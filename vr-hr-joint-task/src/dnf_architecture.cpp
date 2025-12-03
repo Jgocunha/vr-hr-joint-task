@@ -1918,7 +1918,7 @@ const auto lhf = factory.createElement(element::NEURAL_FIELD,
 simulation->addElement(lhf);
 
 
-element::NeuralFieldParameters tf_params = { 100, resting_level, lhf_af };
+element::NeuralFieldParameters tf_params = { 200, resting_level, lhf_af };
 const auto yht = factory.createElement(element::NEURAL_FIELD,
 	{ "yht", dim_params }, { tf_params });
 simulation->addElement(yht);
@@ -1993,11 +1993,29 @@ const auto sosf_sosf_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "sosf -> sosf", dim_params }, { sosf_sosf_k_params });
 simulation->addElement(sosf_sosf_k);
 
-element::MexicanHatKernelParameters loif_loif_k_params = { 20, 22, 100, 10, -0.01, circularity, true };
+
+element::MexicanHatKernelParameters loif_loif_k_params = { 20, 22, 100, 40, -0.01, circularity, true };
 const auto loif_loif_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "loif -> loif", dim_params }, { loif_loif_k_params });
 simulation->addElement(loif_loif_k);
 
+element::MexicanHatKernelParameters soif_soif_k_params = { 20, 22, 100, 40, -0.01, circularity, true };
+const auto soif_soif_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
+	{ "soif -> soif", dim_params }, { soif_soif_k_params });
+simulation->addElement(soif_soif_k);
+
+element::MexicanHatKernelParameters boif_boif_k_params = { 20, 22, 100, 40, -0.01, circularity, true };
+const auto boif_boif_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
+	{ "boif -> boif", dim_params }, { boif_boif_k_params });
+simulation->addElement(boif_boif_k);
+
+element::MexicanHatKernelParameters yoif_yoif_k_params = { 20, 22, 100, 40, -0.01, circularity, true };
+const auto yoif_yoif_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
+	{ "yoif -> yoif", dim_params }, { yoif_yoif_k_params });
+simulation->addElement(yoif_yoif_k);
+
+
+/*
 element::GaussKernelParameters soif_soif_k_params = { 20, 22, -0.01, circularity, true }; //width, amplitude, shift
 const auto soif_soif_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "soif -> soif", dim_params }, { soif_soif_k_params });
@@ -2008,7 +2026,7 @@ simulation->addElement(boif_boif_k);
 const auto yoif_yoif_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "yoif -> yoif", dim_params }, { soif_soif_k_params });
 simulation->addElement(yoif_yoif_k);
-
+*/
 
 element::GaussKernelParameters sof_sof_k_params = { 20, 2, -0.01, circularity, true }; //width, amplitude, shift
 const auto sof_sof_k = factory.createElement(element::GAUSS_KERNEL,
@@ -2044,19 +2062,19 @@ const auto lhf_lhf_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "lhf -> lhf", dim_params }, { lhf_lhf_k_params });	
 simulation->addElement(lhf_lhf_k);
 
-element::MexicanHatKernelParameters bht_bht_k_params = { 20,10,50,0, -0.01, false, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters bht_bht_k_params = { 20,20,50,5, -0.0001, true, true }; //width, amplitude, shift
 const auto bht_bht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "bht -> bht", dim_params }, { bht_bht_k_params });
 simulation->addElement(bht_bht_k);
-element::MexicanHatKernelParameters yht_yht_k_params = { 20,10,50,0, -0.01, false, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters yht_yht_k_params = { 20,20,50,5, -0.0001, true, true }; //width, amplitude, shift
 const auto yht_yht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "yht -> yht", dim_params }, { yht_yht_k_params });
 simulation->addElement(yht_yht_k);
-element::MexicanHatKernelParameters sht_sht_k_params = { 20,10,50,0, -0.01, false, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters sht_sht_k_params = { 20,20,50,5, -0.0001, true, true }; //width, amplitude, shift
 const auto sht_sht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "sht -> sht", dim_params }, { sht_sht_k_params });
 simulation->addElement(sht_sht_k);
-element::MexicanHatKernelParameters lht_lht_k_params = { 20,10,50,0, -0.01, false, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters lht_lht_k_params = { 20,20,50,5, -0.0001, true, true }; //width, amplitude, shift
 const auto lht_lht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "lht -> lht", dim_params }, { lht_lht_k_params });
 
@@ -2071,7 +2089,7 @@ const auto aol_sosf_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "aol -> sosf", dim_params }, { aol_sosf_k_params });
 simulation->addElement(aol_sosf_k);
 
-element::GaussKernelParameters aol_loif_k_params = { 5, 12, 0.0, circularity, true };
+element::GaussKernelParameters aol_loif_k_params = { 5, 10, -0.01, circularity, true };
 const auto aol_loif_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "aol -> loif", dim_params }, { aol_loif_k_params });
 simulation->addElement(aol_loif_k);
