@@ -333,37 +333,164 @@ void DnfComposerHandler::setupUserInterface() const
 		   { "aol", "activation" },
 		   { "aol", "input" },
 			{ "aol", "output" },
-	   }
-   );
+	   });
 
 	visualization->plot(
 	   PlotCommonParameters{
 	   PlotType::LINE_PLOT,
 	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
-	   PlotAnnotations{ "Action Simulation Layer", "Spatial location", "Amplitude" } },
+	   PlotAnnotations{ "Small Objects Selection Field", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "sosf", "activation" },
+		   { "sosf", "input" },
+			{ "sosf", "output" },
+	   });
+
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Large Objects Integration Field", "Spatial location", "Amplitude" } },
 	   LinePlotParameters{},
 	   {
 		   { "loif", "activation" },
 		   { "loif", "input" },
 			{ "loif", "output" },
-	   }
-	);
+	   });
+
+	visualization->plot(
+		   PlotCommonParameters{
+		   PlotType::LINE_PLOT,
+		   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+		   PlotAnnotations{ "Small Objects Integration Field", "Spatial location", "Amplitude" } },
+		   LinePlotParameters{},
+		   {
+			   { "soif", "activation" },
+			   { "soif", "input" },
+				{ "soif", "output" },
+		   });
 
 	visualization->plot(
 	   PlotCommonParameters{
 	   PlotType::LINE_PLOT,
 	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
-	   PlotAnnotations{ "Action Representation Layer", "Spatial location", "Amplitude" } },
+	   PlotAnnotations{ "Blue Objects Integration Field", "Spatial location", "Amplitude" } },
 	   LinePlotParameters{},
 	   {
-			 { "bht", "input" },
-		   { "bht", "activation" },
-			{ "bht", "output" },
-			 { "yht", "input" },
-		   { "yht", "activation" },
-			{ "yht", "output" },
-	   }
-   );
+		   { "boif", "activation" },
+		   { "boif", "input" },
+			{ "boif", "output" },
+	   });
+
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Yellow Objects Integration Field", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "yoif", "activation" },
+		   { "yoif", "input" },
+			{ "yoif", "output" },
+	   });
+
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Small Objects Field", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "sof", "activation" },
+		   { "sof", "input" },
+			{ "sof", "output" },
+	   });
+
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Large Objects Field", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "lof", "activation" },
+		   { "lof", "input" },
+			{ "lof", "output" },
+	   });
+
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Blue Objects Field", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "bof", "activation" },
+		   { "bof", "input" },
+			{ "bof", "output" },
+	   });
+
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Yellow Objects Field", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "yof", "activation" },
+		   { "yof", "input" },
+			{ "yof", "output" },
+	   });
+
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Yellow Hypothesis Field", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "yhf", "activation" },
+		   { "yhf", "input" },
+			{ "yhf", "output" },
+	   });
+
+
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Blue Hypothesis Field", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "bhf", "activation" },
+		   { "bhf", "input" },
+			{ "bhf", "output" },
+	   });
+
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Short Hypothesis Field", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "shf", "activation" },
+		   { "shf", "input" },
+			{ "shf", "output" },
+	   });
+
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Large Hypothesis Field", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "lhf", "activation" },
+		   { "lhf", "input" },
+			{ "lhf", "output" },
+	   });
 
 	visualization->plot(
 	   PlotCommonParameters{
@@ -375,6 +502,5 @@ void DnfComposerHandler::setupUserInterface() const
 		   { "ael", "activation" },
 		   { "ael", "input" },
 			{ "ael", "output" },
-	   }
-   );
+	   });
 }
