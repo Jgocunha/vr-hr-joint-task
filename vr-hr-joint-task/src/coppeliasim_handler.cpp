@@ -24,8 +24,8 @@ void CoppeliasimHandler::init()
 
 void CoppeliasimHandler::incomingSignalsLoop()
 {
-	
-	while (!incomingSignalsClient.initialize());
+
+	while (!incomingSignalsClient.initialize()) {}
 
 	incomingSignalsClient.startSimulation();
 
@@ -34,26 +34,20 @@ void CoppeliasimHandler::incomingSignalsLoop()
 	while (isConnected() && !killEverything)
 	{
 		readSignals();
-		//printSignals();
 	}
 
 	incomingSignalsClient.stopSimulation();
-
-	//if (incomingSignalsThread.joinable())
-		//incomingSignalsThread.join();
 }
 
 void CoppeliasimHandler::outgoingSignalsLoop()
 {
-	while (!outgoingSignalsClient.initialize());
+	while (!outgoingSignalsClient.initialize()) {}
 
 	while (outgoingSignalsClient.isConnected() && !killEverything)
 	{
 		writeSignals();
 	}
 
-	//if (outgoingSignalsThread.joinable())
-		//outgoingSignalsThread.join();
 }
 
 void CoppeliasimHandler::setSignals(const OutgoingSignals& signals)
@@ -68,7 +62,7 @@ IncomingSignals CoppeliasimHandler::getSignals() const
 
 void CoppeliasimHandler::readHandPosition()
 {
-	while (!handClient.initialize());
+	while (!handClient.initialize()) {}
 
 	hand.objectHandle = handClient.getObjectHandle("RightController");
 
@@ -83,9 +77,6 @@ void CoppeliasimHandler::readHandPosition()
 			pos.orientation.gamma}
 		};
     }
-
-	//if (handThread.joinable())
-		//handThread.join();
 }
 
 Pose CoppeliasimHandler::getHandPose() const
@@ -231,32 +222,4 @@ void CoppeliasimHandler::resetSignals() const
 	incomingSignalsClient.setIntegerSignal(IncomingSignals::HUMAN_PLACE_OBJ8, 0);
 	incomingSignalsClient.setIntegerSignal(IncomingSignals::CAN_RESTART, 0);
 	incomingSignalsClient.setIntegerSignal(IncomingSignals::RESTART, 0);
-}
-
-void CoppeliasimHandler::printSignals() const
-{
-	/*std::cout << "Signals:" << std::endl;
-	std::cout << "----------------" << std::endl;
-	std::cout << "Start Sim: " << signals.startSim << std::endl;
-	std::cout << "Sim Started: " << signals.simStarted << std::endl;
-	std::cout << "Can Restart: " << signals.canRestart << std::endl;
-	std::cout << "Restart: " << signals.restart << std::endl;
-	std::cout << "Object 1: " << signals.object1 << std::endl;
-	std::cout << "Object 2: " << signals.object2 << std::endl;
-	std::cout << "Object 3: " << signals.object3 << std::endl;
-	std::cout << "Target Object: " << signals.targetObject << std::endl;
-	std::cout << "Robot Approaching: " << signals.robotApproaching << std::endl;
-	std::cout << "Robot Grasp Obj 1: " << signals.robotGraspObj1 << std::endl;
-	std::cout << "Robot Grasp Obj 2: " << signals.robotGraspObj2 << std::endl;
-	std::cout << "Robot Grasp Obj 3: " << signals.robotGraspObj3 << std::endl;
-	std::cout << "Robot Place Obj 1: " << signals.robotPlaceObj1 << std::endl;
-	std::cout << "Robot Place Obj 2: " << signals.robotPlaceObj2 << std::endl;
-	std::cout << "Robot Place Obj 3: " << signals.robotPlaceObj3 << std::endl;
-	std::cout << "Human Grasp Obj 1: " << signals.humanGraspObj1 << std::endl;
-	std::cout << "Human Grasp Obj 2: " << signals.humanGraspObj2 << std::endl;
-	std::cout << "Human Grasp Obj 3: " << signals.humanGraspObj3 << std::endl;
-	std::cout << "Human Place Obj 1: " << signals.humanPlaceObj1 << std::endl;
-	std::cout << "Human Place Obj 2: " << signals.humanPlaceObj2 << std::endl;
-	std::cout << "Human Place Obj 3: " << signals.humanPlaceObj3 << std::endl;
-	std::endl(std::cout);*/
 }

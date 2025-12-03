@@ -10,12 +10,24 @@ int main(int argc, char* argv[])
 
 	try
 	{
+		// 1) Ask user for participant info
+		const int  participantId = askParticipantId();
+		const char condition     = askCondition();
+		const char feature       = askFeature();
+
+		// 2) Experiment configuration
 		constexpr double deltaT = 50;
 		constexpr DnfArchitectureType architecture =
-			DnfArchitectureType::KNOWN_SHORT;
-		constexpr uint8_t numTrials = 5;
+			DnfArchitectureType::NO_ANTICIPATION;
+		constexpr uint8_t numTrials = 20;
 
-		const ExperimentParameters params{ architecture, deltaT, numTrials };
+		// 3) Fill parameters, including participant info
+		ExperimentParameters params{architecture, deltaT, numTrials };
+		params.participantId = participantId;
+		params.condition     = condition;
+		params.feature       = feature;
+
+		// 4) Run experiment
 		Experiment experiment(params);
 
 		experiment.init();

@@ -43,27 +43,36 @@ DnfComposerHandler::~DnfComposerHandler()
 
 void DnfComposerHandler::init()
 {
+	running = true;
 	simulationThread = std::thread(&DnfComposerHandler::run, this);
 }
 
-void DnfComposerHandler::run()
+void DnfComposerHandler::run() const
 {
 	application->init();
+
 	bool userRequestedExit = false;
-	while (!userRequestedExit || !killEverything)
+
+	while (running && !userRequestedExit)
 	{
 		application->step();
 		userRequestedExit = application->hasGUIBeenClosed();
 	}
+
 	application->close();
-	if (simulationThread.joinable())
-		simulationThread.join();
 }
 
 void DnfComposerHandler::end()
 {
+	stop();
+
 	if (simulationThread.joinable())
 		simulationThread.join();
+}
+
+void DnfComposerHandler::stop()
+{
+	running = false;
 }
 
 void DnfComposerHandler::setHandStimulus(const Position& position, bool object1, bool object2, bool object3) const
@@ -89,6 +98,7 @@ void DnfComposerHandler::setHandStimulus(const Position& position, bool object1,
 	case DnfArchitectureType::NO_ANTICIPATION:
 		// Do nothing
 		break;
+	default: break;
 	}
 }
 
@@ -128,7 +138,8 @@ int DnfComposerHandler::getTargetObject() const
 	double distanceToObject8 = circularDistance(centroid, 15);
 
 	// Determine the closest target and return the corresponding value
-	const double minDistance = std::min({ distanceToObject1, distanceToObject2, distanceToObject3, distanceToObject4, distanceToObject5, distanceToObject6, distanceToObject7, distanceToObject8 });
+	const double minDistance = std::min({ distanceToObject1, distanceToObject2, distanceToObject3, distanceToObject4,
+		distanceToObject5, distanceToObject6, distanceToObject7, distanceToObject8 });
 
 	if (minDistance == distanceToObject1)
 		return 1;
@@ -149,7 +160,8 @@ int DnfComposerHandler::getTargetObject() const
 	return 0;
 }
 
-void DnfComposerHandler::setAvailableObjectsInTheWorkspace(bool object1, bool object2, bool object3, bool object4, bool object5, bool object6, bool object7, bool object8) const
+void DnfComposerHandler::setAvailableObjectsInTheWorkspace(bool object1, bool object2, bool object3, bool object4,
+	bool object5, bool object6, bool object7, bool object8) const
 {
 	auto orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("long stimulus 1"));
 	auto orl_stimulus_parameters = orl_stimulus->getParameters();
@@ -200,7 +212,8 @@ void DnfComposerHandler::setAvailableObjectsInTheWorkspace(bool object1, bool ob
 	orl_stimulus->setParameters(new_params);
 }
 
-void DnfComposerHandler::setHandStimulusDependingOnHumanActionLikelihood(const Position& position, bool object1, bool object2, bool object3) const
+void DnfComposerHandler::setHandStimulusDependingOnHumanActionLikelihood(const Position& position, const bool object1,
+	const bool object2, const bool object3) const
 {
 	static Position handPrevious = position;
 	static const Position objPosition1 = { 0.000,  0.125, 0.716 };
