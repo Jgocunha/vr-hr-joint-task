@@ -1918,7 +1918,7 @@ const auto lhf = factory.createElement(element::NEURAL_FIELD,
 simulation->addElement(lhf);
 
 
-element::NeuralFieldParameters tf_params = { 150, resting_level, lhf_af };
+element::NeuralFieldParameters tf_params = { 100, resting_level, lhf_af };
 const auto yht = factory.createElement(element::NEURAL_FIELD,
 	{ "yht", dim_params }, { tf_params });
 simulation->addElement(yht);
@@ -1988,7 +1988,7 @@ const auto aol_aol_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "aol -> aol", dim_params }, { aol_aol_k_params });
 simulation->addElement(aol_aol_k);
 
-element::MexicanHatKernelParameters sosf_sosf_k_params = { 18.92, 22.22, 50, 20, -0.23, circularity, true };
+element::MexicanHatKernelParameters sosf_sosf_k_params = { 18.92, 28, 100, 50, -0.23, circularity, true };
 const auto sosf_sosf_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "sosf -> sosf", dim_params }, { sosf_sosf_k_params });
 simulation->addElement(sosf_sosf_k);
@@ -2044,19 +2044,19 @@ const auto lhf_lhf_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "lhf -> lhf", dim_params }, { lhf_lhf_k_params });	
 simulation->addElement(lhf_lhf_k);
 
-element::MexicanHatKernelParameters bht_bht_k_params = { 3,15,30,40, -0.01, false, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters bht_bht_k_params = { 20,10,50,0, -0.01, false, true }; //width, amplitude, shift
 const auto bht_bht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "bht -> bht", dim_params }, { bht_bht_k_params });
 simulation->addElement(bht_bht_k);
-element::MexicanHatKernelParameters yht_yht_k_params = { 3, 15,30,40, -0.01, false, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters yht_yht_k_params = { 20,10,50,0, -0.01, false, true }; //width, amplitude, shift
 const auto yht_yht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "yht -> yht", dim_params }, { yht_yht_k_params });
 simulation->addElement(yht_yht_k);
-element::MexicanHatKernelParameters sht_sht_k_params = { 3, 15,30,40, -0.01, false, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters sht_sht_k_params = { 20,10,50,0, -0.01, false, true }; //width, amplitude, shift
 const auto sht_sht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "sht -> sht", dim_params }, { sht_sht_k_params });
 simulation->addElement(sht_sht_k);
-element::MexicanHatKernelParameters lht_lht_k_params = { 3, 15,30,40, -0.01, false, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters lht_lht_k_params = { 20,10,50,0, -0.01, false, true }; //width, amplitude, shift
 const auto lht_lht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "lht -> lht", dim_params }, { lht_lht_k_params });
 
@@ -2150,7 +2150,7 @@ const auto lof_lhf_k = factory.createElement(element::GAUSS_KERNEL,
 simulation->addElement(lof_lhf_k);
 
 
-element::GaussKernelParameters yhf_sosf_k_params = { 5, 6, -0.01, circularity, true };
+element::GaussKernelParameters yhf_sosf_k_params = { 5, 7, -0.01, circularity, true };
 const auto yhf_sosf_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "yhf -> sosf", dim_params }, { yhf_sosf_k_params });
 simulation->addElement(yhf_sosf_k);
@@ -2160,7 +2160,7 @@ const auto yhf_loif_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "yhf -> loif", dim_params }, { yhf_loif_k_params });
 simulation->addElement(yhf_loif_k);
 
-element::GaussKernelParameters bhf_sosf_k_params = { 5, 6, -0.01, circularity, true };
+element::GaussKernelParameters bhf_sosf_k_params = { 5, 7, -0.01, circularity, true };
 const auto bhf_sosf_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "bhf -> sosf", dim_params }, { bhf_sosf_k_params });
 simulation->addElement(bhf_sosf_k);
@@ -2170,7 +2170,7 @@ const auto bhf_loif_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "bhf -> loif", dim_params }, { bhf_loif_k_params });
 simulation->addElement(bhf_loif_k);
 
-element::GaussKernelParameters shf_sosf_k_params = { 5, 10, -0.01, circularity, true };
+element::GaussKernelParameters shf_sosf_k_params = { 5, 11, -0.01, circularity, true };
 const auto shf_sosf_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "shf -> sosf", dim_params }, { shf_sosf_k_params });
 simulation->addElement(shf_sosf_k);

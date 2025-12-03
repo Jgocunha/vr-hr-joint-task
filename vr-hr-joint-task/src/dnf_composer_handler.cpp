@@ -258,7 +258,8 @@ void DnfComposerHandler::setHandStimulusDependingOnHumanHandPosition(const Posit
 		calculateHandDistanceToObjects(position));
 	const double y = normalizeHandPosition(position.y);
 
-	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus->getParameters().width, 1.05*proximity, y, false, false };
+		//hardcode hand at certain position used to be 1.05*proximity, y
+	const dnf_composer::element::GaussStimulusParameters new_params{ aol_stimulus->getParameters().width, 15, 75, false, false };
 	aol_stimulus->setParameters(new_params);
 }
 
@@ -333,6 +334,19 @@ void DnfComposerHandler::setupUserInterface() const
 		   { "loif", "activation" },
 		   { "loif", "input" },
 			{ "loif", "output" },
+	   }
+	);
+
+	visualization->plot(
+	   PlotCommonParameters{
+	   PlotType::LINE_PLOT,
+	   PlotDimensions{ 0, 50, -20, 20, 0.5, 1.0},
+	   PlotAnnotations{ "Action Simulation Layer", "Spatial location", "Amplitude" } },
+	   LinePlotParameters{},
+	   {
+		   { "sosf", "activation" },
+		   { "sosf", "input" },
+			{ "sosf", "output" },
 	   }
 	);
 
