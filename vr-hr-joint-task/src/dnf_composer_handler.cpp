@@ -187,25 +187,25 @@ void DnfComposerHandler::setAvailableObjectsInTheWorkspace(bool object1, bool ob
 	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 
-	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("long stimulus 3"));
+	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("short stimulus 3"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
 	amplitude = object5 ? 1 : 0;
 	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 
-	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("long stimulus 4"));
+	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("short stimulus 4"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
 	amplitude = object6 ? 1 : 0;
 	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 
-	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("short stimulus 3"));
+	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("long stimulus 3"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
 	amplitude = object7 ? 1 : 0;
 	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 
-	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("short stimulus 4"));
+	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("long stimulus 4"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
 	amplitude = object8 ? 1 : 0;
 	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };

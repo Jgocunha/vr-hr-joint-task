@@ -63,12 +63,11 @@ const auto hand_position_stimulus = factory.createElement(element::GAUSS_STIMULU
 	{ "hand position stimulus", dim_params }, { hand_position_gsp });
 simulation->addElement(hand_position_stimulus);
 
-
-element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 15, circularity, true };
+element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 75, circularity, true };
 const auto sof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 4", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_1);
-sof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
+sof_gsp = { stimulus_sigma, stimulus_amplitude, 105, circularity, true };
 const auto sof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 3", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_2);
@@ -81,11 +80,11 @@ const auto sof_stimulus_4 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 1", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_4);
 
-element::GaussStimulusParameters lof_gsp = { stimulus_sigma, stimulus_amplitude, 75, circularity, true };
+element::GaussStimulusParameters lof_gsp = { stimulus_sigma, stimulus_amplitude, 15, circularity, true };
 const auto lof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 4", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_1);
-lof_gsp = { stimulus_sigma, stimulus_amplitude, 105, circularity, true };
+lof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
 const auto lof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 3", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_2);
@@ -331,13 +330,11 @@ element::GaussStimulusParameters hand_position_gsp = { stimulus_sigma, 0, 0, cir
 const auto hand_position_stimulus = factory.createElement(element::GAUSS_STIMULUS,
 	{ "hand position stimulus", dim_params }, { hand_position_gsp });
 simulation->addElement(hand_position_stimulus);
-
-
-element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 15, circularity, true };
+element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 75, circularity, true };
 const auto sof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 4", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_1);
-sof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
+sof_gsp = { stimulus_sigma, stimulus_amplitude, 105, circularity, true };
 const auto sof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 3", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_2);
@@ -350,11 +347,11 @@ const auto sof_stimulus_4 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 1", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_4);
 
-element::GaussStimulusParameters lof_gsp = { stimulus_sigma, stimulus_amplitude, 75, circularity, true };
+element::GaussStimulusParameters lof_gsp = { stimulus_sigma, stimulus_amplitude, 15, circularity, true };
 const auto lof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 4", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_1);
-lof_gsp = { stimulus_sigma, stimulus_amplitude, 105, circularity, true };
+lof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
 const auto lof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 3", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_2);
@@ -727,12 +724,11 @@ const auto hand_position_stimulus = factory.createElement(element::GAUSS_STIMULU
 	{ "hand position stimulus", dim_params }, { hand_position_gsp });
 simulation->addElement(hand_position_stimulus);
 
-
-element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 15, circularity, true };
+element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 75, circularity, true };
 const auto sof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 4", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_1);
-sof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
+sof_gsp = { stimulus_sigma, stimulus_amplitude, 105, circularity, true };
 const auto sof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 3", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_2);
@@ -745,11 +741,11 @@ const auto sof_stimulus_4 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 1", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_4);
 
-element::GaussStimulusParameters lof_gsp = { stimulus_sigma, stimulus_amplitude, 75, circularity, true };
+element::GaussStimulusParameters lof_gsp = { stimulus_sigma, stimulus_amplitude, 15, circularity, true };
 const auto lof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 4", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_1);
-lof_gsp = { stimulus_sigma, stimulus_amplitude, 105, circularity, true };
+lof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
 const auto lof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 3", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_2);
@@ -1121,13 +1117,11 @@ element::GaussStimulusParameters hand_position_gsp = { stimulus_sigma, 0, 0, cir
 const auto hand_position_stimulus = factory.createElement(element::GAUSS_STIMULUS,
 	{ "hand position stimulus", dim_params }, { hand_position_gsp });
 simulation->addElement(hand_position_stimulus);
-
-
-element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 15, circularity, true };
+element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 75, circularity, true };
 const auto sof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 4", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_1);
-sof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
+sof_gsp = { stimulus_sigma, stimulus_amplitude, 105, circularity, true };
 const auto sof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 3", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_2);
@@ -1140,11 +1134,11 @@ const auto sof_stimulus_4 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 1", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_4);
 
-element::GaussStimulusParameters lof_gsp = { stimulus_sigma, stimulus_amplitude, 75, circularity, true };
+element::GaussStimulusParameters lof_gsp = { stimulus_sigma, stimulus_amplitude, 15, circularity, true };
 const auto lof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 4", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_1);
-lof_gsp = { stimulus_sigma, stimulus_amplitude, 105, circularity, true };
+lof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
 const auto lof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 3", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_2);
@@ -1156,8 +1150,6 @@ lof_gsp = { stimulus_sigma, stimulus_amplitude, 225, circularity, true };
 const auto lof_stimulus_4 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 1", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_4);
-
-
 
 //self excitations kernels
 element::GaussKernelParameters aol_aol_k_params = { 20, 2, -0.01, circularity, true};
@@ -1517,12 +1509,11 @@ const auto hand_position_stimulus = factory.createElement(element::GAUSS_STIMULU
 	{ "hand position stimulus", dim_params }, { hand_position_gsp });
 simulation->addElement(hand_position_stimulus);
 
-
-element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 15, circularity, true };
+element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 75, circularity, true };
 const auto sof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 4", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_1);
-sof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
+sof_gsp = { stimulus_sigma, stimulus_amplitude, 105, circularity, true };
 const auto sof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 3", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_2);
@@ -1535,11 +1526,11 @@ const auto sof_stimulus_4 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 1", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_4);
 
-element::GaussStimulusParameters lof_gsp = { stimulus_sigma, stimulus_amplitude, 75, circularity, true };
+element::GaussStimulusParameters lof_gsp = { stimulus_sigma, stimulus_amplitude, 15, circularity, true };
 const auto lof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 4", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_1);
-lof_gsp = { stimulus_sigma, stimulus_amplitude, 105, circularity, true };
+lof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
 const auto lof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 3", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_2);
@@ -1551,8 +1542,6 @@ lof_gsp = { stimulus_sigma, stimulus_amplitude, 225, circularity, true };
 const auto lof_stimulus_4 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 1", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_4);
-
-
 
 //self excitations kernels
 element::GaussKernelParameters aol_aol_k_params = { 20, 2, -0.01, circularity, true};
@@ -1945,12 +1934,11 @@ const auto hand_position_stimulus = factory.createElement(element::GAUSS_STIMULU
 	{ "hand position stimulus", dim_params }, { hand_position_gsp });
 simulation->addElement(hand_position_stimulus);
 
-
-element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 15, circularity, true };
+element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 75, circularity, true };
 const auto sof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 4", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_1);
-sof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
+sof_gsp = { stimulus_sigma, stimulus_amplitude, 105, circularity, true };
 const auto sof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 3", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_2);
@@ -1963,11 +1951,11 @@ const auto sof_stimulus_4 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 1", dim_params }, { sof_gsp });
 simulation->addElement(sof_stimulus_4);
 
-element::GaussStimulusParameters lof_gsp = { stimulus_sigma, stimulus_amplitude, 75, circularity, true };
+element::GaussStimulusParameters lof_gsp = { stimulus_sigma, stimulus_amplitude, 15, circularity, true };
 const auto lof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 4", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_1);
-lof_gsp = { stimulus_sigma, stimulus_amplitude, 105, circularity, true };
+lof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
 const auto lof_stimulus_2 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 3", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_2);
@@ -1979,7 +1967,6 @@ lof_gsp = { stimulus_sigma, stimulus_amplitude, 225, circularity, true };
 const auto lof_stimulus_4 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "long stimulus 1", dim_params }, { lof_gsp });
 simulation->addElement(lof_stimulus_4);
-
 
 
 //self excitations kernels
@@ -2015,19 +2002,6 @@ const auto yoif_yoif_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 simulation->addElement(yoif_yoif_k);
 
 
-/*
-element::GaussKernelParameters soif_soif_k_params = { 20, 22, -0.01, circularity, true }; //width, amplitude, shift
-const auto soif_soif_k = factory.createElement(element::GAUSS_KERNEL,
-	{ "soif -> soif", dim_params }, { soif_soif_k_params });
-simulation->addElement(soif_soif_k);
-const auto boif_boif_k = factory.createElement(element::GAUSS_KERNEL,
-	{ "boif -> boif", dim_params }, { soif_soif_k_params });
-simulation->addElement(boif_boif_k);
-const auto yoif_yoif_k = factory.createElement(element::GAUSS_KERNEL,
-	{ "yoif -> yoif", dim_params }, { soif_soif_k_params });
-simulation->addElement(yoif_yoif_k);
-*/
-
 element::GaussKernelParameters sof_sof_k_params = { 20, 2, -0.01, circularity, true }; //width, amplitude, shift
 const auto sof_sof_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "sof -> sof", dim_params }, { sof_sof_k_params });
@@ -2062,19 +2036,19 @@ const auto lhf_lhf_k = factory.createElement(element::GAUSS_KERNEL,
 	{ "lhf -> lhf", dim_params }, { lhf_lhf_k_params });	
 simulation->addElement(lhf_lhf_k);
 
-element::MexicanHatKernelParameters bht_bht_k_params = { 20,20,50,5, -0.0001, true, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters bht_bht_k_params = { 20,23,50,5,-0.001,true, true }; //width, amplitude, shift
 const auto bht_bht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "bht -> bht", dim_params }, { bht_bht_k_params });
 simulation->addElement(bht_bht_k);
-element::MexicanHatKernelParameters yht_yht_k_params = { 20,20,50,5, -0.0001, true, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters yht_yht_k_params = { 20,23,50,5, -0.001, true, true }; //width, amplitude, shift
 const auto yht_yht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "yht -> yht", dim_params }, { yht_yht_k_params });
 simulation->addElement(yht_yht_k);
-element::MexicanHatKernelParameters sht_sht_k_params = { 20,20,50,5, -0.0001, true, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters sht_sht_k_params = { 20,23,50,5, -0.001, true, true }; //width, amplitude, shift
 const auto sht_sht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "sht -> sht", dim_params }, { sht_sht_k_params });
 simulation->addElement(sht_sht_k);
-element::MexicanHatKernelParameters lht_lht_k_params = { 20,20,50,5, -0.0001, true, true }; //width, amplitude, shift
+element::MexicanHatKernelParameters lht_lht_k_params = { 20,23,50,5, -0.001, true, true }; //width, amplitude, shift
 const auto lht_lht_k = factory.createElement(element::MEXICAN_HAT_KERNEL,
 	{ "lht -> lht", dim_params }, { lht_lht_k_params });
 
