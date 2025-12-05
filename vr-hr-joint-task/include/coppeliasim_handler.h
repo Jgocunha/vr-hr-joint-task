@@ -76,6 +76,8 @@ struct IncomingSignals
 	static constexpr const char* REPLANNING_COUNT = "replanningCount";
 	static constexpr const char* COMMON_GRASP = "commonGrasp";
 
+	static constexpr const char* HUMAN_IS_GRASPING = "humanIsGrasping";
+
 	bool simStarted;
 	bool object1;
 	bool object2;
@@ -131,6 +133,8 @@ struct IncomingSignals
 	int replanningCount;
 	int commonGrasp;
 
+	bool humanIsGrasping;
+
 	IncomingSignals()
 		: simStarted(false)
 		, object1(false)
@@ -182,6 +186,7 @@ struct IncomingSignals
 		, robotIdleTime(0)
 		, replanningCount(0)
 		, commonGrasp(0)
+		, humanIsGrasping(false)
 	{}
 };
 

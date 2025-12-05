@@ -113,14 +113,48 @@ void Experiment::waitForSimulationToStart()
 
 void Experiment::sendHandPositionToDnf()
 {
+	// // no 'freeze' - 'unfreeze' logic
+	// handPose = coppeliasimHandler.getHandPose();
+	// dnfComposerHandler.setHandStimulus({
+	// 	handPose.position.x,
+	// 	handPose.position.y,
+	// 	handPose.position.z},
+	// 	inSignals.object1,
+	// 	inSignals.object2,
+	// 	inSignals.object3);
+
+	// 'freeze' - 'unfreeze' logic
 	handPose = coppeliasimHandler.getHandPose();
-	dnfComposerHandler.setHandStimulus({
-		handPose.position.x,
-		handPose.position.y,
-		handPose.position.z},
+
+	// State that persists across calls of this function
+	static bool isFrozen = false;
+	static Position frozenPos{ 0.0, 0.0, 0.0 };
+	static bool wasGrasping = false;
+
+	const bool isGrasping = inSignals.humanIsGrasping;
+
+	// Rising edge: human started grasping -> freeze at the current hand position
+	if (isGrasping && !wasGrasping)
+	{
+		frozenPos = handPose.position;
+		isFrozen = true;
+	}
+	// Falling edge: human stopped grasping -> unfreeze
+	else if (!isGrasping && wasGrasping)
+	{
+		isFrozen = false;
+	}
+
+	wasGrasping = isGrasping;
+
+	const Position& posForDnf = isFrozen ? frozenPos : handPose.position;
+
+	dnfComposerHandler.setHandStimulus(
+		posForDnf,
 		inSignals.object1,
 		inSignals.object2,
-		inSignals.object3);
+		inSignals.object3
+	);
 }
 
 void Experiment::sendAvailableObjectsToDnf() const
