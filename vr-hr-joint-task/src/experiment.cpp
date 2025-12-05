@@ -113,7 +113,7 @@ void Experiment::waitForSimulationToStart()
 
 void Experiment::sendHandPositionToDnf()
 {
-	// // no 'freeze' - 'unfreeze' logic
+	// // hand position is sent directly always
 	// handPose = coppeliasimHandler.getHandPose();
 	// dnfComposerHandler.setHandStimulus({
 	// 	handPose.position.x,
@@ -123,10 +123,9 @@ void Experiment::sendHandPositionToDnf()
 	// 	inSignals.object2,
 	// 	inSignals.object3);
 
-	// 'freeze' - 'unfreeze' logic
+	// 'freeze' - 'unfreeze' logic depending on grasping state
 	handPose = coppeliasimHandler.getHandPose();
 
-	// State that persists across calls of this function
 	static bool isFrozen = false;
 	static Position frozenPos{ 0.0, 0.0, 0.0 };
 	static bool wasGrasping = false;
