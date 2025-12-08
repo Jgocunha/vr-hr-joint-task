@@ -165,25 +165,25 @@ void DnfComposerHandler::setAvailableObjectsInTheWorkspace(bool object1, bool ob
 {
 	auto orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("long stimulus 1"));
 	auto orl_stimulus_parameters = orl_stimulus->getParameters();
-	double amplitude = object1 ? 1 : 0;
+	double amplitude = object2 ? 1 : 0;
 	dnf_composer::element::GaussStimulusParameters new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 
 	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("long stimulus 2"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
-	amplitude = object2 ? 1 : 0;
+	amplitude = object4 ? 1 : 0;
 	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 
 	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("short stimulus 1"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
-	amplitude = object3 ? 1 : 0;
+	amplitude = object1 ? 1 : 0;
 	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 
 	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("short stimulus 2"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
-	amplitude = object4 ? 1 : 0;
+	amplitude = object3 ? 1 : 0;
 	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 
@@ -195,13 +195,13 @@ void DnfComposerHandler::setAvailableObjectsInTheWorkspace(bool object1, bool ob
 
 	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("short stimulus 4"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
-	amplitude = object6 ? 1 : 0;
+	amplitude = object7 ? 1 : 0;
 	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 
 	orl_stimulus = std::dynamic_pointer_cast<dnf_composer::element::GaussStimulus>(simulation->getElement("long stimulus 3"));
 	orl_stimulus_parameters = orl_stimulus->getParameters();
-	amplitude = object7 ? 1 : 0;
+	amplitude = object6 ? 1 : 0;
 	new_params = { orl_stimulus_parameters.width, 15*amplitude, orl_stimulus_parameters.position, false, false };
 	orl_stimulus->setParameters(new_params);
 

@@ -114,15 +114,15 @@ void Experiment::waitForSimulationToStart()
 void Experiment::sendHandPositionToDnf()
 {
 	// // hand position is sent directly always
-	// handPose = coppeliasimHandler.getHandPose();
-	// dnfComposerHandler.setHandStimulus({
-	// 	handPose.position.x,
-	// 	handPose.position.y,
-	// 	handPose.position.z},
-	// 	inSignals.object1,
-	// 	inSignals.object2,
-	// 	inSignals.object3);
-
+	 handPose = coppeliasimHandler.getHandPose();
+	 dnfComposerHandler.setHandStimulus({
+	 	handPose.position.x,
+	 	handPose.position.y,
+	 	handPose.position.z},
+	 	inSignals.object1,
+	 	inSignals.object2,
+		inSignals.object3);
+/*
 	// 'freeze' - 'unfreeze' logic depending on grasping state
 	handPose = coppeliasimHandler.getHandPose();
 
@@ -153,7 +153,7 @@ void Experiment::sendHandPositionToDnf()
 		inSignals.object1,
 		inSignals.object2,
 		inSignals.object3
-	);
+	);*/
 }
 
 void Experiment::sendAvailableObjectsToDnf() const
