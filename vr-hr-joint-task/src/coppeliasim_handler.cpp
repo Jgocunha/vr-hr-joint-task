@@ -159,6 +159,9 @@ void CoppeliasimHandler::readSignals()
 	incomingSignals.robotIdleTime = incomingSignalsClient.getIntegerSignal(IncomingSignals::ROBOT_IDLE_TIME);
 	incomingSignals.replanningCount = incomingSignalsClient.getIntegerSignal(IncomingSignals::REPLANNING_COUNT);
 	incomingSignals.commonGrasp = incomingSignalsClient.getIntegerSignal(IncomingSignals::COMMON_GRASP);
+
+	incomingSignals.humanIsGrasping =
+		incomingSignalsClient.getIntegerSignal(IncomingSignals::HUMAN_IS_GRASPING);
 }
 
 void CoppeliasimHandler::writeSignals() const
