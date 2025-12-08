@@ -212,24 +212,38 @@ void Experiment::interpretAndLogSystemState()
 		afterGraspingForcePlacing = false;
 		placeCount = 0;
 		newTargetCount = 0;
-		trialCounter++;
-		logger::log(logger::LogLevel::INFO, "Trial " + std::to_string(trialCounter) + " out of " + std::to_string(numTrials));
+		//trialCounter++;
+		//logger::log(logger::LogLevel::INFO, "Trial " + std::to_string(trialCounter) + " out of " + std::to_string(numTrials));
 	}
 
 	if(inSignals.simStarted && logMsgs.prevSimStarted == false)
 	{
-		using namespace vr_hr_joint_task::tools;
-		logger::log(logger::LogLevel::INFO, "Task has started.");
-		EventLogger::log(LogLevel::CONTROL, "Task has started.");
-		EventLogger::logHumanHandPose("Task has started.");
-		logMsgs.prevSimStarted = true;
-		logMsgs.prevSimFinished = false;
-		afterPlacingForceTargeting = true;
-		afterTargetingForceGrasping = false;		
-		logMsgs.lastTargetObject = 0;
-		afterGraspingForcePlacing = false;		
-		placeCount = 0;
-		newTargetCount = 0;
+    using namespace vr_hr_joint_task::tools;
+
+    // only count if previous was finished
+    //if (logMsgs.prevSimFinished)
+   // {
+        trialCounter++;
+        logger::log(logger::LogLevel::INFO, 
+            "Starting new trial: " + std::to_string(trialCounter) + 
+            " out of " + std::to_string(numTrials));
+		EventLogger::log(LogLevel::ROBOT,  "Starting new trial: " + std::to_string(trialCounter) + 
+           " out of " + std::to_string(numTrials));
+   // }
+
+    logger::log(logger::LogLevel::INFO, "Task has started.");
+    EventLogger::log(LogLevel::CONTROL, "Task has started.");
+    EventLogger::logHumanHandPose("Task has started.");
+
+    // Reset flags & state
+    logMsgs.prevSimStarted = true;
+    logMsgs.prevSimFinished = false;
+    afterPlacingForceTargeting = true;
+    afterTargetingForceGrasping = false;
+    logMsgs.lastTargetObject = 0;
+    afterGraspingForcePlacing = false;
+    placeCount = 0;
+    newTargetCount = 0;
 	}
 	logMsgs.prevSimStarted = inSignals.simStarted;
 

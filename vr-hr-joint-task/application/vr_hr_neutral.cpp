@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 		constexpr double deltaT = 50;
 		constexpr DnfArchitectureType architecture =
 			DnfArchitectureType::NEUTRAL;
-		constexpr uint8_t numTrials = 4;
+		constexpr uint8_t numTrials = 5;
 
 		// 3) Fill parameters, including participant info
 		ExperimentParameters params{architecture, deltaT, numTrials };
