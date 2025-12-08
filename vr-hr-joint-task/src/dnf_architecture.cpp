@@ -561,15 +561,16 @@ simulation->createInteraction("long stimulus 3", "output", "lof");
 simulation->createInteraction("long stimulus 4", "output", "lof");
 
 
-simulation->createInteraction("long stimulus 3", "output", "bof");
+simulation->createInteraction("long stimulus 2", "output", "bof");
 simulation->createInteraction("long stimulus 4", "output", "bof");
-simulation->createInteraction("short stimulus 3", "output", "bof");
+simulation->createInteraction("short stimulus 2", "output", "bof");
 simulation->createInteraction("short stimulus 4", "output", "bof");
 
 simulation->createInteraction("long stimulus 1", "output", "yof");
-simulation->createInteraction("long stimulus 2", "output", "yof");
+simulation->createInteraction("long stimulus 3", "output", "yof");
 simulation->createInteraction("short stimulus 1", "output", "yof");
-simulation->createInteraction("short stimulus 2", "output", "yof");
+simulation->createInteraction("short stimulus 3", "output", "yof");
+
 
 
 //interactions
@@ -953,15 +954,17 @@ simulation->createInteraction("long stimulus 3", "output", "lof");
 simulation->createInteraction("long stimulus 4", "output", "lof");
 
 
-simulation->createInteraction("long stimulus 3", "output", "bof");
+
+simulation->createInteraction("long stimulus 2", "output", "bof");
 simulation->createInteraction("long stimulus 4", "output", "bof");
-simulation->createInteraction("short stimulus 3", "output", "bof");
+simulation->createInteraction("short stimulus 2", "output", "bof");
 simulation->createInteraction("short stimulus 4", "output", "bof");
 
 simulation->createInteraction("long stimulus 1", "output", "yof");
-simulation->createInteraction("long stimulus 2", "output", "yof");
+simulation->createInteraction("long stimulus 3", "output", "yof");
 simulation->createInteraction("short stimulus 1", "output", "yof");
-simulation->createInteraction("short stimulus 2", "output", "yof");
+simulation->createInteraction("short stimulus 3", "output", "yof");
+
 
 
 //interactions
@@ -1345,15 +1348,16 @@ simulation->createInteraction("long stimulus 3", "output", "lof");
 simulation->createInteraction("long stimulus 4", "output", "lof");
 
 
-simulation->createInteraction("long stimulus 3", "output", "bof");
+simulation->createInteraction("long stimulus 2", "output", "bof");
 simulation->createInteraction("long stimulus 4", "output", "bof");
-simulation->createInteraction("short stimulus 3", "output", "bof");
+simulation->createInteraction("short stimulus 2", "output", "bof");
 simulation->createInteraction("short stimulus 4", "output", "bof");
 
 simulation->createInteraction("long stimulus 1", "output", "yof");
-simulation->createInteraction("long stimulus 2", "output", "yof");
+simulation->createInteraction("long stimulus 3", "output", "yof");
 simulation->createInteraction("short stimulus 1", "output", "yof");
-simulation->createInteraction("short stimulus 2", "output", "yof");
+simulation->createInteraction("short stimulus 3", "output", "yof");
+
 
 
 //interactions
@@ -1737,15 +1741,16 @@ simulation->createInteraction("long stimulus 3", "output", "lof");
 simulation->createInteraction("long stimulus 4", "output", "lof");
 
 
-simulation->createInteraction("long stimulus 3", "output", "bof");
+simulation->createInteraction("long stimulus 2", "output", "bof");
 simulation->createInteraction("long stimulus 4", "output", "bof");
-simulation->createInteraction("short stimulus 3", "output", "bof");
+simulation->createInteraction("short stimulus 2", "output", "bof");
 simulation->createInteraction("short stimulus 4", "output", "bof");
 
 simulation->createInteraction("long stimulus 1", "output", "yof");
-simulation->createInteraction("long stimulus 2", "output", "yof");
+simulation->createInteraction("long stimulus 3", "output", "yof");
 simulation->createInteraction("short stimulus 1", "output", "yof");
-simulation->createInteraction("short stimulus 2", "output", "yof");
+simulation->createInteraction("short stimulus 3", "output", "yof");
+
 
 
 //interactions
@@ -1931,6 +1936,7 @@ element::GaussStimulusParameters hand_position_gsp = { stimulus_sigma, 0, 0, cir
 const auto hand_position_stimulus = factory.createElement(element::GAUSS_STIMULUS,
 	{ "hand position stimulus", dim_params }, { hand_position_gsp });
 simulation->addElement(hand_position_stimulus);
+
 element::GaussStimulusParameters sof_gsp = { stimulus_sigma, stimulus_amplitude, 45, circularity, true };
 const auto sof_stimulus_1 = factory.createElement(element::GAUSS_STIMULUS,
 	{ "short stimulus 4", dim_params }, { sof_gsp });
@@ -2274,15 +2280,15 @@ simulation->createInteraction("long stimulus 3", "output", "lof");
 simulation->createInteraction("long stimulus 4", "output", "lof");
 
 
-simulation->createInteraction("long stimulus 3", "output", "bof");
+simulation->createInteraction("long stimulus 2", "output", "bof");
 simulation->createInteraction("long stimulus 4", "output", "bof");
-simulation->createInteraction("short stimulus 3", "output", "bof");
+simulation->createInteraction("short stimulus 2", "output", "bof");
 simulation->createInteraction("short stimulus 4", "output", "bof");
 
 simulation->createInteraction("long stimulus 1", "output", "yof");
-simulation->createInteraction("long stimulus 2", "output", "yof");
+simulation->createInteraction("long stimulus 3", "output", "yof");
 simulation->createInteraction("short stimulus 1", "output", "yof");
-simulation->createInteraction("short stimulus 2", "output", "yof");
+simulation->createInteraction("short stimulus 3", "output", "yof");
 
 
 //interactions
