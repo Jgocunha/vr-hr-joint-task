@@ -278,7 +278,7 @@ void DnfComposerHandler::setHandStimulusDependingOnHumanHandPosition(const Posit
 double DnfComposerHandler::calculateHandDistanceToObjects(const Position& position)
 {
 	// Table center and dimensions
-	static constexpr double tableCenterX = 0.0;
+	static constexpr double tableCenterX = 0.075; // 0.0 (deprecated)
 	static constexpr double tableCenterZ = 0.641 + 0.08;
 
 	const double distanceX = std::abs(position.x - tableCenterX);
@@ -299,8 +299,8 @@ double DnfComposerHandler::calculateHandProximityToObjects(double distance)
 double DnfComposerHandler::normalizeHandPosition(double handPositionY)
 {
 	// Define the min and max of the table in Y dimension
-	static constexpr double yMin = -0.48;
-	static constexpr double yMax = 0.42;
+	static constexpr double yMin = -0.506; // -0.48 (deprecated)
+	static constexpr double yMax = 0.494; // -0.42 (deprecated)
 	// Define the min and max of the scale
 	static constexpr double scaleMin = 0;
 	static constexpr double scaleMax = 240;
