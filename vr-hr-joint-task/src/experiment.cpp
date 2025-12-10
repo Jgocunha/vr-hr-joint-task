@@ -188,8 +188,31 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::logHumanHandPose(log);
 	}
 
+		// Detect increase in replanning count (rising edge)
+	if (inSignals.replanningCount > logMsgs.prevReplanningCount)
+	{
+
+		 logMsgs.prevTargetBeforeReplan = logMsgs.lastTargetObject;
+		 logMsgs.waitingForPostReplanTarget = true;
+
+		 using namespace vr_hr_joint_task::tools;
+		// Log the target object that was active before the replan
+		EventLogger::log(LogLevel::ROBOT,
+			"Replanning detected. Previous target before replan was " +
+			std::to_string(logMsgs.prevTargetBeforeReplan) + ".");
+		
+		
+		logger::log(logger::LogLevel::INFO,
+			"Replanning detected. Previous target before replan was " +
+			std::to_string(logMsgs.prevTargetBeforeReplan) + ".");
+	}
+
+	// Update remembered replanning count
+	logMsgs.prevReplanningCount = inSignals.replanningCount;
+
 	if (/*inSignals.canRestart && logMsgs.prevSimFinished == false &&*/ placeCount >= 4)
 	{
+		/*
 		using namespace vr_hr_joint_task::tools;
 		EventLogger::log(LogLevel::CONTROL, "Task has finished.");
 		logger::log(logger::LogLevel::INFO, "Task has finished.");
@@ -214,11 +237,34 @@ void Experiment::interpretAndLogSystemState()
 		newTargetCount = 0;
 		//trialCounter++;
 		//logger::log(logger::LogLevel::INFO, "Trial " + std::to_string(trialCounter) + " out of " + std::to_string(numTrials));
+		*/
 	}
 
 	if(inSignals.simStarted && logMsgs.prevSimStarted == false)
 	{
     using namespace vr_hr_joint_task::tools;
+			
+		EventLogger::log(LogLevel::CONTROL, "Previous task has finished.");
+		logger::log(logger::LogLevel::INFO, "Previous task has finished.");
+		EventLogger::logHumanHandPose("Task has finished.");
+		EventLogger::log(LogLevel::CONTROL, "Re-planning count: " + std::to_string(inSignals.replanningCount));
+		logger::log(logger::LogLevel::INFO, "Re-planning count: " + std::to_string(inSignals.replanningCount));
+		EventLogger::log(LogLevel::CONTROL, "Collision count: " + std::to_string(inSignals.collisionCounter));
+		logger::log(logger::LogLevel::INFO, "Collision count: " + std::to_string(inSignals.collisionCounter));
+		EventLogger::log(LogLevel::CONTROL, "Human idle time: " + std::to_string(inSignals.humanIdleTime));
+		logger::log(logger::LogLevel::INFO, "Human idle time: " + std::to_string(inSignals.humanIdleTime));
+		EventLogger::log(LogLevel::CONTROL, "Robot idle time: " + std::to_string(inSignals.robotIdleTime));
+		logger::log(logger::LogLevel::INFO, "Robot idle time: " + std::to_string(inSignals.robotIdleTime));
+		EventLogger::log(LogLevel::CONTROL, "Common grasp: " + std::to_string(inSignals.commonGrasp));
+		logger::log(logger::LogLevel::INFO, "Common grasp: " + std::to_string(inSignals.commonGrasp));
+		logMsgs.prevSimFinished = true;
+		afterPlacingForceTargeting = true;
+		afterTargetingForceGrasping = false;
+		afterGraspingForcePlacing = false;
+		logMsgs.lastTargetObject = 0;
+		afterGraspingForcePlacing = false;
+		placeCount = 0;
+		newTargetCount = 0;
 
     // only count if previous was finished
     //if (logMsgs.prevSimFinished)
@@ -250,15 +296,47 @@ void Experiment::interpretAndLogSystemState()
 	// Check if the robot is approaching a new object.
 	//if (inSignals.robotApproaching && /*!inSignals.robotGrasping && */outSignals.targetObject != logMsgs.lastTargetObject) {
 	if (/*inSignals.robotApproaching &&*/afterPlacingForceTargeting && outSignals.targetObject != logMsgs.lastTargetObject) {
+
 		if (outSignals.targetObject != 0)
 		{
 			EventLogger::log(LogLevel::ROBOT, "Robot will target object " + std::to_string(outSignals.targetObject) + ".");
 			using namespace vr_hr_joint_task::tools;
 			logger::log(logger::LogLevel::INFO, "Robot will target object " + std::to_string(outSignals.targetObject) + ".");
+
+		
 			newTargetCount++;
 			afterPlacingForceTargeting = false;
 			afterTargetingForceGrasping = true;
+
+
+				/**
+				// -----------------------------
+			// NEW: If replan occurred earlier, log X → Y transition
+			// -----------------------------
+			if (logMsgs.waitingForPostReplanTarget)
+			{
+				logMsgs.newTargetAfterReplan = outSignals.targetObject;
+
+				EventLogger::log(LogLevel::ROBOT,
+					"Replanning: previous target was " +
+					std::to_string(logMsgs.prevTargetBeforeReplan) +
+					", new target is " +
+					std::to_string(logMsgs.newTargetAfterReplan) + ".");
+
+				logger::log(logger::LogLevel::INFO,
+					"Replanning: previous target was " +
+					std::to_string(logMsgs.prevTargetBeforeReplan) +
+					", new target is " +
+					std::to_string(logMsgs.newTargetAfterReplan) + ".");
+
+				// Reset flag so next target is not treated as replan
+				logMsgs.waitingForPostReplanTarget = false;
+			}
+
+			// Store target
 			logMsgs.lastTargetObject = outSignals.targetObject;
+			logMsgs.prevTargetBeforeReplan = outSignals.targetObject;
+				*/
 		}
 	}
 

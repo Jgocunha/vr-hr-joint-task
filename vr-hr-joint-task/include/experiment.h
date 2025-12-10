@@ -24,6 +24,10 @@ struct ExperimentParameters
 struct LogMsgs
 {
     int lastTargetObject = -1;
+	int prevReplanningCount = 0;
+	int prevTargetBeforeReplan = 0;	
+	int newTargetAfterReplan = 0;
+	bool waitingForPostReplanTarget = false;
 	bool prevSimStarted = false;
     bool prevRobotGraspObj1 = false;
     bool prevRobotGraspObj2 = false;
