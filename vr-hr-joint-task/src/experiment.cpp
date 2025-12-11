@@ -195,6 +195,7 @@ void Experiment::interpretAndLogSystemState()
 		 logMsgs.prevTargetBeforeReplan = logMsgs.lastTargetObject;
 		 logMsgs.waitingForPostReplanTarget = true;
 
+		 /*
 		 using namespace vr_hr_joint_task::tools;
 		// Log the target object that was active before the replan
 		EventLogger::log(LogLevel::ROBOT,
@@ -204,7 +205,7 @@ void Experiment::interpretAndLogSystemState()
 		
 		logger::log(logger::LogLevel::INFO,
 			"Replanning detected. Previous target before replan was " +
-			std::to_string(logMsgs.prevTargetBeforeReplan) + ".");
+			std::to_string(logMsgs.prevTargetBeforeReplan) + ".");*/
 	}
 
 	// Update remembered replanning count
@@ -212,38 +213,8 @@ void Experiment::interpretAndLogSystemState()
 
 	if (/*inSignals.canRestart && logMsgs.prevSimFinished == false &&*/ placeCount >= 4)
 	{
-		/*
+		
 		using namespace vr_hr_joint_task::tools;
-		EventLogger::log(LogLevel::CONTROL, "Task has finished.");
-		logger::log(logger::LogLevel::INFO, "Task has finished.");
-		EventLogger::logHumanHandPose("Task has finished.");
-		EventLogger::log(LogLevel::CONTROL, "Re-planning count: " + std::to_string(inSignals.replanningCount));
-		logger::log(logger::LogLevel::INFO, "Re-planning count: " + std::to_string(inSignals.replanningCount));
-		EventLogger::log(LogLevel::CONTROL, "Collision count: " + std::to_string(inSignals.collisionCounter));
-		logger::log(logger::LogLevel::INFO, "Collision count: " + std::to_string(inSignals.collisionCounter));
-		EventLogger::log(LogLevel::CONTROL, "Human idle time: " + std::to_string(inSignals.humanIdleTime));
-		logger::log(logger::LogLevel::INFO, "Human idle time: " + std::to_string(inSignals.humanIdleTime));
-		EventLogger::log(LogLevel::CONTROL, "Robot idle time: " + std::to_string(inSignals.robotIdleTime));
-		logger::log(logger::LogLevel::INFO, "Robot idle time: " + std::to_string(inSignals.robotIdleTime));
-		EventLogger::log(LogLevel::CONTROL, "Common grasp: " + std::to_string(inSignals.commonGrasp));
-		logger::log(logger::LogLevel::INFO, "Common grasp: " + std::to_string(inSignals.commonGrasp));
-		logMsgs.prevSimFinished = true;
-		afterPlacingForceTargeting = true;
-		afterTargetingForceGrasping = false;
-		afterGraspingForcePlacing = false;
-		logMsgs.lastTargetObject = 0;
-		afterGraspingForcePlacing = false;
-		placeCount = 0;
-		newTargetCount = 0;
-		//trialCounter++;
-		//logger::log(logger::LogLevel::INFO, "Trial " + std::to_string(trialCounter) + " out of " + std::to_string(numTrials));
-		*/
-	}
-
-	if(inSignals.simStarted && logMsgs.prevSimStarted == false)
-	{
-    using namespace vr_hr_joint_task::tools;
-			
 		EventLogger::log(LogLevel::CONTROL, "Previous task has finished.");
 		logger::log(logger::LogLevel::INFO, "Previous task has finished.");
 		EventLogger::logHumanHandPose("Task has finished.");
@@ -262,14 +233,43 @@ void Experiment::interpretAndLogSystemState()
 		afterTargetingForceGrasping = false;
 		afterGraspingForcePlacing = false;
 		logMsgs.lastTargetObject = 0;
-		afterGraspingForcePlacing = false;
-		placeCount = 0;
+		
+		placeCount = 0;//to see if it helps to reset the trial after it started
 		newTargetCount = 0;
+		//logger::log(logger::LogLevel::INFO, "Trial " + std::to_string(trialCounter) + " out of " + std::to_string(numTrials));
+		
+	}
+
+	if(inSignals.simStarted && logMsgs.prevSimStarted == false)
+	{
+    using namespace vr_hr_joint_task::tools;
+			
+		//EventLogger::log(LogLevel::CONTROL, "Previous task has finished.");
+		//logger::log(logger::LogLevel::INFO, "Previous task has finished.");
+		//EventLogger::logHumanHandPose("Task has finished.");
+		//EventLogger::log(LogLevel::CONTROL, "Re-planning count: " + std::to_string(inSignals.replanningCount));
+		//logger::log(logger::LogLevel::INFO, "Re-planning count: " + std::to_string(inSignals.replanningCount));
+		//EventLogger::log(LogLevel::CONTROL, "Collision count: " + std::to_string(inSignals.collisionCounter));
+		//logger::log(logger::LogLevel::INFO, "Collision count: " + std::to_string(inSignals.collisionCounter));
+		//EventLogger::log(LogLevel::CONTROL, "Human idle time: " + std::to_string(inSignals.humanIdleTime));
+		//logger::log(logger::LogLevel::INFO, "Human idle time: " + std::to_string(inSignals.humanIdleTime));
+		//EventLogger::log(LogLevel::CONTROL, "Robot idle time: " + std::to_string(inSignals.robotIdleTime));
+		//logger::log(logger::LogLevel::INFO, "Robot idle time: " + std::to_string(inSignals.robotIdleTime));
+		//EventLogger::log(LogLevel::CONTROL, "Common grasp: " + std::to_string(inSignals.commonGrasp));
+		//logger::log(logger::LogLevel::INFO, "Common grasp: " + std::to_string(inSignals.commonGrasp));
+		//.prevSimFinished = true;
+		//afterPlacingForceTargeting = true;
+		//afterTargetingForceGrasping = false;
+		//afterGraspingForcePlacing = false;
+		//logMsgs.lastTargetObject = 0;
+		//afterGraspingForcePlacing = false;
+		//placeCount = 0;
+		//newTargetCount = 0;
 
     // only count if previous was finished
     //if (logMsgs.prevSimFinished)
    // {
-        trialCounter++;
+   		trialCounter++;
         logger::log(logger::LogLevel::INFO, 
             "Starting new trial: " + std::to_string(trialCounter) + 
             " out of " + std::to_string(numTrials));
@@ -309,7 +309,7 @@ void Experiment::interpretAndLogSystemState()
 			afterTargetingForceGrasping = true;
 
 
-				/**
+		
 				// -----------------------------
 			// NEW: If replan occurred earlier, log X → Y transition
 			// -----------------------------
@@ -336,7 +336,7 @@ void Experiment::interpretAndLogSystemState()
 			// Store target
 			logMsgs.lastTargetObject = outSignals.targetObject;
 			logMsgs.prevTargetBeforeReplan = outSignals.targetObject;
-				*/
+		
 		}
 	}
 
@@ -347,6 +347,7 @@ void Experiment::interpretAndLogSystemState()
 		logger::log(logger::LogLevel::INFO, "Robot is grasping object 1.");
 		afterTargetingForceGrasping = false;
 		afterGraspingForcePlacing = true;
+		//placeCount++;
 	}
 	logMsgs.prevRobotGraspObj1 = inSignals.robotGraspObj1;
 
@@ -356,6 +357,7 @@ void Experiment::interpretAndLogSystemState()
 		logger::log(logger::LogLevel::INFO, "Robot is grasping object 2.");
 		afterTargetingForceGrasping = false;
 		afterGraspingForcePlacing = true;
+		//placeCount++;
 	}
 	logMsgs.prevRobotGraspObj2 = inSignals.robotGraspObj2;
 
@@ -365,6 +367,7 @@ void Experiment::interpretAndLogSystemState()
 		logger::log(logger::LogLevel::INFO, "Robot is grasping object 3.");
 		afterTargetingForceGrasping = false;
 		afterGraspingForcePlacing = true;
+		//placeCount++;
 	}
 	logMsgs.prevRobotGraspObj3 = inSignals.robotGraspObj3;
 
@@ -374,6 +377,7 @@ void Experiment::interpretAndLogSystemState()
 		logger::log(logger::LogLevel::INFO, "Robot is grasping object 4.");
 		afterTargetingForceGrasping = false;
 		afterGraspingForcePlacing = true;
+		//placeCount++;
 	}
 	logMsgs.prevRobotGraspObj4 = inSignals.robotGraspObj4;
 
@@ -383,6 +387,7 @@ void Experiment::interpretAndLogSystemState()
 		logger::log(logger::LogLevel::INFO, "Robot is grasping object 5.");
 		afterTargetingForceGrasping = false;
 		afterGraspingForcePlacing = true;
+		//placeCount++;
 	}
 	logMsgs.prevRobotGraspObj5 = inSignals.robotGraspObj5;
 
@@ -392,6 +397,7 @@ void Experiment::interpretAndLogSystemState()
 		logger::log(logger::LogLevel::INFO, "Robot is grasping object 6.");
 		afterTargetingForceGrasping = false;
 		afterGraspingForcePlacing = true;
+		//placeCount++;
 	}
 	logMsgs.prevRobotGraspObj6 = inSignals.robotGraspObj6;
 
@@ -401,6 +407,7 @@ void Experiment::interpretAndLogSystemState()
 		logger::log(logger::LogLevel::INFO, "Robot is grasping object 7.");
 		afterTargetingForceGrasping = false;
 		afterGraspingForcePlacing = true;
+		//placeCount++;
 	}
 	logMsgs.prevRobotGraspObj7 = inSignals.robotGraspObj7;
 
@@ -410,6 +417,7 @@ void Experiment::interpretAndLogSystemState()
 		logger::log(logger::LogLevel::INFO, "Robot is grasping object 8.");
 		afterTargetingForceGrasping = false;
 		afterGraspingForcePlacing = true;
+		//placeCount++;
 	}
 	logMsgs.prevRobotGraspObj8 = inSignals.robotGraspObj8;
 
@@ -419,6 +427,7 @@ void Experiment::interpretAndLogSystemState()
 		using namespace vr_hr_joint_task::tools;
 		logger::log(logger::LogLevel::INFO, "Human is grasping object 1.");
 		EventLogger::logHumanHandPose("Human is grasping object 1.");
+		placeCount++;
 	}
 	logMsgs.prevHumanGraspObj1 = inSignals.humanGraspObj1;
 
@@ -427,6 +436,7 @@ void Experiment::interpretAndLogSystemState()
 		using namespace vr_hr_joint_task::tools;
 		logger::log(logger::LogLevel::INFO, "Human is grasping object 2.");
 		EventLogger::logHumanHandPose("Human is grasping object 2.");
+		//placeCount++;
 	}
 	logMsgs.prevHumanGraspObj2 = inSignals.humanGraspObj2;
 
@@ -435,6 +445,7 @@ void Experiment::interpretAndLogSystemState()
 		using namespace vr_hr_joint_task::tools;
 		logger::log(logger::LogLevel::INFO, "Human is grasping object 3.");
 		EventLogger::logHumanHandPose("Human is grasping object 3.");
+		placeCount++;
 	}
 	logMsgs.prevHumanGraspObj3 = inSignals.humanGraspObj3;
 
@@ -443,6 +454,7 @@ void Experiment::interpretAndLogSystemState()
 		using namespace vr_hr_joint_task::tools;
 		logger::log(logger::LogLevel::INFO, "Human is grasping object 4.");
 		EventLogger::logHumanHandPose("Human is grasping object 4.");
+		//placeCount++;
 	}
 	logMsgs.prevHumanGraspObj4 = inSignals.humanGraspObj4;
 
@@ -451,6 +463,7 @@ void Experiment::interpretAndLogSystemState()
 		using namespace vr_hr_joint_task::tools;
 		logger::log(logger::LogLevel::INFO, "Human is grasping object 5.");
 		EventLogger::logHumanHandPose("Human is grasping object 5.");
+		placeCount++;
 	}
 	logMsgs.prevHumanGraspObj5 = inSignals.humanGraspObj5;
 
@@ -459,6 +472,7 @@ void Experiment::interpretAndLogSystemState()
 		using namespace vr_hr_joint_task::tools;
 		logger::log(logger::LogLevel::INFO, "Human is grasping object 6.");
 		EventLogger::logHumanHandPose("Human is grasping object 6.");
+		//placeCount++;
 	}
 	logMsgs.prevHumanGraspObj6 = inSignals.humanGraspObj6;
 
@@ -467,6 +481,7 @@ void Experiment::interpretAndLogSystemState()
 		using namespace vr_hr_joint_task::tools;
 		logger::log(logger::LogLevel::INFO, "Human is grasping object 7.");
 		EventLogger::logHumanHandPose("Human is grasping object 7.");
+		placeCount++;
 	}
 	logMsgs.prevHumanGraspObj7 = inSignals.humanGraspObj7;
 
@@ -475,6 +490,7 @@ void Experiment::interpretAndLogSystemState()
 		using namespace vr_hr_joint_task::tools;	
 		logger::log(logger::LogLevel::INFO, "Human is grasping object 8.");
 		EventLogger::logHumanHandPose("Human is grasping object 8.");
+		//placeCount++;
 	}
 	logMsgs.prevHumanGraspObj8 = inSignals.humanGraspObj8;
 
@@ -575,7 +591,7 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 1.");
 		EventLogger::logHumanHandPose("Human is placing object 1.");
 		logger::log(logger::LogLevel::INFO, "Human is placing object 1.");
-		placeCount++;
+		//placeCount++;
 		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevHumanPlaceObj1 = inSignals.humanPlaceObj1;
@@ -585,7 +601,7 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 2.");
 		EventLogger::logHumanHandPose("Human is placing object 2.");
 		logger::log(logger::LogLevel::INFO, "Human is placing object 2.");
-		placeCount++;
+		//placeCount++;
 		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevHumanPlaceObj2 = inSignals.humanPlaceObj2;
@@ -595,7 +611,7 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 3.");
 		EventLogger::logHumanHandPose("Human is placing object 3.");
 		logger::log(logger::LogLevel::INFO, "Human is placing object 3.");
-		placeCount++;
+		//placeCount++;
 		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevHumanPlaceObj3 = inSignals.humanPlaceObj3;
@@ -605,7 +621,7 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 4.");
 		EventLogger::logHumanHandPose("Human is placing object 4.");
 		logger::log(logger::LogLevel::INFO, "Human is placing object 4.");
-		placeCount++;
+		//placeCount++;
 		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevHumanPlaceObj4 = inSignals.humanPlaceObj4;
@@ -615,7 +631,7 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 5.");
 		EventLogger::logHumanHandPose("Human is placing object 5.");
 		logger::log(logger::LogLevel::INFO, "Human is placing object 5.");
-		placeCount++;
+		//placeCount++;
 		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevHumanPlaceObj5 = inSignals.humanPlaceObj5;
@@ -625,7 +641,7 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 6.");
 		EventLogger::logHumanHandPose("Human is placing object 6.");
 		logger::log(logger::LogLevel::INFO, "Human is placing object 6.");
-		placeCount++;
+		//placeCount++;
 		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevHumanPlaceObj6 = inSignals.humanPlaceObj6;
@@ -634,7 +650,7 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 7.");
 		EventLogger::logHumanHandPose("Human is placing object 7.");
 		logger::log(logger::LogLevel::INFO, "Human is placing object 7.");
-		placeCount++;
+		//placeCount++;
 		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevHumanPlaceObj7 = inSignals.humanPlaceObj7;
@@ -643,7 +659,7 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::log(LogLevel::HUMAN, "Human is placing object 8.");
 		EventLogger::logHumanHandPose("Human is placing object 8.");
 		logger::log(logger::LogLevel::INFO, "Human is placing object 8.");
-		placeCount++;
+		//placeCount++;
 		logger::log(logger::LogLevel::INFO, "Place count: " + std::to_string(placeCount));
 	}
 	logMsgs.prevHumanPlaceObj8 = inSignals.humanPlaceObj8;
