@@ -188,7 +188,7 @@ void Experiment::interpretAndLogSystemState()
 		EventLogger::logHumanHandPose(log);
 	}
 
-		// Detect increase in replanning count (rising edge)
+		// Detect increase in replanning count 
 	if (inSignals.replanningCount > logMsgs.prevReplanningCount)
 	{
 
@@ -233,41 +233,19 @@ void Experiment::interpretAndLogSystemState()
 		afterTargetingForceGrasping = false;
 		afterGraspingForcePlacing = false;
 		logMsgs.lastTargetObject = 0;
-		
 		placeCount = 0;//to see if it helps to reset the trial after it started
 		newTargetCount = 0;
-		//logger::log(logger::LogLevel::INFO, "Trial " + std::to_string(trialCounter) + " out of " + std::to_string(numTrials));
+		//trialCounter++;
+		logger::log(logger::LogLevel::INFO, "Trial " + std::to_string(trialCounter) + " out of " + std::to_string(numTrials));
 		
 	}
 
 	if(inSignals.simStarted && logMsgs.prevSimStarted == false)
 	{
     using namespace vr_hr_joint_task::tools;
-			
-		//EventLogger::log(LogLevel::CONTROL, "Previous task has finished.");
-		//logger::log(logger::LogLevel::INFO, "Previous task has finished.");
-		//EventLogger::logHumanHandPose("Task has finished.");
-		//EventLogger::log(LogLevel::CONTROL, "Re-planning count: " + std::to_string(inSignals.replanningCount));
-		//logger::log(logger::LogLevel::INFO, "Re-planning count: " + std::to_string(inSignals.replanningCount));
-		//EventLogger::log(LogLevel::CONTROL, "Collision count: " + std::to_string(inSignals.collisionCounter));
-		//logger::log(logger::LogLevel::INFO, "Collision count: " + std::to_string(inSignals.collisionCounter));
-		//EventLogger::log(LogLevel::CONTROL, "Human idle time: " + std::to_string(inSignals.humanIdleTime));
-		//logger::log(logger::LogLevel::INFO, "Human idle time: " + std::to_string(inSignals.humanIdleTime));
-		//EventLogger::log(LogLevel::CONTROL, "Robot idle time: " + std::to_string(inSignals.robotIdleTime));
-		//logger::log(logger::LogLevel::INFO, "Robot idle time: " + std::to_string(inSignals.robotIdleTime));
-		//EventLogger::log(LogLevel::CONTROL, "Common grasp: " + std::to_string(inSignals.commonGrasp));
-		//logger::log(logger::LogLevel::INFO, "Common grasp: " + std::to_string(inSignals.commonGrasp));
-		//.prevSimFinished = true;
-		//afterPlacingForceTargeting = true;
-		//afterTargetingForceGrasping = false;
-		//afterGraspingForcePlacing = false;
-		//logMsgs.lastTargetObject = 0;
-		//afterGraspingForcePlacing = false;
-		//placeCount = 0;
-		//newTargetCount = 0;
 
-    // only count if previous was finished
-    //if (logMsgs.prevSimFinished)
+// only count if previous was finished
+	//if (logMsgs.prevSimFinished)
    // {
    		trialCounter++;
         logger::log(logger::LogLevel::INFO, 
@@ -307,12 +285,10 @@ void Experiment::interpretAndLogSystemState()
 			newTargetCount++;
 			afterPlacingForceTargeting = false;
 			afterTargetingForceGrasping = true;
-
-
 		
-				// -----------------------------
-			// NEW: If replan occurred earlier, log X → Y transition
-			// -----------------------------
+			
+			//log when replan occured
+		
 			if (logMsgs.waitingForPostReplanTarget)
 			{
 				logMsgs.newTargetAfterReplan = outSignals.targetObject;

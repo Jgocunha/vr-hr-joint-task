@@ -370,12 +370,11 @@ void DnfComposerHandler::setupUserInterface() const
 	   PlotAnnotations{ "Action Representation Layer", "Spatial location", "Amplitude" } },
 	   LinePlotParameters{},
 	   {
-			 { "bht", "input" },
-		   { "bht", "activation" },
-			{ "bht", "output" },
-			 { "yht", "input" },
-		   { "yht", "activation" },
-			{ "yht", "output" },
+			 { "sht", "input" },
+		   { "sht", "activation" },
+			 { "lht", "input" },
+		   { "lht", "activation" },
+			
 	   }
    );
 
