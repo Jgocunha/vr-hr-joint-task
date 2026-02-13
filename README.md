@@ -2,8 +2,11 @@
 
 [![Watch the video](https://img.youtube.com/vi/oyNoqGCwlLg/maxresdefault.jpg)](https://youtu.be/oyNoqGCwlLg)
 
-
 A virtual reality experiment exploring the impact of anticipatory behaviours in robots on joint task performance and human experience during collaborative pick-and-place tasks.
+
+For a full exploration of the repository, refer to the [Wiki](https://github.com/Jgocunha/vr-hr-joint-task/wiki).
+
+---
 
 ## Project Overview
 
@@ -16,6 +19,8 @@ This project implements a cognitive control system using a dynamic neural field 
 - Lower discomfort was reported when anticipation was enabled
 - Significant reductions in collision frequency with anticipatory behaviour
 - Most participants (9/10) preferred collaborating with the anticipatory robot
+
+---
 
 ## Project Structure
 
@@ -37,7 +42,7 @@ vr-hr-joint-task/
 ├── build.bat # Build script 
 └── CMakeLists.txt # CMake configuration
 ```
-
+---
 
 ## System Architecture
 
@@ -59,12 +64,14 @@ The project uses a dynamic neural field (DNF) architecture with four primary fie
 
 ![DNF Architecture](vr-hr-joint-task/resources/dnf-architecture.png)
 
+---
+
 ## Setup Requirements
 
 ### Hardware
 - HTC VIVE or HTC VIVE Pro Eye VR headset (both tested and working)
 - Controllers for interaction in a VR environment
-- Windows 11 (amd64) system
+- Windows 
 
 ### Software Dependencies
 
@@ -107,6 +114,8 @@ The following libraries are automatically installed via vcpkg during the build p
 - implot
 - nlohmann-json
 
+---
+
 ## Building the Project
 
 1. **Clone the repository**
@@ -126,6 +135,7 @@ The following libraries are automatically installed via vcpkg during the build p
    - Install necessary vcpkg packages
    - Compile the project
    - Generate the executable
+---
 
 ## Running the Experiment
 
@@ -141,6 +151,8 @@ The following libraries are automatically installed via vcpkg during the build p
 3. **Start the simulation** in CoppeliaSim (press the play button)
 
 4. **Put on the VR headset** to begin the experiment
+
+---
 
 ## Experiment Design
 
@@ -163,6 +175,8 @@ All experimental data is automatically logged by the `event_logger` component, i
 - Spatial trajectories
 - Task performance metrics
 - System state information
+
+---
 
 ## Troubleshooting
 
