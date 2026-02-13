@@ -1,19 +1,20 @@
-# Anticipatory Action Selection in Human-Robot Interaction
+# Neurally Inspired Anticipatory Action Selection for Human-Robot Collaboration: A Virtual Reality Experiment
 
-![Project Cover](vr-hr-joint-task/resources/cover-image.jpg)
+[![Watch the video](https://img.youtube.com/vi/oyNoqGCwlLg/maxresdefault.jpg)](https://youtu.be/oyNoqGCwlLg)
 
-A virtual reality experiment exploring the impact of anticipatory behaviors in robots on joint task performance and human experience during collaborative pick-and-place tasks.
+
+A virtual reality experiment exploring the impact of anticipatory behaviours in robots on joint task performance and human experience during collaborative pick-and-place tasks.
 
 ## Project Overview
 
-This project implements a cognitive control system using dynamic neural field (DNF) architecture that enables a robot to predict and adapt to human actions in real-time. The system was evaluated in a virtual reality environment where participants completed a collaborative pick-and-place task with the robot under two conditions: anticipatory and non-anticipatory robot behavior.
+This project implements a cognitive control system using a dynamic neural field (DNF) architecture that enables a robot to predict and adapt to human actions in real-time. The system was evaluated in a virtual reality environment where participants completed a collaborative pick-and-place task with the robot under two conditions: anticipatory and non-anticipatory robot behavior.
 
 ### Key Findings
 
 - Anticipatory mechanisms significantly improved subjective measures of robot perception
 - Participants rated the anticipatory robot higher in competence and warmth
 - Lower discomfort was reported when anticipation was enabled
-- Significant reductions in collision frequency with anticipatory behavior
+- Significant reductions in collision frequency with anticipatory behaviour
 - Most participants (9/10) preferred collaborating with the anticipatory robot
 
 ## Project Structure
@@ -30,8 +31,7 @@ vr-hr-joint-task/
 │ └── misc.cpp # Utility functions 
 ├── include/ # Header files 
 ├── coppeliasim/ # Simulation environment 
-│ ├── scene.ttt # Main CoppeliaSim scene 
-│ ├── scene-vr-lab.ttt # Alternative VR lab scene 
+│ ├── scene-vr-lab.ttt # CoppeliaSim scene 
 │ └── models/ # 3D models and assets 
 ├── resources/ # Additional resources 
 ├── build.bat # Build script 
@@ -63,7 +63,7 @@ The project uses a dynamic neural field (DNF) architecture with four primary fie
 
 ### Hardware
 - HTC VIVE or HTC VIVE Pro Eye VR headset (both tested and working)
-- Controllers for interaction in VR environment
+- Controllers for interaction in a VR environment
 - Windows 11 (amd64) system
 
 ### Software Dependencies
@@ -83,28 +83,6 @@ The project uses a dynamic neural field (DNF) architecture with four primary fie
 3. **Visual Studio 2019/2022** with C++ development tools
 
 #### Required Libraries
-
-1. **Dynamic Neural Field Composer**
-   - Implementation of the cognitive architecture based on dynamic neural fields
-   - Repository: [github.com/Jgocunha/dynamic-neural-field-composer](https://github.com/Jgocunha/dynamic-neural-field-composer)
-   - Installation:
-     ```bash
-     git clone https://github.com/Jgocunha/dynamic-neural-field-composer
-     cd dynamic-neural-field-composer
-     build.bat
-     install.bat
-     ```
-
-2. **CoppeliaSim C++ Client**
-   - Interface for communication with the CoppeliaSim robotics simulator
-   - Repository: [github.com/Jgocunha/coppeliasim-cpp](https://github.com/Jgocunha/coppeliasim-cpp)
-   - Installation:
-     ```bash
-     git clone https://github.com/Jgocunha/coppeliasim-cpp
-     cd coppeliasim-cpp
-     build.bat
-     install.bat
-     ```
 
 3. **CoppeliaSim VR Toolbox**
    - Enables integration with VR headsets
@@ -169,8 +147,8 @@ The following libraries are automatically installed via vcpkg during the build p
 The experiment employs a within-subjects design with two conditions:
 
 ### Conditions
-- **Anticipation-on**: Robot exhibits anticipatory behavior by predicting the participant's next action using the DNF architecture
-- **Anticipation-off**: Robot selects objects arbitrarily with no predictive behavior
+- **Anticipation-on**: Robot exhibits anticipatory behaviour by predicting the participant's next action using the DNF architecture
+- **Anticipation-off**: Robot selects objects arbitrarily with no predictive behaviour
 
 ### Task
 In each trial, the participant and robot collaboratively place three objects into a container. The system automatically logs:
@@ -191,23 +169,18 @@ All experimental data is automatically logged by the `event_logger` component, i
 ### Common Issues
 
 1. **VR Toolbox crashes on first launch**
-   - This is expected behavior; the toolbox typically works fine on subsequent launches
+   - This is expected behaviour; the toolbox typically works fine on subsequent launches
 
 2. **Broken models in VR simulation**
-   - Ensure the lua file modification was applied correctly
+   - Ensure the Lua file modification was applied correctly
    - Alternative fix: Run simulation → Stop → Press Ctrl+Z to undo → Save (Ctrl+S)
 
 3. **Build failures**
    - Verify all dependencies are properly installed
-   - Check that `VCPKG_ROOT` environment variable is set correctly
+   - Check that the `VCPKG_ROOT` environment variable is set correctly
    - Ensure Visual Studio C++ tools are installed
 
 4. **VR headset not detected**
    - Verify VR Toolbox installation
    - Check that SteamVR or OpenVR is properly configured
    - Ensure VR headset drivers are up to date
-
-5. **HTC_VIVE.lua script functions not found**
-   - Verify VR Toolbox installation
-   - Verify you have run 'CopyToVrep.bat' and it successfully copied the necessary files
-   - Make sure you are running a compatible version of CoppeliaSim Version <= 4.7 [CoppeliaSim previous versions](https://coppeliarobotics.com/previousVersions)
