@@ -10,6 +10,9 @@
 #include "dnf_composer/user_interface/element_window.h"
 #include "dnf_architecture.h"
 #include "misc.h"
+#include <fstream>
+#include <filesystem>
+#include <format>
 
 class DnfComposerHandler
 {
@@ -19,6 +22,7 @@ private:
 	std::shared_ptr<dnf_composer::Application> application;
 	std::shared_ptr<dnf_composer::Visualization> visualization;
 	std::thread simulationThread;
+	std::ofstream logFile;
 public:
 	DnfComposerHandler(DnfArchitectureType dnf, double deltaT);
 	~DnfComposerHandler();
@@ -34,6 +38,8 @@ public:
 	int getTargetObject() const;
 	void setAvailableObjectsInTheWorkspace(bool object1, bool object2, bool object3) const;
 	DnfArchitectureType getDnfType() const { return dnf; }
+	void logInferredHumanAction();
+
 private:
 	void setHandStimulusDependingOnHumanActionLikelihood(const Position& position, 
 		bool object1, 

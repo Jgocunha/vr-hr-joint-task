@@ -28,6 +28,16 @@ DnfComposerHandler::~DnfComposerHandler()
 void DnfComposerHandler::init()
 {
 	simulationThread = std::thread(&DnfComposerHandler::run, this);
+
+	std::filesystem::create_directories(std::string(OUTPUT_DIRECTORY) + "/anticipation_tests");
+
+	const auto now = std::chrono::system_clock::now();
+	const std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+	std::stringstream ss;
+	ss << std::put_time(std::localtime(&now_time), "%y-%m-%d_%Hh%Mm%Ss");
+	std::string filePath = std::string(OUTPUT_DIRECTORY) + "/anticipation_tests" + "/human_action_inferred" + ss.str() + ".txt";
+
+	logFile.open(filePath, std::ofstream::out | std::ofstream::app);
 }
 
 void DnfComposerHandler::run()
@@ -96,12 +106,12 @@ int DnfComposerHandler::getTargetObject() const
 	// Determine the closest target and return the corresponding value
 	const double minDistance = std::min({ distanceToObject1, distanceToObject2, distanceToObject3 });
 
-	if (minDistance == distanceToObject1)
-		return 1;
-	if (minDistance == distanceToObject2)
-		return 2;
-	if (minDistance == distanceToObject3)
-		return 3;
+	// if (minDistance == distanceToObject1)
+	// 	return 1;
+	// if (minDistance == distanceToObject2)
+	// 	return 2;
+	// if (minDistance == distanceToObject3)
+	// 	return 3;
 	return 0;
 }
 
@@ -287,4 +297,72 @@ void DnfComposerHandler::setupUserInterface() const
 			{ "ael", "output" },
 	   }
    );
+}
+
+void DnfComposerHandler::logInferredHumanAction()
+{
+	const auto asl = std::dynamic_pointer_cast<dnf_composer::element::NeuralField>(simulation->getElement("asl"));
+	const auto bumps = asl->getBumps();
+
+	if (bumps.empty())
+		return;
+
+	const double centroid = bumps.at(0).centroid;
+	if (centroid < 0)
+		return;
+
+	const int size = asl->getMaxSpatialDimension();
+
+	// Function to calculate the circular distance between two points
+	auto circularDistance = [size](double point1, double point2) -> double {
+		const double directDistance = std::abs(point1 - point2);
+		const double circularDistance = size - directDistance;
+		return std::min(directDistance, circularDistance);
+	};
+
+	// Calculate distances to the three points
+	double distanceToObject1 = circularDistance(centroid, 37.5);
+	double distanceToObject2 = circularDistance(centroid, 25);
+	double distanceToObject3 = circularDistance(centroid, 12.5);
+
+	// Determine the closest target and return the corresponding value
+	const double minDistance = std::min({ distanceToObject1, distanceToObject2, distanceToObject3 });
+
+	std::string msg = "Human action inferred: ";
+	static int lastLoggedTarget = 0;
+	int obj = 0;
+	// log object number and timestamp
+	if (minDistance == distanceToObject1)
+		obj = 1;
+	else if (minDistance == distanceToObject2)
+		obj = 2;
+	else if (minDistance == distanceToObject3)
+		obj = 3;
+	else obj = 0;
+
+	if (lastLoggedTarget != obj && obj!=0)
+	{
+		lastLoggedTarget = obj;
+		msg += std::to_string(obj);
+
+		if (!logFile.is_open()) return;
+
+		const auto now = std::chrono::system_clock::now();
+
+		// split into seconds + microseconds
+		const auto secs = std::chrono::time_point_cast<std::chrono::seconds>(now);
+		const auto us = std::chrono::duration_cast<std::chrono::microseconds>(now - secs).count();
+
+		const std::time_t now_time = std::chrono::system_clock::to_time_t(secs);
+
+		std::stringstream timeSS, logSS;
+
+		timeSS << std::put_time(std::localtime(&now_time), "%Y-%m-%d %H:%M:%S")
+			   << '.' << std::setfill('0') << std::setw(6) << us;
+
+		logSS << msg << timeSS.str() << std::endl;
+
+		logFile << logSS.str();
+		logFile.flush();
+	}
 }

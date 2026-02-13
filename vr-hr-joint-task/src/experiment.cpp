@@ -62,6 +62,7 @@ void Experiment::handleSignalsBetweenDnfAndCoppeliasim()
 		sendAvailableObjectsToDnf();
 		if (dnfComposerHandler.getDnfType() != DnfArchitectureType::BASELINE)
 			sendTargetObjectToRobot();
+		dnfComposerHandler.logInferredHumanAction();
 		interpretAndLogSystemState();
 		coppeliasimHandler.setSignals(outSignals);
 	}
