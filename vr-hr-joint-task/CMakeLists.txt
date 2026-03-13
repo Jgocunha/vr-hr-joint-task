@@ -58,6 +58,7 @@ set(header
     "include/dnf_composer_handler.h"
     "include/coppeliasim_handler.h"
     "include/event_logger.h"
+    "include/logger.h"
 )
 
 # Set source files
@@ -68,12 +69,11 @@ set(src
     "src/dnf_composer_handler.cpp"
     "src/coppeliasim_handler.cpp"
     "src/event_logger.cpp"
+    "src/logger.cpp"
 )
 
-configure_file(./resources/resources.rc.in ./resources/resources.rc)
-
 # Define library target
-add_library(${CMAKE_PROJECT_NAME} ${header} ${src} ./resources/resources.rc)
+add_library(${CMAKE_PROJECT_NAME} ${header} ${src})
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> 
@@ -83,15 +83,20 @@ target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
 
 # Setup imgui
 find_package(imgui CONFIG REQUIRED)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE imgui::imgui "d3d12.lib" "dxgi.lib" "d3dcompiler.lib")
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE imgui::imgui)
 
 # Setup implot
 find_package(implot CONFIG REQUIRED)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE implot::implot)
+
+# Setup imgui-node-editor
+find_package(unofficial-imgui-node-editor CONFIG REQUIRED)
+
+# Setup imgui-platform-kit
+find_package(imgui-platform-kit CONFIG REQUIRED)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE imgui-platform-kit)
 
 # Setup nlohmann-json
 find_package(nlohmann_json CONFIG REQUIRED)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
 # Setup dynamic-neural-field-composer
 find_package(dynamic-neural-field-composer REQUIRED)
@@ -132,34 +137,42 @@ install(EXPORT ${CMAKE_PROJECT_NAME}Targets DESTINATION ${HR_VR_PROJ_CMAKE_CONFI
                                        FILE ${CMAKE_PROJECT_NAME}-config.cmake
 )
 
-# Add executable project
+# Add executable project modifiable
 set(EXE_PROJECT ${CMAKE_PROJECT_NAME}-exe)
-add_executable(${EXE_PROJECT} "src/main.cpp" ./resources/resources.rc)
+add_executable(${EXE_PROJECT} "src/main.cpp")
 target_include_directories(${EXE_PROJECT} PRIVATE include)
-target_link_libraries(${EXE_PROJECT} PRIVATE imgui::imgui ${CMAKE_PROJECT_NAME})
+target_link_libraries(${EXE_PROJECT} PRIVATE ${CMAKE_PROJECT_NAME})
+target_link_libraries(${EXE_PROJECT} PRIVATE imgui::imgui)
+target_link_libraries(${EXE_PROJECT} PRIVATE imgui-platform-kit)
 target_link_libraries(${EXE_PROJECT} PRIVATE dynamic-neural-field-composer)
 target_link_libraries(${EXE_PROJECT} PRIVATE coppeliasim-cpp-client)
 
+# Add executable project anticipation
+set(EXE_PROJECT_ANTICIPATION vr-hr-anticipation-exe)
+add_executable(${EXE_PROJECT_ANTICIPATION} "src/vr_hr_anticipation.cpp")
+target_include_directories(${EXE_PROJECT_ANTICIPATION} PRIVATE include)
+target_link_libraries(${EXE_PROJECT_ANTICIPATION} PRIVATE ${CMAKE_PROJECT_NAME})
+target_link_libraries(${EXE_PROJECT_ANTICIPATION} PRIVATE imgui::imgui)
+target_link_libraries(${EXE_PROJECT_ANTICIPATION} PRIVATE imgui-platform-kit)
+target_link_libraries(${EXE_PROJECT_ANTICIPATION} PRIVATE dynamic-neural-field-composer)
+target_link_libraries(${EXE_PROJECT_ANTICIPATION} PRIVATE coppeliasim-cpp-client)
 
-# Setup Catch2
-enable_testing()
-find_package(Catch2 CONFIG REQUIRED)
-include(CTest)
-include(Catch)
+# Add executable project no anticipation
+set(EXE_PROJECT_NO_ANTICIPATION vr-hr-no-anticipation-exe)
+add_executable(${EXE_PROJECT_NO_ANTICIPATION} "src/vr_hr_no_anticipation.cpp")
+target_include_directories(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE include)
+target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE ${CMAKE_PROJECT_NAME})
+target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE imgui::imgui)
+target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE imgui-platform-kit)
+target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE dynamic-neural-field-composer)
+target_link_libraries(${EXE_PROJECT_NO_ANTICIPATION} PRIVATE coppeliasim-cpp-client)
 
-# Add test project
-set(TEST_PROJECT ${CMAKE_PROJECT_NAME}-test)
-add_executable(${TEST_PROJECT} 
-    tests/test.cpp 
-)
-target_include_directories(${TEST_PROJECT} PRIVATE include)
-target_link_libraries(${TEST_PROJECT} PRIVATE 
-	Catch2::Catch2 
-	Catch2::Catch2WithMain 
-	${CMAKE_PROJECT_NAME} 
-	dynamic-neural-field-composer
-	coppeliasim-cpp-client
-)
-
-# Automatically discover and add tests
-catch_discover_tests(${TEST_PROJECT})
+# Add executable project baseline
+set(EXE_PROJECT_BASELINE vr-hr-baseline-exe)
+add_executable(${EXE_PROJECT_BASELINE} "src/vr_hr_baseline.cpp")
+target_include_directories(${EXE_PROJECT_BASELINE} PRIVATE include)
+target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE ${CMAKE_PROJECT_NAME})
+target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE imgui::imgui)
+target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE imgui-platform-kit)
+target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE dynamic-neural-field-composer)
+target_link_libraries(${EXE_PROJECT_BASELINE} PRIVATE coppeliasim-cpp-client)

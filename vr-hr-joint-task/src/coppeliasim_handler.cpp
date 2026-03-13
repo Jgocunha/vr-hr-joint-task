@@ -22,7 +22,6 @@ void CoppeliasimHandler::init()
 	handThread = std::thread(&CoppeliasimHandler::readHandPosition, this);
 }
 
-
 void CoppeliasimHandler::incomingSignalsLoop()
 {
 	
@@ -32,29 +31,35 @@ void CoppeliasimHandler::incomingSignalsLoop()
 
 	resetSignals();
 
-	while (isConnected())
+	while (isConnected() && !killEverything)
 	{
 		readSignals();
 		//printSignals();
 	}
+
+	incomingSignalsClient.stopSimulation();
+
+	//if (incomingSignalsThread.joinable())
+		//incomingSignalsThread.join();
 }
 
 void CoppeliasimHandler::outgoingSignalsLoop()
 {
 	while (!outgoingSignalsClient.initialize());
 
-	while (outgoingSignalsClient.isConnected())
+	while (outgoingSignalsClient.isConnected() && !killEverything)
 	{
 		writeSignals();
 	}
-}
 
+	//if (outgoingSignalsThread.joinable())
+		//outgoingSignalsThread.join();
+}
 
 void CoppeliasimHandler::setSignals(const OutgoingSignals& signals)
 {
 	outgoingSignals = signals;
 }
-
 
 IncomingSignals CoppeliasimHandler::getSignals() const
 {
@@ -67,7 +72,7 @@ void CoppeliasimHandler::readHandPosition()
 
 	hand.objectHandle = handClient.getObjectHandle("RightController");
 
-    while (handClient.isConnected())
+    while (handClient.isConnected() && !killEverything)
     {
         coppeliasim_cpp::Pose pos = handClient.getObjectPose(hand.objectHandle);
 		hand.pose = { {pos.position.x,
@@ -78,22 +83,26 @@ void CoppeliasimHandler::readHandPosition()
 			pos.orientation.gamma}
 		};
     }
-}
 
+	//if (handThread.joinable())
+		//handThread.join();
+}
 
 Pose CoppeliasimHandler::getHandPose() const
 {
 	return hand.pose;
 }
 
-
 void CoppeliasimHandler::end()
 {
 	if (isConnected())
 		incomingSignalsClient.stopSimulation();
-	incomingSignalsThread.join();
-	outgoingSignalsThread.join();
-	handThread.join();
+	if (incomingSignalsThread.joinable())
+		incomingSignalsThread.join();
+	if (outgoingSignalsThread.joinable())
+		outgoingSignalsThread.join();
+	if (handThread.joinable())
+		handThread.join();
 }
 
 bool CoppeliasimHandler::isConnected() const
@@ -124,12 +133,20 @@ void CoppeliasimHandler::readSignals()
 	incomingSignals.humanPlaceObj3 = incomingSignalsClient.getIntegerSignal(IncomingSignals::HUMAN_PLACE_OBJ3);
 	incomingSignals.canRestart = incomingSignalsClient.getIntegerSignal(IncomingSignals::CAN_RESTART);
 	incomingSignals.restart = incomingSignalsClient.getIntegerSignal(IncomingSignals::RESTART);
+
+	incomingSignals.collisionCounter = incomingSignalsClient.getIntegerSignal(IncomingSignals::COLLISION);
+
+	incomingSignals.humanIdleTime = incomingSignalsClient.getIntegerSignal(IncomingSignals::HUMAN_IDLE_TIME);
+	incomingSignals.robotIdleTime = incomingSignalsClient.getIntegerSignal(IncomingSignals::ROBOT_IDLE_TIME);
+	incomingSignals.replanningCount = incomingSignalsClient.getIntegerSignal(IncomingSignals::REPLANNING_COUNT);
+	incomingSignals.commonGrasp = incomingSignalsClient.getIntegerSignal(IncomingSignals::COMMON_GRASP);
 }
 
 void CoppeliasimHandler::writeSignals() const
 {
 	outgoingSignalsClient.setIntegerSignal(OutgoingSignals::START_SIM, outgoingSignals.startSim);
 	outgoingSignalsClient.setIntegerSignal(OutgoingSignals::TARGET_OBJECT, outgoingSignals.targetObject);
+	outgoingSignalsClient.setIntegerSignal(OutgoingSignals::ARCHITECTURE_TYPE, outgoingSignals.archType);
 }
 
 void CoppeliasimHandler::resetSignals() const

@@ -4,14 +4,16 @@
 #include "dnf_composer_handler.h"
 #include "coppeliasim_handler.h"
 #include "event_logger.h"
+#include "logger.h"
 
 struct ExperimentParameters
 {
 	DnfArchitectureType dnf;
 	double deltaT;
+	uint8_t numTrials;
 
-	ExperimentParameters(DnfArchitectureType dnf, double deltaT)
-	: dnf(dnf), deltaT(deltaT)
+	ExperimentParameters(DnfArchitectureType dnf, double deltaT, int numTrials)
+	: dnf(dnf), deltaT(deltaT), numTrials(numTrials)
 	{}
 };
 
@@ -31,6 +33,7 @@ struct LogMsgs
     bool prevHumanPlaceObj1 = false;
     bool prevHumanPlaceObj2 = false;
     bool prevHumanPlaceObj3 = false;
+	bool prevSimFinished = false;
 
     void clear()
 	{
@@ -48,6 +51,7 @@ struct LogMsgs
         prevHumanPlaceObj1 = false;
         prevHumanPlaceObj2 = false;
         prevHumanPlaceObj3 = false;
+		prevSimFinished = false;
     }
 };
 
@@ -61,6 +65,8 @@ private:
 	OutgoingSignals outSignals;
 	Pose handPose;
 	LogMsgs logMsgs;
+	int numTrials;
+	int trialCounter;
 public:
 	Experiment(const ExperimentParameters& parameters);
 	~Experiment();
@@ -79,7 +85,7 @@ private:
 	void sendTargetObjectToRobot();
 	void interpretAndLogSystemState();
 
-	void keepAliveWhileTaskIsRunning() const;
+	void keepAliveWhileTaskIsRunning();
 	bool areObjectsPresent() const;
 	bool areAllObjectsPresent() const;
 };
