@@ -1,5 +1,10 @@
 # Neurally Inspired Anticipatory Action Selection for Human-Robot Collaboration: A Virtual Reality Experiment
 
+[![C++17](https://img.shields.io/badge/C%2B%2B-17-00599C?style=flat-square&logo=cplusplus&logoColor=white)](https://en.cppreference.com/w/cpp/17)
+[![CMake](https://img.shields.io/badge/CMake-3.20%2B-064F8C?style=flat-square&logo=cmake&logoColor=white)](https://cmake.org)
+[![Windows](https://img.shields.io/badge/Windows-0078D6?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTAgMy40NDlMOS43NSAyLjF2OS40NTFIMG0xMC45NDktOS42MDJMMjQgMHYxMS40SDEwLjk0OU0wIDEyLjZoOS43NXY5LjQ1MUwwIDIwLjY5OU0xMC45NDkgMTIuNkgyNFYyNGwtMTIuOS0xLjgwMSIvPjwvc3ZnPg==&logoColor=white)](https://github.com/Jgocunha/vr-hr-joint-task/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
+
 [![Watch the video](https://img.youtube.com/vi/oyNoqGCwlLg/maxresdefault.jpg)](https://youtu.be/oyNoqGCwlLg)
 
 A virtual reality experiment exploring the impact of anticipatory behaviours in robots on joint task performance and human experience during collaborative pick-and-place tasks.
@@ -195,6 +200,14 @@ All experimental data is automatically logged by the `event_logger` component, i
    - Ensure Visual Studio C++ tools are installed
 
 4. **VR headset not detected**
-   - Verify VR Toolbox installation
+   - Verify VR Toolbox Installation
    - Check that SteamVR or OpenVR is properly configured
    - Ensure VR headset drivers are up to date
+
+---
+
+## Citation
+
+If you use this work in your research, please cite the following paper:
+
+> J. G. Cunha, R. H. Cuijpers, W. Erlhagen, E. Bicho, Robustness and Adaptability in a Dynamic Neural Field Architecture Subject to Degeneration, in: ICSR+ART 2026, status: In press.
