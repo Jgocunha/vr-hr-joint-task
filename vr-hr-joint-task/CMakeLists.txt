@@ -99,7 +99,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE imgui-platform-kit)
 find_package(nlohmann_json CONFIG REQUIRED)
 
 # Setup dynamic-neural-field-composer (build.bat installs the pinned revision here)
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/deps/dnfc-install")
+list(PREPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/deps/dnfc-install")
 find_package(dynamic-neural-field-composer REQUIRED)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE dynamic-neural-field-composer)
 

@@ -126,9 +126,10 @@ Every one of these is pinned to the version the experiment was developed against
   `vr-hr-joint-task/dnfc-ref.txt` (`32c5e7c`, 2026-02-19), against the same manifest, into
   `vr-hr-joint-task/deps/dnfc-install`.
 
-The vcpkg in `VCPKG_ROOT` must be a git clone (as in the instructions above), since vcpkg
-reads the pinned versions from its git history; `build.bat` fetches the baseline commit if
-the clone lacks it.
+The vcpkg in `VCPKG_ROOT` must be a git clone (as in the instructions above) at `b70a4e2` or
+newer, since vcpkg reads the pinned versions from its git history and checked-out files;
+`build.bat` unshallows a shallow clone and stops with the update command if the clone is
+older.
 
 ---
 
