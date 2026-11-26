@@ -827,3 +827,5 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+# Pinned C++ dependencies built by build.bat
+vr-hr-joint-task/deps/

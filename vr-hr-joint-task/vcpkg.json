@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "builtin-baseline": "b70a4e216a6ba7d854457f5d9a64e30d62f0c6a5",
+  "dependencies": [
+    {
+      "name": "imgui",
+      "features": [ "docking-experimental", "dx12-binding", "win32-binding" ]
+    },
+    "implot",
+    "imgui-node-editor",
+    "imgui-platform-kit",
+    "nlohmann-json"
+  ]
+}
