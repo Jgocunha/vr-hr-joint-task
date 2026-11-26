@@ -114,10 +114,22 @@ The project uses a dynamic neural field (DNF) architecture with four primary fie
      6. Run `copyToVrep.bat` as administrator
 
 #### Automatically Managed Dependencies
-The following libraries are automatically installed via vcpkg during the build process:
-- imgui (with docking-experimental, core, dx12-binding, win32-binding)
-- implot
-- nlohmann-json
+Every one of these is pinned to the version the experiment was developed against:
+- imgui 1.91.9 (with docking-experimental, dx12-binding, win32-binding), implot 0.17,
+  imgui-node-editor 0.9.3 and nlohmann-json 3.12.0 are declared in
+  `vr-hr-joint-task/vcpkg.json` and pinned by its `builtin-baseline` (vcpkg commit `b70a4e2`,
+  the last before vcpkg moved to imgui 1.92.6, which this dynamic-neural-field-composer
+  revision does not compile against). CMake installs them on the first configure.
+- imgui-platform-kit is a vcpkg overlay port in `vr-hr-joint-task/ports/`, pinned to commit
+  `366f9f7`.
+- dynamic-neural-field-composer is built from source by `build.bat` at the commit in
+  `vr-hr-joint-task/dnfc-ref.txt` (`32c5e7c`, 2026-02-19), against the same manifest, into
+  `vr-hr-joint-task/deps/dnfc-install`.
+
+The vcpkg in `VCPKG_ROOT` must be a git clone (as in the instructions above) at `b70a4e2` or
+newer, since vcpkg reads the pinned versions from its git history and checked-out files;
+`build.bat` unshallows a shallow clone and stops with the update command if the clone is
+older.
 
 ---
 
@@ -136,8 +148,9 @@ The following libraries are automatically installed via vcpkg during the build p
    build.bat
    ```
    This script will:
-   - Configure CMake
-   - Install necessary vcpkg packages
+   - Make sure vcpkg has the pinned baseline commit
+   - Build the pinned dynamic-neural-field-composer into `deps/dnfc-install` (first run only)
+   - Configure CMake, which installs the vcpkg packages from `vcpkg.json` (first run only)
    - Compile the project
    - Generate the executable
 ---
