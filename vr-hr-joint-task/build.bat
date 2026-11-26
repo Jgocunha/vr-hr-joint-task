@@ -92,9 +92,11 @@ mkdir %PROJECT_ROOT%\build\x64-debug
 
 :: Run CMake
 cmake -G "Visual Studio 17 2022" -A x64 -S "%PROJECT_ROOT%" -B "%PROJECT_ROOT%\build\x64-release" -DCMAKE_TOOLCHAIN_FILE="%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE=Release
+if errorlevel 1 ( echo ERROR: CMake configure failed. & pause & exit /b 1 )
 
 :: Build your project using the generated build files
 cmake --build "%PROJECT_ROOT%\build\x64-release" --config Release
+if errorlevel 1 ( echo ERROR: Build failed. & pause & exit /b 1 )
 
 :: Run CMake
 :: cmake -G "Visual Studio 17 2022" -A x64 -S "%PROJECT_ROOT%" -B "%PROJECT_ROOT%\build\x64-debug" -DCMAKE_TOOLCHAIN_FILE="%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE=Debug
@@ -106,4 +108,4 @@ cmake --build "%PROJECT_ROOT%\build\x64-release" --config Release
 :: Optionally, you can run your executable here if applicable
 
 pause
-exit /b 1
+exit /b 0
